@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include "expression.hpp"
 #include "information_state.hpp"
 

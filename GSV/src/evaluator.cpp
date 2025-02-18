@@ -5,22 +5,53 @@
 #include <stdexcept>
 #include <ranges>
 
-#include "semantic_relations.hpp"
 #include "variable.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
 namespace {
-	void filter(InformationState& state, const std::function<bool(const Possibility&)>& predicate) {
-		for (auto it = state.begin(); it != state.end(); ) {
-			if (!predicate(*it)) {
-				it = state.erase(it);
-			}
-			else {
-				++it;
-			}
+
+void filter(InformationState& state, const std::function<bool(const Possibility&)>& predicate) {
+	for (auto it = state.begin(); it != state.end(); ) {
+		if (!predicate(*it)) {
+			it = state.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
+}
+
+/*
+ * Retrieves the denotation of a term in a given world within a model
+ * 
+ * throws std::out_of_range if the term does not exist
+ */
+int termDenotation(std::string_view term, int w, const IModel& m)
+{
+	return m.termInterpretation(term, w);
+}
+
+/*
+ * Retrieves the denotation of a predicate in a given world within a model
+ *
+ * throws std::out_of_range if the predicate does not exist
+ */
+const std::set<std::vector<int>>& predicateDenotation(std::string_view predicate, int w, const IModel& m)
+{
+	return m.predicateInterpretation(predicate, w);
+}
+
+/*
+ * Retrieves the denotation of a variable in a given possibility
+ *
+ * throws std::out_of_range if the variable has no associated peg
+ */
+int variableDenotation(std::string_view variable, const Possibility& p)
+{
+	return p.getAssignment(p.referentSystem->value(variable));
+}
+
 }
 
 /**

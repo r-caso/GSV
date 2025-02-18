@@ -20,7 +20,6 @@ target_sources(GSV PRIVATE
     GSV/src/semantics/information_state.cpp
     GSV/src/semantics/possibility.cpp
     GSV/src/semantics/referent_system.cpp
-    GSV/src/semantics/semantic_relations.cpp
     
     third_party/semantics/model.cpp
     third_party/syntax/expression.cpp
