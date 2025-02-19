@@ -1,6 +1,7 @@
 #include "information_state.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 
 namespace iif_sadaf::talk::GSV {
@@ -23,9 +24,9 @@ InformationState::InformationState(const IModel& model, bool create_possibilitie
 		return;
 	}
 
-	const int number_of_worlds = model.domain_cardinality();
+	const int number_of_worlds = model.world_cardinality();
 	for (int i = 0; i < number_of_worlds; ++i) {
-		possibilities.insert(Possibility(r_system, i));
+		possibilities.emplace(r_system, i);
 	}
 }
 
@@ -199,7 +200,6 @@ bool subsistsIn(const Possibility& p, const InformationState& s)
 	const auto is_descendant_of_p_in_s = [&](const Possibility& p1) -> bool { return isDescendantOf(p1, p, s); };
 	return std::ranges::any_of(s.possibilities, is_descendant_of_p_in_s);
 }
-
 
 /**
  * @brief Checks if an information state subsists within another.
