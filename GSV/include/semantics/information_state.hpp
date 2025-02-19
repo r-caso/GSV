@@ -19,6 +19,19 @@ struct InformationState {
 public:
 	InformationState(const IModel& model, bool create_possibilities = true);
 
+	InformationState(const InformationState& other)
+		: possibilities(other.possibilities),
+		model(other.model)
+	{ }
+
+	InformationState(InformationState&& other) noexcept
+		: possibilities(std::move(other.possibilities))
+		, model(other.model)
+	{ }
+
+	InformationState& operator=(const InformationState&) = delete;
+	InformationState& operator=(InformationState&&) = delete;
+
 	bool empty() const;
 	void clear();
 

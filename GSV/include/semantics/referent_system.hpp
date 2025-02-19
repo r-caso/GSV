@@ -14,6 +14,38 @@ namespace iif_sadaf::talk::GSV {
  */
 struct ReferentSystem {
 public:
+	ReferentSystem() = default;
+
+	ReferentSystem(const ReferentSystem& other)
+		: pegs(other.pegs)
+		, variablePegAssociation(other.variablePegAssociation)
+	{ }
+
+	ReferentSystem& operator=(const ReferentSystem& other)
+	{
+		if (this != &other) {
+			this->pegs = other.pegs;
+			this->variablePegAssociation = other.variablePegAssociation;
+		}
+
+		return *this;
+	}
+
+	ReferentSystem(ReferentSystem&& other) noexcept
+		: pegs(other.pegs)
+		, variablePegAssociation(std::move(other.variablePegAssociation))
+	{ }
+
+	ReferentSystem& operator=(ReferentSystem&& other) noexcept
+	{
+		if (this != &other) {
+			this->pegs = other.pegs;
+			this->variablePegAssociation = std::move(other.variablePegAssociation);
+			other.pegs = 0;
+		}
+		return *this;
+	}
+
 	int range() const;
 	std::set<std::string_view> domain() const;
 	int value(std::string_view variable) const;
