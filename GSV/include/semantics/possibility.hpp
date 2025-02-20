@@ -52,7 +52,6 @@ public:
 		return *this;
 	}
 
-	int getAssignment(int peg) const;
 	void update(std::string_view variable, int individual);
 	
 	std::shared_ptr<ReferentSystem> referentSystem;

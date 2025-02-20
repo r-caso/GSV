@@ -49,7 +49,7 @@ const std::set<std::vector<int>>& predicateDenotation(std::string_view predicate
  */
 int variableDenotation(std::string_view variable, const Possibility& p)
 {
-	return p.getAssignment(p.referentSystem->value(variable));
+	return p.assignment.at(p.referentSystem->value(variable));
 }
 
 }

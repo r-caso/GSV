@@ -31,21 +31,6 @@ void Possibility::update(std::string_view variable, int individual)
 	assignment[referentSystem->variablePegAssociation.at(variable)] = individual;
 }
 
-/**
-* @brief Retrieves the individual assigned to a given peg.
-*
-* @param peg The peg whose assigned individual is to be retrieved.
-* @return The assigned individual, or -1 if the peg is not assigned.
-*/
-int Possibility::getAssignment(int peg) const
-{
-	if (!assignment.contains(peg)) {
-		return -1;
-	}
-
-	return assignment.at(peg);
-}
-
 /*
 * NON-MEMBER FUNCTIONS
 */
@@ -67,7 +52,7 @@ bool extends(const Possibility& p2, const Possibility& p1)
 		int peg = map.first;
 		int individual = map.second;
 
-		return !p1.assignment.contains(peg) || (p1.getAssignment(peg) == p2.getAssignment(peg));
+		return !p1.assignment.contains(peg) || (p1.assignment.at(peg) == p2.assignment.at(peg));
 	};
 
 	return (p1.world == p2.world) && std::ranges::all_of(p2.assignment, peg_is_new_or_maintains_assignment);
