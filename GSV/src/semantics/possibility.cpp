@@ -27,8 +27,8 @@ Possibility::Possibility(std::shared_ptr<ReferentSystem> r_system, int world)
 */
 void Possibility::update(std::string_view variable, int individual)
 {
-	referentSystem->update(variable);
-	assignment[referentSystem->variablePegAssociation.at(variable)] = individual;
+	referentSystem->variablePegAssociation[variable] = ++(referentSystem->pegs);
+	assignment[referentSystem->pegs] = individual;
 }
 
 /*

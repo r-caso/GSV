@@ -46,10 +46,7 @@ public:
 		return *this;
 	}
 
-	int range() const;
-	std::set<std::string_view> domain() const;
 	int value(std::string_view variable) const;
-	void update(std::string_view variable);
 
 	int pegs = 0;
 	std::unordered_map<std::string_view, int> variablePegAssociation = {};

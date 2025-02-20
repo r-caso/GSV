@@ -5,34 +5,16 @@
 
 namespace iif_sadaf::talk::GSV {
 
-/**
- * @brief Returns the range (number of pegs) of the ReferentSystem.
- * 
- * Since the range of a referent system is always an initial segment
- * of the natural numbers, the number of pegs represents the range
- * of the referent system. 
- *
- * @return The number of pegs in the referent system.
- */
-int ReferentSystem::range() const
-{
-	return pegs;
-}
+namespace {
+	std::set<std::string_view> domain(const ReferentSystem& r)
+	{
+		std::set<std::string_view> domain;
+		for (const auto& [variable, peg] : r.variablePegAssociation) {
+			domain.insert(variable);
+		}
 
-/**
- * @brief Returns the domain (set of variables) of the ReferentSystem.
- *
- * @return A set of string views representing the variables in the referent
- * system.
- */
-std::set<std::string_view> ReferentSystem::domain() const
-{
-	std::set<std::string_view> domain;
-	for (const auto& [variable, peg] : variablePegAssociation) {
-		domain.insert(variable);
+		return domain;
 	}
-
-	return domain;
 }
 
 /**
@@ -52,16 +34,6 @@ int ReferentSystem::value(std::string_view variable) const
 	return variablePegAssociation.at(variable);
 }
 
-void ReferentSystem::update(std::string_view variable)
-{
-	variablePegAssociation[variable] = ++pegs;
-}
-
-/**
- * @brief Represents a referent system for variable assignments.
- *
- * The ReferentSystem class maintains associations between variables and integer pegs.
- */
 std::string str(const ReferentSystem& r)
 {
 	std::string desc = "Number of pegs: " + std::to_string(r.pegs) + "\n";
@@ -95,19 +67,19 @@ std::string str(const ReferentSystem& r)
  */
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 {
-	if (r1.range() > r2.range()) {
+	if (r1.pegs > r2.pegs) {
 		return false;
 	}
 
-	std::set<std::string_view> domain_r1 = r1.domain();
-	std::set<std::string_view> domain_r2 = r2.domain();
+	std::set<std::string_view> domain_r1 = domain(r1);
+	std::set<std::string_view> domain_r2 = domain(r2);
 
 	if (!std::ranges::includes(domain_r2, domain_r1)) {
 		return false;
 	}
 
 	const auto old_var_same_or_new_peg = [&](std::string_view variable) -> bool {
-		return r1.value(variable) == r2.value(variable) || r1.range() <= r2.value(variable);
+		return r1.value(variable) == r2.value(variable) || r1.pegs <= r2.value(variable);
 	};
 
 	if (!std::ranges::all_of(domain_r1, old_var_same_or_new_peg)) {
@@ -115,7 +87,7 @@ bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 	}
 
 	const auto new_var_new_peg = [&](std::string_view variable) -> bool {
-		return domain_r1.contains(variable) || r1.range() <= r2.value(variable);
+		return domain_r1.contains(variable) || r1.pegs <= r2.value(variable);
 	};
 
 	return std::ranges::all_of(domain_r2, new_var_new_peg);
