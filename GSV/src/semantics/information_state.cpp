@@ -6,14 +6,6 @@
 
 namespace iif_sadaf::talk::GSV {
 
-/**
- * @brief Constructs an InformationState based on a given model.
- *
- * Initializes the information state and optionally populates it with possibilities.
- *
- * @param model The model to which this information state belongs.
- * @param create_possibilities Whether to initialize the possibilities set.
- */
 InformationState::InformationState(const IModel& model, bool create_possibilities)
 	: possibilities()
 	, model(model)
@@ -29,6 +21,16 @@ InformationState::InformationState(const IModel& model, bool create_possibilitie
 		possibilities.emplace(r_system, i);
 	}
 }
+
+InformationState::InformationState(const InformationState& other)
+	: possibilities(other.possibilities),
+	model(other.model)
+{ }
+
+InformationState::InformationState(InformationState&& other) noexcept
+	: possibilities(std::move(other.possibilities))
+	, model(other.model)
+{ }
 
 /**
  * @brief Checks if the information state is empty.

@@ -4,17 +4,44 @@
 
 namespace iif_sadaf::talk::GSV {
 
-/**
-* @brief Constructs a Possibility with a given referent system and world index.
-* 
-* @param r_system Shared pointer to the referent system.
-* @param world The index of the possible world.
-*/
 Possibility::Possibility(std::shared_ptr<ReferentSystem> r_system, int world)
 	: referentSystem(r_system)
 	, assignment({})
 	, world(world)
 { }
+
+Possibility::Possibility(const Possibility& other)
+	: referentSystem(other.referentSystem)
+	, assignment(other.assignment)
+	, world(other.world)
+{ }
+
+Possibility& Possibility::operator=(const Possibility& other)
+{
+	if (this != &other) {
+		this->referentSystem = other.referentSystem;
+		this->assignment = other.assignment;
+		this->world = other.world;
+	}
+
+	return *this;
+}
+
+Possibility::Possibility(Possibility&& other) noexcept
+	: referentSystem(std::move(other.referentSystem))
+	, assignment(std::move(other.assignment))
+	, world(other.world)
+{ }
+
+Possibility& Possibility::operator=(Possibility&& other) noexcept
+{
+	if (this != &other) {
+		this->referentSystem = std::move(other.referentSystem);
+		this->assignment = std::move(other.assignment);
+		this->world = other.world;
+	}
+	return *this;
+}
 
 /**
 * @brief Updates the assignment of a variable to an individual.

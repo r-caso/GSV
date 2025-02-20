@@ -18,17 +18,8 @@ namespace iif_sadaf::talk::GSV {
 struct InformationState {
 public:
 	InformationState(const IModel& model, bool create_possibilities = true);
-
-	InformationState(const InformationState& other)
-		: possibilities(other.possibilities),
-		model(other.model)
-	{ }
-
-	InformationState(InformationState&& other) noexcept
-		: possibilities(std::move(other.possibilities))
-		, model(other.model)
-	{ }
-
+	InformationState(const InformationState& other);
+	InformationState(InformationState&& other) noexcept;
 	InformationState& operator=(const InformationState&) = delete;
 	InformationState& operator=(InformationState&&) = delete;
 

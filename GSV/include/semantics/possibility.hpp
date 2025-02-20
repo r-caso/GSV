@@ -18,39 +18,10 @@ namespace iif_sadaf::talk::GSV {
 struct Possibility {
 public:
 	Possibility(std::shared_ptr<ReferentSystem> r_system, int world);
-	
-	Possibility(const Possibility& other)
-		: referentSystem(other.referentSystem)
-		, assignment(other.assignment)
-		, world(other.world)
-	{ }
-
-	Possibility& operator=(const Possibility& other)
-	{
-		if (this != &other) {
-			this->referentSystem = other.referentSystem;
-			this->assignment = other.assignment;
-			this->world = other.world;
-		}
-
-		return *this;
-	}
-
-	Possibility(Possibility&& other) noexcept
-		: referentSystem(std::move(other.referentSystem))
-		, assignment(std::move(other.assignment))
-		, world(other.world)
-	{ }
-
-	Possibility& operator=(Possibility&& other) noexcept
-	{
-		if (this != &other) {
-			this->referentSystem = std::move(other.referentSystem);
-			this->assignment = std::move(other.assignment);
-			this->world = other.world;
-		}
-		return *this;
-	}
+	Possibility(const Possibility& other);
+	Possibility& operator=(const Possibility& other);
+	Possibility(Possibility&& other) noexcept;
+	Possibility& operator=(Possibility&& other) noexcept;
 
 	void update(std::string_view variable, int individual);
 	
