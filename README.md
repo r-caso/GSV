@@ -31,8 +31,9 @@ Once you have a `Model` object instantiated, instantiate an `InformationState` o
 
 ```c++
 namespace GSV = iif_sadaf::talk::GSV;
-GSV::InformationState state(model);
+GSV::InformationState state = GSV::create(model);
 ```
+Notice that `InformationState` is just an alias for `std::set<GSV::Possibility>`, and you need to call the `GSV::create()` function to populate the information state with possibilities.
 
 Then, you need to generate an [`Expression` object](third_party/syntax/expression.hpp) that represents a QML formula, e.g. by calling an appropriate parser on a formula:
 
@@ -46,10 +47,27 @@ Expression expr = parse(formula);
 
 Since the GSV evaluator library runs the semantic interpretation on the abstract syntactic representation provided by the `Expression` objects, no parser is included as part of the library, nor as an external dependency, but there are many options to implement one.
 
-Once you have the input `InformationState` that serves as input to the interpretation process, and the `Expression` object that is to be interpreted, you may call the `Evaluator()` as you would do with any other visitor:
+Once you have the `InformationState` that serves as input to the interpretation process, and the `Expression` object that is to be interpreted, you may call the `Evaluator()` as you would do with any other visitor:
 
 ```c++
-GSV::InformationState output_state = std::visit(GSV::Evaluator(), expression, std::variant<InformationState>(state));
+GSV::InformationState output_state = std::visit(
+    GSV::Evaluator(),
+    expression,
+    std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(state, &model))
+);
+```
+
+`GSV::Evaluator()` takes an `InformationState` and an `const IModel*` as input parameters, and gives back an (updated) `InformationState` as output. Due to the way `std::visit` is implemented in C++, you need to pass both input parameters wrapped in a `std::variant`. If you want a simpler way of handling the visitor call, you can implement the following function:
+
+```c++
+GSV::InformationState evaluate(const Expression& e, InformationState s, const IModel& m)
+{
+    return std::visit(
+        GSV::Evaluator(),
+        e,
+        std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(s, &model))
+    );
+}
 ```
 
 ## Contributing
