@@ -72,7 +72,7 @@ InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::var
 		throw(std::invalid_argument("Invalid operator for unary formula"));
 	}
 
-	return input_state;
+	return std::move(input_state);
 }
 
 /**
@@ -138,7 +138,7 @@ InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::va
 		throw(std::invalid_argument("Invalid operator for binary formula"));
 	}
 
-	return input_state;
+	return std::move(input_state);
 }
 
 /**
@@ -203,7 +203,7 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 		throw(std::invalid_argument("Invalid quantifier"));
 	}
 
-	return input_state;
+	return std::move(input_state);
 }
 
 /**
@@ -224,17 +224,17 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool { 
-		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : termDenotation(expr->lhs, p.world, *model);
-		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : termDenotation(expr->rhs, p.world, *model);
+		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : termDenotation(expr->lhs, p.world, model);
+		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : termDenotation(expr->rhs, p.world, model);
 		return lhs_denotation == rhs_denotation;
 	};
 
 	filter(input_state, assigns_same_denotation);
 
-	return input_state;
+	return std::move(input_state);
 }
 
 /**
@@ -256,22 +256,22 @@ InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::
 InformationState Evaluator::operator()(std::shared_ptr<PredicationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
 		
 		for (const std::string& argument : expr->arguments) {
-			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : termDenotation(argument, p.world, *model);
+			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : termDenotation(argument, p.world, model);
 			tuple.push_back(denotation);
 		}
 
-		return predicateDenotation(expr->predicate, p.world, *model).contains(tuple);
+		return predicateDenotation(expr->predicate, p.world, model).contains(tuple);
 	};
 
 	filter(input_state, tuple_in_extension);
 
-	return input_state;
+	return std::move(input_state);
 }
 
 }
