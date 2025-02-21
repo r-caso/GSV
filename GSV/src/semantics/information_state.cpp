@@ -7,7 +7,7 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief Creates an information state based upon a model.
+ * @brief Creates an information state based on a model.
  * 
  * This function creates an InformationState object containing exactly one 
  * possibility for each possible world in the base model.

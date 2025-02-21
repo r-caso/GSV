@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['imodel_0',['IModel',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html',1,'iif_sadaf::talk::GSV']]],
-  ['informationstate_1',['InformationState',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html',1,'iif_sadaf::talk::GSV']]]
+  ['imodel_0',['IModel',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html',1,'iif_sadaf::talk::GSV']]]
 ];

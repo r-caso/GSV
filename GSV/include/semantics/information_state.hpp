@@ -10,9 +10,7 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief InformationState alias for `std::set<Possibility>`
- *
- * Represents an information state, defined as a set of possiblities.
+ * @brief An alias for `std::set<Possibility>`
  */
 using InformationState = std::set<Possibility>;
 

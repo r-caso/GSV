@@ -1,12 +1,8 @@
 var searchData=
 [
-  ['iif_5fsadaf_0',['iif_sadaf',['../namespaceiif__sadaf.html',1,'']]],
-  ['iif_5fsadaf_3a_3atalk_1',['talk',['../namespaceiif__sadaf_1_1talk.html',1,'iif_sadaf']]],
-  ['iif_5fsadaf_3a_3atalk_3a_3agsv_2',['GSV',['../namespaceiif__sadaf_1_1talk_1_1_g_s_v.html',1,'iif_sadaf::talk']]],
-  ['imodel_3',['IModel',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html',1,'iif_sadaf::talk::GSV']]],
-  ['imodel_2ehpp_4',['imodel.hpp',['../imodel_8hpp.html',1,'']]],
-  ['information_5fstate_2ecpp_5',['information_state.cpp',['../information__state_8cpp.html',1,'']]],
-  ['information_5fstate_2ehpp_6',['information_state.hpp',['../information__state_8hpp.html',1,'']]],
-  ['informationstate_7',['InformationState',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html',1,'iif_sadaf::talk::GSV::InformationState'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html#a1087623f6f83d3690e81ad216dcb278b',1,'iif_sadaf::talk::GSV::InformationState::InformationState()']]],
-  ['isdescendantof_8',['isDescendantOf',['../namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a32cba68144e98b8aee6197099f04a763',1,'iif_sadaf::talk::GSV']]]
+  ['pegs_0',['pegs',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html#ae2264daf4e0e322902f377aba98a017f',1,'iif_sadaf::talk::GSV::ReferentSystem']]],
+  ['possibility_1',['Possibility',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html',1,'iif_sadaf::talk::GSV::Possibility'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#ab21fb754ee6104a4f93ce06bd1880397',1,'iif_sadaf::talk::GSV::Possibility::Possibility(std::shared_ptr&lt; ReferentSystem &gt; r_system, int world)'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#a636c251374416909a596bb2431a0a809',1,'iif_sadaf::talk::GSV::Possibility::Possibility(const Possibility &amp;other)'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#a839692bcdc452d934c8c1754ed71e5b5',1,'iif_sadaf::talk::GSV::Possibility::Possibility(Possibility &amp;&amp;other) noexcept']]],
+  ['possibility_2ecpp_2',['possibility.cpp',['../possibility_8cpp.html',1,'']]],
+  ['possibility_2ehpp_3',['possibility.hpp',['../possibility_8hpp.html',1,'']]],
+  ['predicateinterpretation_4',['predicateInterpretation',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html#a7e8b0e4e618646581bff0bc57268f222',1,'iif_sadaf::talk::GSV::IModel']]]
 ];

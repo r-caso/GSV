@@ -6,16 +6,18 @@
 namespace iif_sadaf::talk::GSV {
 
 namespace {
-	std::set<std::string_view> domain(const ReferentSystem& r)
-	{
-		std::set<std::string_view> domain;
-		for (const auto& [variable, peg] : r.variablePegAssociation) {
-			domain.insert(variable);
-		}
 
-		return domain;
+std::set<std::string_view> domain(const ReferentSystem& r)
+{
+	std::set<std::string_view> domain;
+	for (const auto& [variable, peg] : r.variablePegAssociation) {
+		domain.insert(variable);
 	}
+
+	return domain;
 }
+
+} // ANONYMOUS NAMESPACE
 
 ReferentSystem::ReferentSystem(const ReferentSystem& other)
 	: pegs(other.pegs)

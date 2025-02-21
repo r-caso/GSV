@@ -22,37 +22,22 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
 	}
 }
 
-/*
- * Retrieves the denotation of a term in a given world within a model
- * 
- * throws std::out_of_range if the term does not exist
- */
 int termDenotation(std::string_view term, int w, const IModel& m)
 {
 	return m.termInterpretation(term, w);
 }
 
-/*
- * Retrieves the denotation of a predicate in a given world within a model
- *
- * throws std::out_of_range if the predicate does not exist
- */
 const std::set<std::vector<int>>& predicateDenotation(std::string_view predicate, int w, const IModel& m)
 {
 	return m.predicateInterpretation(predicate, w);
 }
 
-/*
- * Retrieves the denotation of a variable in a given possibility
- *
- * throws std::out_of_range if the variable has no associated peg
- */
 int variableDenotation(std::string_view variable, const Possibility& p)
 {
 	return p.assignment.at(p.referentSystem->value(variable));
 }
 
-}
+} // ANONYMOUS NAMESPACE
 
 /**
 * @brief Evaluates a unary logical expression on an InformationState.
@@ -61,7 +46,7 @@ int variableDenotation(std::string_view variable, const Possibility& p)
 * modify the given state accordingly.
 *
 * @param expr The unary expression to evaluate.
-* @param state The current information state.
+* @param params The input information state and IModel pointer
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
@@ -97,7 +82,7 @@ InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::var
 * implication, modifying the state accordingly.
 *
 * @param expr The binary expression to evaluate.
-* @param state The current information state.
+* @param params The input information state and IModel pointer
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
@@ -163,7 +148,7 @@ InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::va
 * individuals in the model and updating the state accordingly.
 *
 * @param expr The quantification expression to evaluate.
-* @param state The current information state.
+* @param params The input information state and IModel pointer
 * @return The modified InformationState after applying the quantification.
 * @throws std::invalid_argument if the quantifier is invalid.
 */
@@ -232,8 +217,9 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 * without a binding quantifier or a proper anaphoric antecedent.
 *
 * @param expr The identity expression to evaluate.
-* @param state The current information state.
+* @param params The input information state and IModel pointer
 * @return The filtered InformationState after applying identity conditions.
+* @throws std::invalid_argument if the quantifier is invalid.
 */
 InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
@@ -263,8 +249,9 @@ InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::
  * base model for the information state.
  *
  * @param expr The predicate expression to evaluate.
- * @param state The current information state.
+ * @param params The input information state and IModel pointer
  * @return The filtered InformationState after evaluating the predicate.
+ * @throws std::invalid_argument if the quantifier is invalid.
  */
 InformationState Evaluator::operator()(std::shared_ptr<PredicationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {

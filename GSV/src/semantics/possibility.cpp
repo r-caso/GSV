@@ -46,7 +46,7 @@ Possibility& Possibility::operator=(Possibility&& other) noexcept
 /**
 * @brief Updates the assignment of a variable to an individual.
 *
-* The variable is first updated in the associated referent system.
+* The variable is first added to or updated in the associated referent system.
 * Then, the assignment is modified to map the peg of the variable to the new individual.
 *
 * @param variable The variable to update.

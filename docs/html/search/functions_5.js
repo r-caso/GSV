@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['informationstate_0',['InformationState',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html#a1087623f6f83d3690e81ad216dcb278b',1,'iif_sadaf::talk::GSV::InformationState']]],
-  ['isdescendantof_1',['isDescendantOf',['../namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a32cba68144e98b8aee6197099f04a763',1,'iif_sadaf::talk::GSV']]]
+  ['possibility_0',['Possibility',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#ab21fb754ee6104a4f93ce06bd1880397',1,'iif_sadaf::talk::GSV::Possibility::Possibility(std::shared_ptr&lt; ReferentSystem &gt; r_system, int world)'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#a636c251374416909a596bb2431a0a809',1,'iif_sadaf::talk::GSV::Possibility::Possibility(const Possibility &amp;other)'],['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#a839692bcdc452d934c8c1754ed71e5b5',1,'iif_sadaf::talk::GSV::Possibility::Possibility(Possibility &amp;&amp;other) noexcept']]],
+  ['predicateinterpretation_1',['predicateInterpretation',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html#a7e8b0e4e618646581bff0bc57268f222',1,'iif_sadaf::talk::GSV::IModel']]]
 ];

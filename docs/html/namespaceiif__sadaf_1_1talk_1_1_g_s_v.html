@@ -105,6 +105,7 @@ $(function(){initNavTree('namespaceiif__sadaf_1_1talk_1_1_g_s_v.html',''); initR
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">iif_sadaf::talk::GSV Namespace Reference</div></div>
 </div><!--header-->
@@ -118,9 +119,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for class representing a model for QML without accessiblity.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an information state based on a given model.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a possibility as understood in the underlying semantics.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,25 +126,34 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a referent system for variable assignments.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a38faa488c96113dce7387bd59f670e19" id="r_a38faa488c96113dce7387bd59f670e19"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> = std::set&lt;<a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a>&gt;</td></tr>
+<tr class="memdesc:a38faa488c96113dce7387bd59f670e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::set&lt;<a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a>&gt;</code>  <br /></td></tr>
+<tr class="separator:a38faa488c96113dce7387bd59f670e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af569722674322c63c215e23fa6524b4a" id="r_af569722674322c63c215e23fa6524b4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af569722674322c63c215e23fa6524b4a">update</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;input_state, std::string_view variable, int individual)</td></tr>
+<tr class="memitem:a9ffea3d6fa74cca2af15db26bf94ab1f" id="r_a9ffea3d6fa74cca2af15db26bf94ab1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ffea3d6fa74cca2af15db26bf94ab1f">create</a> (const Model &amp;model)</td></tr>
+<tr class="memdesc:a9ffea3d6fa74cca2af15db26bf94ab1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an information state based on a model.  <br /></td></tr>
+<tr class="separator:a9ffea3d6fa74cca2af15db26bf94ab1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af569722674322c63c215e23fa6524b4a" id="r_af569722674322c63c215e23fa6524b4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af569722674322c63c215e23fa6524b4a">update</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;input_state, std::string_view variable, int individual)</td></tr>
 <tr class="memdesc:af569722674322c63c215e23fa6524b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the information state with a new variable-individual assignment.  <br /></td></tr>
 <tr class="separator:af569722674322c63c215e23fa6524b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd729e10847b4eca7a3c7ae6969369a3" id="r_acd729e10847b4eca7a3c7ae6969369a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd729e10847b4eca7a3c7ae6969369a3">extends</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s1)</td></tr>
+<tr class="memitem:acd729e10847b4eca7a3c7ae6969369a3" id="r_acd729e10847b4eca7a3c7ae6969369a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd729e10847b4eca7a3c7ae6969369a3">extends</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s2, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s1)</td></tr>
 <tr class="memdesc:acd729e10847b4eca7a3c7ae6969369a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if one information state extends another.  <br /></td></tr>
 <tr class="separator:acd729e10847b4eca7a3c7ae6969369a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab155b1f6d95b9cb341340bf40d141adc" id="r_ab155b1f6d95b9cb341340bf40d141adc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab155b1f6d95b9cb341340bf40d141adc">str</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;state)</td></tr>
-<tr class="separator:ab155b1f6d95b9cb341340bf40d141adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32cba68144e98b8aee6197099f04a763" id="r_a32cba68144e98b8aee6197099f04a763"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32cba68144e98b8aee6197099f04a763">isDescendantOf</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p1, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s)</td></tr>
+<tr class="memitem:a32cba68144e98b8aee6197099f04a763" id="r_a32cba68144e98b8aee6197099f04a763"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32cba68144e98b8aee6197099f04a763">isDescendantOf</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p1, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s)</td></tr>
 <tr class="memdesc:a32cba68144e98b8aee6197099f04a763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if one possibility is a descendant of another within an information state.  <br /></td></tr>
 <tr class="separator:a32cba68144e98b8aee6197099f04a763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adaea67e3522379e16b44bda0e2644d9c" id="r_adaea67e3522379e16b44bda0e2644d9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adaea67e3522379e16b44bda0e2644d9c">subsistsIn</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s)</td></tr>
+<tr class="memitem:adaea67e3522379e16b44bda0e2644d9c" id="r_adaea67e3522379e16b44bda0e2644d9c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adaea67e3522379e16b44bda0e2644d9c">subsistsIn</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s)</td></tr>
 <tr class="memdesc:adaea67e3522379e16b44bda0e2644d9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a possibility subsists in an information state.  <br /></td></tr>
 <tr class="separator:adaea67e3522379e16b44bda0e2644d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ee14f197a20b03ff31e354fbedc42b6" id="r_a3ee14f197a20b03ff31e354fbedc42b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ee14f197a20b03ff31e354fbedc42b6">subsistsIn</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s1, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;s2)</td></tr>
+<tr class="memitem:a3ee14f197a20b03ff31e354fbedc42b6" id="r_a3ee14f197a20b03ff31e354fbedc42b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ee14f197a20b03ff31e354fbedc42b6">subsistsIn</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s1, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;s2)</td></tr>
 <tr class="memdesc:a3ee14f197a20b03ff31e354fbedc42b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an information state subsists within another.  <br /></td></tr>
 <tr class="separator:a3ee14f197a20b03ff31e354fbedc42b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab155b1f6d95b9cb341340bf40d141adc" id="r_ab155b1f6d95b9cb341340bf40d141adc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab155b1f6d95b9cb341340bf40d141adc">str</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state)</td></tr>
+<tr class="separator:ab155b1f6d95b9cb341340bf40d141adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24826fb290283ac7aed48b3c22d88af6" id="r_a24826fb290283ac7aed48b3c22d88af6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24826fb290283ac7aed48b3c22d88af6">extends</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p1)</td></tr>
 <tr class="memdesc:a24826fb290283ac7aed48b3c22d88af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether one <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a> extends another.  <br /></td></tr>
 <tr class="separator:a24826fb290283ac7aed48b3c22d88af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,19 +165,57 @@ Functions</h2></td></tr>
 <tr class="memdesc:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether one <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> extends another.  <br /></td></tr>
 <tr class="separator:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13ef67c10d5515b1778ec55e11952d60" id="r_a13ef67c10d5515b1778ec55e11952d60"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13ef67c10d5515b1778ec55e11952d60">str</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
-<tr class="memdesc:a13ef67c10d5515b1778ec55e11952d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a referent system for variable assignments.  <br /></td></tr>
 <tr class="separator:a13ef67c10d5515b1778ec55e11952d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff073b49d917c9e34bd2935988887394" id="r_aff073b49d917c9e34bd2935988887394"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff073b49d917c9e34bd2935988887394">termDenotation</a> (std::string_view term, int w, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;m)</td></tr>
-<tr class="memdesc:aff073b49d917c9e34bd2935988887394"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the denotation of a term in a given world within a model.  <br /></td></tr>
-<tr class="separator:aff073b49d917c9e34bd2935988887394"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83cfb5658e035d7684e59183babecd48" id="r_a83cfb5658e035d7684e59183babecd48"><td class="memItemLeft" align="right" valign="top">const std::set&lt; std::vector&lt; int &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83cfb5658e035d7684e59183babecd48">predicateDenotation</a> (std::string_view predicate, int w, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;m)</td></tr>
-<tr class="memdesc:a83cfb5658e035d7684e59183babecd48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the denotation of a predicate in a given world within a model.  <br /></td></tr>
-<tr class="separator:a83cfb5658e035d7684e59183babecd48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30c2b2cebd0412dfe07215df3163eda2" id="r_a30c2b2cebd0412dfe07215df3163eda2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30c2b2cebd0412dfe07215df3163eda2">variableDenotation</a> (std::string_view variable, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p)</td></tr>
-<tr class="memdesc:a30c2b2cebd0412dfe07215df3163eda2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the denotation of a variable in a given possibility.  <br /></td></tr>
-<tr class="separator:a30c2b2cebd0412dfe07215df3163eda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a38faa488c96113dce7387bd59f670e19" name="a38faa488c96113dce7387bd59f670e19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38faa488c96113dce7387bd59f670e19">&#9670;&#160;</a></span>InformationState</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a38faa488c96113dce7387bd59f670e19">iif_sadaf::talk::GSV::InformationState</a> = std::set&lt;<a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An alias for <code>std::set&lt;<a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a>&gt;</code> </p>
+
+<p class="definition">Definition at line <a class="el" href="information__state_8hpp_source.html#l00015">15</a> of file <a class="el" href="information__state_8hpp_source.html">information_state.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9ffea3d6fa74cca2af15db26bf94ab1f" name="a9ffea3d6fa74cca2af15db26bf94ab1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ffea3d6fa74cca2af15db26bf94ab1f">&#9670;&#160;</a></span>create()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> iif_sadaf::talk::GSV::create </td>
+          <td>(</td>
+          <td class="paramtype">const Model &amp;</td>          <td class="paramname"><span class="paramname"><em>model</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an information state based on a model. </p>
+<p>This function creates an <a class="el" href="#a38faa488c96113dce7387bd59f670e19" title="An alias for std::set&lt;Possibility&gt;">InformationState</a> object containing exactly one possibility for each possible world in the base model.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model</td><td>The model upon which the information state is based </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new information state </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00018">18</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+
+</div>
+</div>
 <a id="acd729e10847b4eca7a3c7ae6969369a3" name="acd729e10847b4eca7a3c7ae6969369a3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd729e10847b4eca7a3c7ae6969369a3">&#9670;&#160;</a></span>extends() <span class="overload">[1/3]</span></h2>
 
@@ -180,12 +225,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool iif_sadaf::talk::GSV::extends </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s2</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s1</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s1</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -201,7 +246,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if s2 extends s1, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00142">142</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00076">76</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
@@ -238,7 +283,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if <code>p2</code> extends <code>p1</code>, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00064">64</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00076">76</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
 
 </div>
 </div>
@@ -277,7 +322,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if <code>r2</code> extends <code>r1</code>, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00096">96</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00100">100</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +345,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -317,7 +362,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if p2 is a descendant of p1 in s, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00183">183</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00098">98</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
@@ -340,52 +385,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00076">76</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a83cfb5658e035d7684e59183babecd48" name="a83cfb5658e035d7684e59183babecd48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83cfb5658e035d7684e59183babecd48">&#9670;&#160;</a></span>predicateDenotation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::set&lt; std::vector&lt; int &gt; &gt; &amp; iif_sadaf::talk::GSV::predicateDenotation </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>predicate</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the denotation of a predicate in a given world within a model. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">predicate</td><td>The predicate to be interpreted. </td></tr>
-    <tr><td class="paramname">w</td><td>The world in which the predicate is interpreted. </td></tr>
-    <tr><td class="paramname">m</td><td>The model containing the interpretation. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The set of tuples representing the predicate's interpretation. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::out_of_range</td><td>if the predicate does not exist. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00028">28</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00088">88</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
 
 </div>
 </div>
@@ -398,13 +398,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">std::string iif_sadaf::talk::GSV::str </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00158">158</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00133">133</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
@@ -423,7 +423,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00081">81</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00093">93</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
 
 </div>
 </div>
@@ -442,10 +442,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Represents a referent system for variable assignments. </p>
-<p>The <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> class maintains associations between variables and integer pegs. </p>
-
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00065">65</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00069">69</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -458,12 +455,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool iif_sadaf::talk::GSV::subsistsIn </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s1</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s2</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s2</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -479,7 +476,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if s1 subsists in s2, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00213">213</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00127">127</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
@@ -497,7 +494,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>s</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -513,52 +510,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if p subsists in s, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00197">197</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
-
-</div>
-</div>
-<a id="aff073b49d917c9e34bd2935988887394" name="aff073b49d917c9e34bd2935988887394"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff073b49d917c9e34bd2935988887394">&#9670;&#160;</a></span>termDenotation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int iif_sadaf::talk::GSV::termDenotation </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>term</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the denotation of a term in a given world within a model. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">term</td><td>The term to be interpreted. </td></tr>
-    <tr><td class="paramname">w</td><td>The world in which the term is interpreted. </td></tr>
-    <tr><td class="paramname">m</td><td>The model containing the interpretation. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The assigned individual for the term in the given world. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::out_of_range</td><td>if the term does not exist. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00014">14</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00112">112</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
@@ -569,9 +521,9 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> iif_sadaf::talk::GSV::update </td>
+          <td class="memname"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> iif_sadaf::talk::GSV::update </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_information_state.html">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>input_state</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>input_state</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -598,46 +550,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new updated information state. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00109">109</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a30c2b2cebd0412dfe07215df3163eda2" name="a30c2b2cebd0412dfe07215df3163eda2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30c2b2cebd0412dfe07215df3163eda2">&#9670;&#160;</a></span>variableDenotation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int iif_sadaf::talk::GSV::variableDenotation </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>variable</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the denotation of a variable in a given possibility. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">variable</td><td>The variable to be interpreted. </td></tr>
-    <tr><td class="paramname">p</td><td>The possibility containing the variable's assignment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The assigned individual for the variable. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::out_of_range</td><td>if the variable has no associated peg. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00041">41</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00043">43</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
 
 </div>
 </div>
