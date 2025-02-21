@@ -10,38 +10,19 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief Represents an information state based on a given model.
+ * @brief InformationState alias for `std::set<Possibility>`
  *
- * The InformationState class maintains a set of possibilities
- * and provides operations to manage them.
+ * Represents an information state, defined as a set of possiblities.
  */
-struct InformationState {
-public:
-	InformationState(const IModel& model, bool create_possibilities = true);
-	InformationState(const InformationState& other);
-	InformationState(InformationState&& other) noexcept;
-	InformationState& operator=(const InformationState&) = delete;
-	InformationState& operator=(InformationState&&) = delete;
+using InformationState = std::set<Possibility>;
 
-	bool empty() const;
-	void clear();
-
-	std::set<Possibility>::iterator begin();
-	std::set<Possibility>::iterator end();
-	std::set<Possibility>::iterator erase(std::set<Possibility>::iterator it);
-	bool contains(const Possibility& p) const;
-
-	std::set<Possibility> possibilities = {};
-	const IModel& model;
-};
-
+InformationState create(const Model& model);
 InformationState update(const InformationState& input_state, std::string_view variable, int individual);
 bool extends(const InformationState& s2, const InformationState& s1);
-
-std::string str(const InformationState& state);
 
 bool isDescendantOf(const Possibility& p2, const Possibility& p1, const InformationState& s);
 bool subsistsIn(const Possibility& p, const InformationState& s);
 bool subsistsIn(const InformationState& s1, const InformationState& s2);
 
+std::string str(const InformationState& state);
 }

@@ -65,29 +65,29 @@ int variableDenotation(std::string_view variable, const Possibility& p)
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::variant<InformationState> state) const
+InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState hypothetical = std::visit(Evaluator(), expr->scope, state);
-	InformationState& s = std::get<InformationState>(state);
+	InformationState hypothetical_update = std::visit(Evaluator(), expr->scope, params);
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 
 	if (expr->op == Operator::E_POS) {
-		if (hypothetical.empty()) {
-			s.clear();
+		if (hypothetical_update.empty()) {
+			input_state.clear();
 		}
 	}
 	else if (expr->op == Operator::E_NEC) {
-		if (!subsistsIn(s, hypothetical)) {
-			s.clear();
+		if (!subsistsIn(input_state, hypothetical_update)) {
+			input_state.clear();
 		}
 	}
 	else if (expr->op == Operator::NEG) {
-		filter(s, [&](const Possibility& p) -> bool { return !subsistsIn(p, hypothetical); });
+		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, hypothetical_update); });
 	}
 	else {
 		throw(std::invalid_argument("Invalid operator for unary formula"));
 	}
 
-	return s;
+	return input_state;
 }
 
 /**
@@ -101,45 +101,59 @@ InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::var
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::variant<InformationState> state) const
+InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+
 	if (expr->op == Operator::CON) {
-		return std::visit(Evaluator(), expr->rhs, std::variant<InformationState>(std::visit(Evaluator(), expr->lhs, state)));
+		return std::visit(
+			Evaluator(),
+			expr->rhs, 
+			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), expr->lhs, params), model))
+		);
 	}
 
-	InformationState& s = std::get<InformationState>(state);
-	InformationState hypothetical_lhs = std::visit(Evaluator(), expr->lhs, state);
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+	InformationState hypothetical_update_lhs = std::visit(Evaluator(), expr->lhs, params);
 
 	if (expr->op == Operator::DIS) {
-		InformationState hypothetical_rhs = std::visit(Evaluator(), expr->rhs, std::variant<InformationState>(std::visit(Evaluator(), negate(expr->lhs), state)));
+		InformationState hypothetical_update_rhs = std::visit(
+			Evaluator(),
+			expr->rhs,
+			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), negate(expr->lhs), params), model))
+		);
 
 		const auto in_lhs_or_in_rhs = [&](const Possibility& p) -> bool {
-			return hypothetical_lhs.contains(p) || hypothetical_rhs.contains(p);
+			return hypothetical_update_lhs.contains(p) || hypothetical_update_rhs.contains(p);
 		};
 
-		filter(s, in_lhs_or_in_rhs);
+		filter(input_state, in_lhs_or_in_rhs);
 	}
 	else if (expr->op == Operator::IMP) {
-		InformationState hypothetical_consequent = std::visit(Evaluator(), expr->rhs, std::variant<InformationState>(hypothetical_lhs));
+		InformationState hypothetical_update_consequent = std::visit(
+			Evaluator(),
+			expr->rhs,
+			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(hypothetical_update_lhs, model))
+		);
 
 		auto all_descendants_subsist = [&](const Possibility& p) -> bool {
 			auto not_descendant_or_subsists = [&](const Possibility& p_star) -> bool {
-				return !isDescendantOf(p_star, p, hypothetical_lhs) || subsistsIn(p_star, hypothetical_consequent);
+				return !isDescendantOf(p_star, p, hypothetical_update_lhs) || subsistsIn(p_star, hypothetical_update_consequent);
 			};
-			return std::ranges::all_of(hypothetical_lhs.possibilities, not_descendant_or_subsists);
+			return std::ranges::all_of(hypothetical_update_lhs, not_descendant_or_subsists);
 		};
 
 		const auto if_subsists_all_descendants_do = [&](const Possibility& p) -> bool {
-			return !subsistsIn(p, hypothetical_lhs) || all_descendants_subsist(p);
+			return !subsistsIn(p, hypothetical_update_lhs) || all_descendants_subsist(p);
 		};
 
-		filter(s, if_subsists_all_descendants_do);
+		filter(input_state, if_subsists_all_descendants_do);
 	}
 	else {
 		throw(std::invalid_argument("Invalid operator for binary formula"));
 	}
 
-	return s;
+	return input_state;
 }
 
 /**
@@ -153,22 +167,27 @@ InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::va
 * @return The modified InformationState after applying the quantification.
 * @throws std::invalid_argument if the quantifier is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr, std::variant<InformationState> state) const
+InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& s = std::get<InformationState>(state);
-	
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+
 	if (expr->quantifier == Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
-		for (int i : std::views::iota(0, s.model.domain_cardinality())) {
-			InformationState s_variant = update(s, expr->variable, i);
-			all_state_variants.push_back(std::visit(Evaluator(), expr->scope, std::variant<InformationState>(s_variant)));
+		for (int i : std::views::iota(0, model->domain_cardinality())) {
+			InformationState s_variant = update(input_state, expr->variable, i);
+			all_state_variants.push_back(std::visit(
+				Evaluator(),
+				expr->scope,
+				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(s_variant, model)))
+			);
 		}
 
-		InformationState output(s.model, false);
+		InformationState output;
 		for (const auto& state_variant : all_state_variants) {
-			for (const auto& p : state_variant.possibilities) {
-				output.possibilities.insert(p);
+			for (const auto& p : state_variant) {
+				output.insert(p);
 			}
 		}
 
@@ -177,24 +196,29 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 	else if (expr->quantifier == Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
-		for (int d : std::views::iota(0, s.model.domain_cardinality())) {
-			InformationState hypothetical = std::visit(Evaluator(), expr->scope, std::variant<InformationState>(update(s, expr->variable, d)));
-			all_hypothetical_updates.push_back(hypothetical);
+		for (int d : std::views::iota(0, model->domain_cardinality())) {
+			InformationState hypothetical_update = std::visit(
+				Evaluator(),
+				expr->scope,
+				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(update(input_state, expr->variable, d), model))
+			);
+			all_hypothetical_updates.push_back(hypothetical_update);
 		}
 
 		const auto subsists_in_all_hyp_updates = [&](const Possibility& p) -> bool {
-			const auto p_subsists_in_hyp_update = [&](const InformationState& hypothetical) -> bool {
-				return subsistsIn(p, hypothetical); 
+			const auto p_subsists_in_hyp_update = [&](const InformationState& hypothetical_update) -> bool {
+				return subsistsIn(p, hypothetical_update);
 			};
 			return std::ranges::all_of(all_hypothetical_updates, p_subsists_in_hyp_update);
 		};
 
-		filter(s, subsists_in_all_hyp_updates);
+		filter(input_state, subsists_in_all_hyp_updates);
 	}
 	else {
 		throw(std::invalid_argument("Invalid quantifier"));
 	}
-	return s;
+
+	return input_state;
 }
 
 /**
@@ -211,19 +235,20 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 * @param state The current information state.
 * @return The filtered InformationState after applying identity conditions.
 */
-InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::variant<InformationState> state) const
+InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& s = std::get<InformationState>(state);
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool { 
-		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : termDenotation(expr->lhs, p.world, s.model);
-		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : termDenotation(expr->rhs, p.world, s.model);
+		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : termDenotation(expr->lhs, p.world, *model);
+		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : termDenotation(expr->rhs, p.world, *model);
 		return lhs_denotation == rhs_denotation;
 	};
 
-	filter(s, assigns_same_denotation);
+	filter(input_state, assigns_same_denotation);
 
-	return s;
+	return input_state;
 }
 
 /**
@@ -241,24 +266,25 @@ InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::
  * @param state The current information state.
  * @return The filtered InformationState after evaluating the predicate.
  */
-InformationState Evaluator::operator()(std::shared_ptr<PredicationNode> expr, std::variant<InformationState> state) const
+InformationState Evaluator::operator()(std::shared_ptr<PredicationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& s = std::get<InformationState>(state);
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
 		
 		for (const std::string& argument : expr->arguments) {
-			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : termDenotation(argument, p.world, s.model);
+			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : termDenotation(argument, p.world, *model);
 			tuple.push_back(denotation);
 		}
 
-		return predicateDenotation(expr->predicate, p.world, s.model).contains(tuple);
+		return predicateDenotation(expr->predicate, p.world, *model).contains(tuple);
 	};
 
-	filter(s, tuple_in_extension);
+	filter(input_state, tuple_in_extension);
 
-	return s;
+	return input_state;
 }
 
 }

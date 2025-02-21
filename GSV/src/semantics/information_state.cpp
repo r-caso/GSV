@@ -6,97 +6,28 @@
 
 namespace iif_sadaf::talk::GSV {
 
-InformationState::InformationState(const IModel& model, bool create_possibilities)
-	: possibilities()
-	, model(model)
+/**
+ * @brief Creates an information state based upon a model.
+ * 
+ * This function creates an InformationState object containing exactly one 
+ * possibility for each possible world in the base model.
+ * 
+ * @param model The model upon which the information state is based
+ * @returns A new information state
+ */
+InformationState create(const Model& model)
 {
-	auto r_system = std::make_shared<ReferentSystem>();
+	std::set<Possibility> possibilities;
 
-	if (!create_possibilities) {
-		return;
-	}
+	auto r_system = std::make_shared<ReferentSystem>();
 
 	const int number_of_worlds = model.world_cardinality();
 	for (int i = 0; i < number_of_worlds; ++i) {
 		possibilities.emplace(r_system, i);
 	}
+
+	return possibilities;
 }
-
-InformationState::InformationState(const InformationState& other)
-	: possibilities(other.possibilities),
-	model(other.model)
-{ }
-
-InformationState::InformationState(InformationState&& other) noexcept
-	: possibilities(std::move(other.possibilities))
-	, model(other.model)
-{ }
-
-/**
- * @brief Checks if the information state is empty.
- *
- * @return True if there are no possibilities, false otherwise.
- */
-bool InformationState::empty() const
-{
-	return possibilities.empty();
-}
-
-/**
- * @brief Clears all possibilities from the information state.
- */
-void InformationState::clear()
-{
-	possibilities.clear();
-}
-
-/**
- * @brief Returns an iterator to the beginning of the possibilities set.
- *
- * @return Iterator to the beginning of the possibilities.
- */
-std::set<Possibility>::iterator InformationState::begin() 
-{
-	return possibilities.begin();
-}
-
-/**
- * @brief Returns an iterator to the end of the possibilities set.
- *
- * @return Iterator to the end of the possibilities.
- */
-std::set<Possibility>::iterator InformationState::end() 
-{
-	return possibilities.end();
-}
-
-/**
- * @brief Removes a possibility from the set.
- *
- * @param it Iterator pointing to the possibility to erase.
- * @return Iterator following the last removed element.
- */
-std::set<Possibility>::iterator InformationState::erase(std::set<Possibility>::iterator it)
-{
-	return possibilities.erase(it);
-}
-
-
-/**
- * @brief Checks if a given possibility is present in the information state.
- *
- * @param p The possibility to check.
- * @return True if the possibility is present, false otherwise.
- */
-bool InformationState::contains(const Possibility& p) const
-{
-	return possibilities.contains(p);
-}
-
-/*
-* NON-MEMBER INTERFACE FUNCTIONS
-*/
-
 
 /**
  * @brief Updates the information state with a new variable-individual assignment.
@@ -111,11 +42,11 @@ bool InformationState::contains(const Possibility& p) const
  */
 InformationState update(const InformationState& input_state, std::string_view variable, int individual)
 {
-	InformationState output_state(input_state.model, false);
+	InformationState output_state;
 
 	auto r_star = std::make_shared<ReferentSystem>();
 
-	for (const auto& p : input_state.possibilities) {
+	for (const auto& p : input_state) {
 		Possibility p_star(r_star, p.world);
 		p_star.assignment = p.assignment;
 		r_star->pegs = p.referentSystem->pegs;
@@ -127,7 +58,7 @@ InformationState update(const InformationState& input_state, std::string_view va
 
 		p_star.update(variable, individual);
 
-		output_state.possibilities.insert(p_star);
+		output_state.insert(p_star);
 	}
 
 	return output_state;
@@ -148,29 +79,10 @@ bool extends(const InformationState& s2, const InformationState& s1)
 		const auto is_extended_by_p2 = [&](const Possibility& p1) -> bool {
 			return extends(p2, p1); 
 		};
-		return std::ranges::any_of(s1.possibilities, is_extended_by_p2);
+		return std::ranges::any_of(s1, is_extended_by_p2);
 	};
 
-	return std::ranges::all_of(s2.possibilities, extends_possibility_in_s1);
-}
-
-/*
-* NON-INTERFACE FUNCTIONS
-*/
-
-std::string str(const InformationState& state)
-{
-	std::string desc;
-
-	desc += "--------------------\n";
-	for (const Possibility& p : state.possibilities) {
-		desc += str(p);
-		desc += "--------------------\n";
-	}
-
-	desc.pop_back();
-
-	return desc;
+	return std::ranges::all_of(s2, extends_possibility_in_s1);
 }
 
 /**
@@ -185,7 +97,7 @@ std::string str(const InformationState& state)
  */
 bool isDescendantOf(const Possibility& p2, const Possibility& p1, const InformationState& s)
 {
-	return s.possibilities.contains(p2) && (extends(p2, p1));
+	return s.contains(p2) && (extends(p2, p1));
 }
 
 /**
@@ -200,7 +112,7 @@ bool isDescendantOf(const Possibility& p2, const Possibility& p1, const Informat
 bool subsistsIn(const Possibility& p, const InformationState& s)
 {
 	const auto is_descendant_of_p_in_s = [&](const Possibility& p1) -> bool { return isDescendantOf(p1, p, s); };
-	return std::ranges::any_of(s.possibilities, is_descendant_of_p_in_s);
+	return std::ranges::any_of(s, is_descendant_of_p_in_s);
 }
 
 /**
@@ -215,7 +127,22 @@ bool subsistsIn(const Possibility& p, const InformationState& s)
 bool subsistsIn(const InformationState& s1, const InformationState& s2)
 {
 	const auto subsists_in_s2 = [&](const Possibility& p) -> bool { return subsistsIn(p, s2); };
-	return std::ranges::all_of(s1.possibilities, subsists_in_s2);
+	return std::ranges::all_of(s1, subsists_in_s2);
+}
+
+std::string str(const InformationState& state)
+{
+	std::string desc;
+
+	desc += "--------------------\n";
+	for (const Possibility& p : state) {
+		desc += str(p);
+		desc += "--------------------\n";
+	}
+
+	desc.pop_back();
+
+	return desc;
 }
 
 }
