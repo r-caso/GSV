@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <functional>
-#include <stdexcept>
 #include <ranges>
+#include <stdexcept>
 
 #include "variable.hpp"
 
