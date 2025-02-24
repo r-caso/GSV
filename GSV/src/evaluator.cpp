@@ -50,7 +50,7 @@ int variableDenotation(std::string_view variable, const Possibility& p)
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+InformationState Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState hypothetical_update = std::visit(Evaluator(), expr->scope, params);
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
@@ -86,7 +86,7 @@ InformationState Evaluator::operator()(std::shared_ptr<UnaryNode> expr, std::var
 * @return The modified InformationState after applying the operation.
 * @throws std::invalid_argument if the operator is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
@@ -152,7 +152,7 @@ InformationState Evaluator::operator()(std::shared_ptr<BinaryNode> expr, std::va
 * @return The modified InformationState after applying the quantification.
 * @throws std::invalid_argument if the quantifier is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
@@ -221,7 +221,7 @@ InformationState Evaluator::operator()(std::shared_ptr<QuantificationNode> expr,
 * @return The filtered InformationState after applying identity conditions.
 * @throws std::invalid_argument if the quantifier is invalid.
 */
-InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
@@ -253,7 +253,7 @@ InformationState Evaluator::operator()(std::shared_ptr<IdentityNode> expr, std::
  * @return The filtered InformationState after evaluating the predicate.
  * @throws std::invalid_argument if the quantifier is invalid.
  */
-InformationState Evaluator::operator()(std::shared_ptr<PredicationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;

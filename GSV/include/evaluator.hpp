@@ -21,11 +21,11 @@ namespace iif_sadaf::talk::GSV {
  * various circumstances (see the member functions' documentation for details).
  */
 struct Evaluator {
-    InformationState operator()(std::shared_ptr<UnaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(std::shared_ptr<BinaryNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(std::shared_ptr<QuantificationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(std::shared_ptr<IdentityNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(std::shared_ptr<PredicationNode> expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    InformationState operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    InformationState operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    InformationState operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    InformationState operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    InformationState operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
 };
 
 }
