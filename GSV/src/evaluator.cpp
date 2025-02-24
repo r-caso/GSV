@@ -160,8 +160,8 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 	if (expr->quantifier == Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
-		for (int i : std::views::iota(0, model->domain_cardinality())) {
-			InformationState s_variant = update(input_state, expr->variable, i);
+        for (const int i : std::views::iota(0, model->domain_cardinality())) {
+            const InformationState s_variant = update(input_state, expr->variable, i);
 			all_state_variants.push_back(std::visit(
 				Evaluator(),
 				expr->scope,
@@ -178,11 +178,12 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 
 		return output;
 	}
-	else if (expr->quantifier == Quantifier::UNIVERSAL) {
+
+    if (expr->quantifier == Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
-		for (int d : std::views::iota(0, model->domain_cardinality())) {
-			InformationState hypothetical_update = std::visit(
+        for (const int d : std::views::iota(0, model->domain_cardinality())) {
+            const InformationState hypothetical_update = std::visit(
 				Evaluator(),
 				expr->scope,
 				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(update(input_state, expr->variable, d), model))

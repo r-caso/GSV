@@ -60,8 +60,7 @@ void Possibility::update(std::string_view variable, int individual)
 bool extends(const Possibility& p2, const Possibility& p1)
 {
 	const auto peg_is_new_or_maintains_assignment = [&](const std::pair<int, int>& map) -> bool {
-		int peg = map.first;
-		int individual = map.second;
+        const int peg = map.first;
 
 		return !p1.assignment.contains(peg) || (p1.assignment.at(peg) == p2.assignment.at(peg));
 	};

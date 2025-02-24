@@ -51,8 +51,8 @@ InformationState update(const InformationState& input_state, std::string_view va
 		p_star.assignment = p.assignment;
 		r_star->pegs = p.referentSystem->pegs;
 		for (const auto& map : p.referentSystem->variablePegAssociation) {
-			auto var = map.first;
-			int peg = map.second;
+            const std::string_view var = map.first;
+            const int peg = map.second;
 			r_star->variablePegAssociation[var] = peg;
 		}
 
