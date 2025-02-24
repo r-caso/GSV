@@ -15,10 +15,10 @@ namespace iif_sadaf::talk::GSV {
 struct ReferentSystem {
 public:
 	ReferentSystem() = default;
-	ReferentSystem(const ReferentSystem& other);
-	ReferentSystem& operator=(const ReferentSystem& other);
-	ReferentSystem(ReferentSystem&& other) noexcept;
-	ReferentSystem& operator=(ReferentSystem&& other) noexcept;
+    ReferentSystem(const ReferentSystem& other) = default;
+    ReferentSystem& operator=(const ReferentSystem& other) = default;
+    ReferentSystem(ReferentSystem&& other) noexcept;
+    ReferentSystem& operator=(ReferentSystem&& other) noexcept;
 
 	int value(std::string_view variable) const;
 

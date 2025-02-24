@@ -18,8 +18,8 @@ namespace iif_sadaf::talk::GSV {
 struct Possibility {
 public:
 	Possibility(std::shared_ptr<ReferentSystem> r_system, int world);
-	Possibility(const Possibility& other);
-	Possibility& operator=(const Possibility& other);
+    Possibility(const Possibility& other) = default;
+    Possibility& operator=(const Possibility& other) = default;
 	Possibility(Possibility&& other) noexcept;
 	Possibility& operator=(Possibility&& other) noexcept;
 

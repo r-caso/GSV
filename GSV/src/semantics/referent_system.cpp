@@ -19,34 +19,19 @@ std::set<std::string_view> domain(const ReferentSystem& r)
 
 } // ANONYMOUS NAMESPACE
 
-ReferentSystem::ReferentSystem(const ReferentSystem& other)
-	: pegs(other.pegs)
-	, variablePegAssociation(other.variablePegAssociation)
-{ }
-
-ReferentSystem& ReferentSystem::operator=(const ReferentSystem& other)
-{
-	if (this != &other) {
-		this->pegs = other.pegs;
-		this->variablePegAssociation = other.variablePegAssociation;
-	}
-
-	return *this;
-}
-
 ReferentSystem::ReferentSystem(ReferentSystem&& other) noexcept
-	: pegs(other.pegs)
-	, variablePegAssociation(std::move(other.variablePegAssociation))
+    : pegs(other.pegs)
+    , variablePegAssociation(std::move(other.variablePegAssociation))
 { }
 
 ReferentSystem& ReferentSystem::operator=(ReferentSystem&& other) noexcept
 {
-	if (this != &other) {
-		this->pegs = other.pegs;
-		this->variablePegAssociation = std::move(other.variablePegAssociation);
-		other.pegs = 0;
-	}
-	return *this;
+    if (this != &other) {
+        this->pegs = other.pegs;
+        this->variablePegAssociation = std::move(other.variablePegAssociation);
+        other.pegs = 0;
+    }
+    return *this;
 }
 
 /**
