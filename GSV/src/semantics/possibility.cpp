@@ -5,7 +5,7 @@
 namespace iif_sadaf::talk::GSV {
 
 Possibility::Possibility(std::shared_ptr<ReferentSystem> r_system, int world)
-    : referentSystem(std::move(r_system))
+    : referentSystem(r_system)
 	, assignment({})
 	, world(world)
 { }
