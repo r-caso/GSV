@@ -14,7 +14,7 @@ namespace iif_sadaf::talk::GSV {
  */
 using InformationState = std::set<Possibility>;
 
-InformationState create(const Model& model);
+InformationState create(const IModel& model);
 InformationState update(const InformationState& input_state, std::string_view variable, int individual);
 bool extends(const InformationState& s2, const InformationState& s1);
 

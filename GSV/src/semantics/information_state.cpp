@@ -15,7 +15,7 @@ namespace iif_sadaf::talk::GSV {
  * @param model The model upon which the information state is based
  * @returns A new information state
  */
-InformationState create(const Model& model)
+InformationState create(const IModel& model)
 {
 	std::set<Possibility> possibilities;
 
