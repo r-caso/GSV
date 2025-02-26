@@ -26,6 +26,7 @@ public:
 	std::unordered_map<std::string_view, int> variablePegAssociation = {};
 };
 
+std::set<std::string_view> domain(const ReferentSystem& r);
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1);
 std::string str(const ReferentSystem& r);
 

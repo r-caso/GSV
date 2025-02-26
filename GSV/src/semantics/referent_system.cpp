@@ -5,8 +5,6 @@
 
 namespace iif_sadaf::talk::GSV {
 
-namespace {
-
 std::set<std::string_view> domain(const ReferentSystem& r)
 {
 	std::set<std::string_view> domain;
@@ -16,8 +14,6 @@ std::set<std::string_view> domain(const ReferentSystem& r)
 
 	return domain;
 }
-
-} // ANONYMOUS NAMESPACE
 
 ReferentSystem::ReferentSystem(ReferentSystem&& other) noexcept
     : pegs(other.pegs)
