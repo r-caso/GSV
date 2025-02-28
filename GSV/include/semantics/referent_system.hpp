@@ -10,7 +10,12 @@ namespace iif_sadaf::talk::GSV {
 /**
  * @brief Represents a referent system for variable assignments.
  *
- * The ReferentSystem class maintains associations between variables and integer pegs.
+ * The `ReferentSystem` class provides a framework for handling variable-to-integer 
+ * mappings within GAV. It allows for retrieval of variable values and tracks the
+ * number of pegs (or reference points) within the system.
+ *
+ * This class supports both copy and move semantics, ensuring flexibility in managing 
+ * instances efficiently.
  */
 struct ReferentSystem {
 public:
