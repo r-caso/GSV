@@ -47,23 +47,6 @@ int ReferentSystem::value(std::string_view variable) const
 	return variablePegAssociation.at(variable);
 }
 
-std::string str(const ReferentSystem& r)
-{
-	std::string desc = "Number of pegs: " + std::to_string(r.pegs) + "\n";
-	desc += "Variable to peg association:\n";
-
-	if (r.variablePegAssociation.empty()) {
-		desc += "  [ empty ]\n";
-		return desc;
-	}
-
-	for (const auto& [variable, peg] : r.variablePegAssociation) {
-		desc += "  - " + std::string(variable) + " -> peg_" + std::to_string(peg) + "\n";
-	}
-
-	return desc;
-}
-
 /**
  * @brief Determines whether one ReferentSystem extends another.
  *
@@ -104,6 +87,23 @@ bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 	};
 
 	return std::ranges::all_of(domain_r2, new_var_new_peg);
+}
+
+std::string str(const ReferentSystem& r)
+{
+	std::string desc = "Number of pegs: " + std::to_string(r.pegs) + "\n";
+	desc += "Variable to peg association:\n";
+
+	if (r.variablePegAssociation.empty()) {
+		desc += "  [ empty ]\n";
+		return desc;
+	}
+
+	for (const auto& [variable, peg] : r.variablePegAssociation) {
+		desc += "  - " + std::string(variable) + " -> peg_" + std::to_string(peg) + "\n";
+	}
+
+	return desc;
 }
 
 }
