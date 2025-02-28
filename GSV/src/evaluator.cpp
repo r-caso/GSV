@@ -22,16 +22,6 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
 	}
 }
 
-int termDenotation(std::string_view term, int w, const IModel& m)
-{
-	return m.termInterpretation(term, w);
-}
-
-const std::set<std::vector<int>>& predicateDenotation(std::string_view predicate, int w, const IModel& m)
-{
-	return m.predicateInterpretation(predicate, w);
-}
-
 int variableDenotation(std::string_view variable, const Possibility& p)
 {
 	return p.assignment.at(p.referentSystem->value(variable));
@@ -228,8 +218,8 @@ InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool { 
-		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : termDenotation(expr->lhs, p.world, model);
-		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : termDenotation(expr->rhs, p.world, model);
+		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : model.termInterpretation(expr->lhs, p.world);
+		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : model.termInterpretation(expr->rhs, p.world);
 		return lhs_denotation == rhs_denotation;
 	};
 
@@ -263,11 +253,11 @@ InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& e
 		std::vector<int> tuple;
 		
 		for (const std::string& argument : expr->arguments) {
-			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : termDenotation(argument, p.world, model);
+			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : model.termInterpretation(argument, p.world);
 			tuple.push_back(denotation);
 		}
 
-		return predicateDenotation(expr->predicate, p.world, model).contains(tuple);
+		return model.predicateInterpretation(expr->predicate, p.world).contains(tuple);
 	};
 
 	filter(input_state, tuple_in_extension);
