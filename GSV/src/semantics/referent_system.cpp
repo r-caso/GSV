@@ -40,7 +40,7 @@ ReferentSystem& ReferentSystem::operator=(ReferentSystem&& other) noexcept
 int ReferentSystem::value(std::string_view variable) const
 {
 	if (!variablePegAssociation.contains(variable)) {
-        const std::string error_msg = "Variable " + std::string(variable) + " has no anaphoric antecedent of binding quantifier";
+        const std::string error_msg = "Variable " + std::string(variable) + " has no anaphoric antecedent or binding quantifier";
 		throw(std::out_of_range(error_msg));
 	}
 
