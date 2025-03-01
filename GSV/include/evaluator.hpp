@@ -28,4 +28,6 @@ struct Evaluator {
     InformationState operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
 };
 
+InformationState evaluate(const Expression& expr, const InformationState& input_state, const IModel& model);
+
 }

@@ -265,4 +265,29 @@ InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& e
 	return std::move(input_state);
 }
 
+/**
+ * @brief Evaluates an expression within a given information state and model.
+ *
+ * This function takes as input an `InformationState' object, applies
+ * an `Evaluator` visitor to the input `Expression`, and returns the
+ * output `InformationState`, given the semantic values provided by the
+ * `Model' object. It utilizes `std::visit` to dynamically apply the
+ * appropriate evaluation logic based on the type of `expr`.
+ *
+ * @param expr The expression to evaluate.
+ * @param input_state The initial information state used during evaluation.
+ * @param model The model that provides contextual information for evaluation.
+ * @return The resulting `InformationState` after evaluating the expression.
+ * @throws `std::invalid_argument', if formula does not accord with GSV grammar
+ * @throws `std::out_of_range' if interpretation is undefined
+ */
+InformationState evaluate(const Expression& expr, const InformationState& input_state, const IModel& model)
+{
+	return std::visit(
+		Evaluator(),
+		expr,
+		std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(input_state, &model))
+	);
+}
+
 }
