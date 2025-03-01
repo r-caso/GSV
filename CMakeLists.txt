@@ -6,7 +6,7 @@ if (POLICY CMP0141)
     "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project(GSV VERSION 0.1 LANGUAGES CXX)
+project(GSV VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -16,6 +16,7 @@ add_library(GSV STATIC)
 
 target_sources(GSV PRIVATE
     GSV/src/evaluator.cpp
+    GSV/src/semantic_relations.cpp
 
     GSV/src/semantics/information_state.cpp
     GSV/src/semantics/possibility.cpp
