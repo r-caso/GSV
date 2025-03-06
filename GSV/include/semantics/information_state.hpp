@@ -23,4 +23,6 @@ bool subsistsIn(const Possibility& p, const InformationState& s);
 bool subsistsIn(const InformationState& s1, const InformationState& s2);
 
 std::string str(const InformationState& state);
+std::string repr(const InformationState& state);
+
 }

@@ -37,5 +37,6 @@ bool extends(const Possibility& p2, const Possibility& p1);
 bool operator<(const Possibility& p1, const Possibility& p2);
 
 std::string str(const Possibility& p);
+std::string repr(const Possibility& p);
 
 }

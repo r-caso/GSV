@@ -106,4 +106,21 @@ std::string str(const ReferentSystem& r)
 	return desc;
 }
 
+std::string repr(const ReferentSystem& r)
+{
+	std::string desc = "R-System : [ ";
+
+	if (r.variablePegAssociation.empty()) {
+		return desc + "]";
+	}
+
+	for (const auto& [variable, peg] : r.variablePegAssociation) {
+		desc += "{ " + std::string(variable) + " : " + std::to_string(peg) + " }, ";
+	}
+
+	desc.resize(desc.size() - 2);
+
+	return desc + " ]";
+}
+
 }

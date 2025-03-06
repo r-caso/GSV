@@ -93,4 +93,24 @@ std::string str(const Possibility& p)
 	return desc;
 }
 
+std::string repr(const Possibility& p)
+{
+	std::string desc = "Possibility : [ " + repr(*p.referentSystem) + ", Assignment : [ ";
+
+	if (p.assignment.empty()) {
+		desc += "]";
+	}
+	else {
+		for (const auto& [peg, individual] : p.assignment) {
+			desc += "{ " + std::to_string(peg) + " : " + std::to_string(individual) + " }, ";
+		}
+		desc.resize(desc.size() - 2);
+		desc += " ]";
+	}
+
+	desc += ", World : " + std::to_string(p.world) + " ]";
+
+	return desc;
+}
+
 }

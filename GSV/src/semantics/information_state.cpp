@@ -145,4 +145,15 @@ std::string str(const InformationState& state)
 	return desc;
 }
 
+std::string repr(const InformationState& state)
+{
+	std::string desc = "Information State : [\n";
+
+	for (const Possibility& p : state) {
+		desc += "  " + repr(p) + "\n";
+	}
+
+	return desc + "]";
+}
+
 }
