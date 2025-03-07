@@ -5,6 +5,7 @@
 #include <ranges>
 #include <stdexcept>
 
+#include "logger.hpp"
 #include "variable.hpp"
 
 namespace iif_sadaf::talk::GSV {
@@ -42,25 +43,40 @@ int variableDenotation(std::string_view variable, const Possibility& p)
 */
 InformationState Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	GSV_TRACE("Started evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+
 	InformationState hypothetical_update = std::visit(Evaluator(), expr->scope, params);
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 
+	GSV_TRACE("Input context is:\n" + repr(input_state));
+	GSV_TRACE("Hypothetical prejacent update is:\n" + repr(hypothetical_update));
+
 	if (expr->op == Operator::E_POS) {
+		GSV_TRACE("Running test on prejacent update");
 		if (hypothetical_update.empty()) {
+			GSV_TRACE("fail");
 			input_state.clear();
 		}
+		GSV_TRACE("pass");
 	}
 	else if (expr->op == Operator::E_NEC) {
+		GSV_TRACE("Running test on prejacent update");
 		if (!subsistsIn(input_state, hypothetical_update)) {
+			GSV_TRACE("fail");
 			input_state.clear();
 		}
+		GSV_TRACE("pass");
 	}
 	else if (expr->op == Operator::NEG) {
+		GSV_TRACE("Filtering input state");
 		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, hypothetical_update); });
 	}
 	else {
 		throw(std::invalid_argument("Invalid operator for unary formula"));
 	}
+
+	GSV_TRACE("Output context is:\n" + repr(input_state));
+	GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 	return std::move(input_state);
 }
@@ -78,18 +94,28 @@ InformationState Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, s
 */
 InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	GSV_TRACE("Started evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+
+	GSV_TRACE("Input context is:\n" + repr(input_state));
 
 	if (expr->op == Operator::CON) {
-		return std::visit(
+		GSV_TRACE("Performing sequential updates : [" + std::visit(Formatter(), Expression(expr->lhs)) + "][" + std::visit(Formatter(), Expression(expr->rhs)) + "]");
+		const InformationState output = std::visit(
 			Evaluator(),
 			expr->rhs, 
 			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), expr->lhs, params), model))
 		);
+		GSV_TRACE("Output context is:\n" + repr(output));
+		GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+		return output;
 	}
 
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	InformationState hypothetical_update_lhs = std::visit(Evaluator(), expr->lhs, params);
+
+	GSV_TRACE("Hypothetical LHS update is:\n" + repr(hypothetical_update_lhs));
 
 	if (expr->op == Operator::DIS) {
 		InformationState hypothetical_update_rhs = std::visit(
@@ -98,10 +124,13 @@ InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, 
 			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), negate(expr->lhs), params), model))
 		);
 
+		GSV_TRACE("Hypothetical RHS update is:\n" + repr(hypothetical_update_rhs));
+
 		const auto in_lhs_or_in_rhs = [&](const Possibility& p) -> bool {
 			return hypothetical_update_lhs.contains(p) || hypothetical_update_rhs.contains(p);
 		};
 
+		GSV_TRACE("Filtering input state");
 		filter(input_state, in_lhs_or_in_rhs);
 	}
 	else if (expr->op == Operator::IMP) {
@@ -110,6 +139,8 @@ InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, 
 			expr->rhs,
 			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(hypothetical_update_lhs, model))
 		);
+
+		GSV_TRACE("Hypothetical RHS update is:\n" + repr(hypothetical_update_consequent));
 
 		auto all_descendants_subsist = [&](const Possibility& p) -> bool {
 			auto not_descendant_or_subsists = [&](const Possibility& p_star) -> bool {
@@ -122,11 +153,15 @@ InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, 
 			return !subsistsIn(p, hypothetical_update_lhs) || all_descendants_subsist(p);
 		};
 
+		GSV_TRACE("Filtering input state");
 		filter(input_state, if_subsists_all_descendants_do);
 	}
 	else {
 		throw(std::invalid_argument("Invalid operator for binary formula"));
 	}
+
+	GSV_TRACE("Output context is:\n" + repr(input_state));
+	GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 	return std::move(input_state);
 }
@@ -144,14 +179,21 @@ InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, 
 */
 InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	GSV_TRACE("Started evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+
+	GSV_TRACE("Input context is:\n" + repr(input_state));
 
 	if (expr->quantifier == Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
-        for (const int i : std::views::iota(0, model->domain_cardinality())) {
-            const InformationState s_variant = update(input_state, expr->variable, i);
+        for (const int d : std::views::iota(0, model->domain_cardinality())) {
+			GSV_TRACE("Evaluating subformula w.r.t. individual " + std::to_string(d) + " [out of " + std::to_string(model->domain_cardinality() - 1) + "]");
+			GSV_TRACE("Constructing information state variants");
+			GSV_TRACE("Updating referent system and assignment with [" + expr->variable + ", " + std::to_string(d) + "]");
+            const InformationState s_variant = update(input_state, expr->variable, d);
 			all_state_variants.push_back(std::visit(
 				Evaluator(),
 				expr->scope,
@@ -159,12 +201,16 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 			);
 		}
 
+		GSV_TRACE("Expanding input information state");
 		InformationState output;
 		for (const auto& state_variant : all_state_variants) {
 			for (const auto& p : state_variant) {
 				output.insert(p);
 			}
 		}
+
+		GSV_TRACE("Output context is:\n" + repr(output));
+		GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 		return output;
 	}
@@ -173,6 +219,8 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 		std::vector<InformationState> all_hypothetical_updates;
 
         for (const int d : std::views::iota(0, model->domain_cardinality())) {
+			GSV_TRACE("Evaluating subformula w.r.t. individual " + std::to_string(d) + " [out of " + std::to_string(model->domain_cardinality() - 1) + "]");
+			GSV_TRACE("Constructing information state variants");
             const InformationState hypothetical_update = std::visit(
 				Evaluator(),
 				expr->scope,
@@ -188,11 +236,15 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 			return std::ranges::all_of(all_hypothetical_updates, p_subsists_in_hyp_update);
 		};
 
+		GSV_TRACE("Filtering input state");
 		filter(input_state, subsists_in_all_hyp_updates);
 	}
 	else {
 		throw(std::invalid_argument("Invalid quantifier"));
 	}
+
+	GSV_TRACE("Output context is:\n" + repr(input_state));
+	GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 	return std::move(input_state);
 }
@@ -214,8 +266,12 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 */
 InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	GSV_TRACE("Started evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
+
+	GSV_TRACE("Input context is:\n" + repr(input_state));
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool { 
 		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : model.termInterpretation(expr->lhs, p.world);
@@ -223,7 +279,11 @@ InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr
 		return lhs_denotation == rhs_denotation;
 	};
 
+	GSV_TRACE("Filtering input state");
 	filter(input_state, assigns_same_denotation);
+
+	GSV_TRACE("Output context is:\n" + repr(input_state));
+	GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 	return std::move(input_state);
 }
@@ -246,8 +306,12 @@ InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr
  */
 InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
+	GSV_TRACE("Started evaluation of formula " + std::visit(Formatter(), Expression(expr)));
+
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
+
+	GSV_TRACE("Input context is:\n" + repr(input_state));
 
 	auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
@@ -260,7 +324,11 @@ InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& e
 		return model.predicateInterpretation(expr->predicate, p.world).contains(tuple);
 	};
 
+	GSV_TRACE("Filtering input state");
 	filter(input_state, tuple_in_extension);
+
+	GSV_TRACE("Output context is:\n" + repr(input_state));
+	GSV_TRACE("Finished evaluation of formula " + std::visit(Formatter(), Expression(expr)));
 
 	return std::move(input_state);
 }
