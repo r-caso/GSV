@@ -73,6 +73,17 @@ bool operator<(const Possibility& p1, const Possibility& p2)
 	return p1.world < p2.world;
 }
 
+std::expected<int, std::string> variableDenotation(std::string_view variable, const Possibility& p)
+{
+	const auto peg = p.referentSystem->value(variable);
+
+	if (!peg.has_value()) {
+		return std::unexpected(peg.error());
+	}
+
+	return p.assignment.at(peg.value());
+}
+
 std::string str(const Possibility& p)
 {
 	std::string desc = "[ ] Referent System:\n" + str(*p.referentSystem);
