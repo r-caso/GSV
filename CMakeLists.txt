@@ -8,7 +8,7 @@ endif()
 
 project(GSV VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -21,10 +21,11 @@ target_sources(GSV PRIVATE
     GSV/src/semantics/information_state.cpp
     GSV/src/semantics/possibility.cpp
     GSV/src/semantics/referent_system.cpp
+
+    GSV/src/utility/formatter.cpp
     
     third_party/semantics/model.cpp
     third_party/syntax/expression.cpp
-    third_party/syntax/variable.cpp
 )
 
-target_include_directories(GSV PUBLIC GSV/include GSV/include/interfaces GSV/include/semantics third_party/semantics third_party/syntax)
+target_include_directories(GSV PUBLIC GSV/include GSV/include/interfaces GSV/include/semantics GSV/include/utility third_party/semantics third_party/spdlog/include third_party/syntax)
