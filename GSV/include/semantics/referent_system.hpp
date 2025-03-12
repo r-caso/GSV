@@ -1,5 +1,6 @@
 #pragma once
 
+#include <expected>
 #include <set>
 #include <string>
 #include <string_view>
@@ -25,7 +26,7 @@ public:
     ReferentSystem(ReferentSystem&& other) noexcept;
     ReferentSystem& operator=(ReferentSystem&& other) noexcept;
 
-	int value(std::string_view variable) const;
+	std::expected<int, std::string> value(std::string_view variable) const;
 
 	int pegs = 0;
 	std::unordered_map<std::string_view, int> variablePegAssociation = {};

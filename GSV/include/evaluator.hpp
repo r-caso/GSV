@@ -1,5 +1,7 @@
 #pragma once
 
+#include <expected>
+
 #include "expression.hpp"
 #include "information_state.hpp"
 
@@ -21,13 +23,13 @@ namespace iif_sadaf::talk::GSV {
  * various circumstances (see the member functions' documentation for details).
  */
 struct Evaluator {
-    InformationState operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    InformationState operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
 };
 
-InformationState evaluate(const Expression& expr, const InformationState& input_state, const IModel& model);
+std::expected<InformationState, std::string> evaluate(const Expression& expr, const InformationState& input_state, const IModel& model);
 
 }
