@@ -95,16 +95,6 @@ std::expected<int, std::string> variableDenotation(std::string_view variable, co
 		return std::unexpected(peg.error());
 	}
 
-	return p.assignment.at(peg.value());
-}
-std::expected<int, std::string> variableDenotation(std::string_view variable, const Possibility& p)
-{
-	const auto peg = p.referentSystem->value(variable);
-
-	if (!peg.has_value()) {
-		return std::unexpected(peg.error());
-	}
-
 	// Whenever variable exists in referent system, assignment is guaranteed to
 	// contain the corresponding peg, so there is no need to check for existence
 	// before returning
