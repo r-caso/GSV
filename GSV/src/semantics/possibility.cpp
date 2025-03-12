@@ -73,6 +73,20 @@ bool operator<(const Possibility& p1, const Possibility& p2)
 	return p1.world < p2.world;
 }
 
+/**
+ * @brief Retrieves the denotation of a variable within a given Possibility.
+ *
+ * This function looks up the peg associated with the given variable in the Possibility's ReferentSystem
+ * and then retrieves the corresponding individual from the assignment.
+ *
+ * @param variable The name of the variable whose denotation is being retrieved.
+ * @param p The Possibility in which the variable is interpreted.
+ *
+ * @return std::expected<int, std::string>
+ * - If successful, returns the individual assigned to the variable.
+ * - If the variable is not found in the ReferentSystem, returns an error message.
+ * - If the peg retrieved from the ReferentSystem is not found in the assignment, returns an error message.
+ */
 std::expected<int, std::string> variableDenotation(std::string_view variable, const Possibility& p)
 {
 	const auto peg = p.referentSystem->value(variable);
@@ -81,6 +95,19 @@ std::expected<int, std::string> variableDenotation(std::string_view variable, co
 		return std::unexpected(peg.error());
 	}
 
+	return p.assignment.at(peg.value());
+}
+std::expected<int, std::string> variableDenotation(std::string_view variable, const Possibility& p)
+{
+	const auto peg = p.referentSystem->value(variable);
+
+	if (!peg.has_value()) {
+		return std::unexpected(peg.error());
+	}
+
+	// Whenever variable exists in referent system, assignment is guaranteed to
+	// contain the corresponding peg, so there is no need to check for existence
+	// before returning
 	return p.assignment.at(peg.value());
 }
 
