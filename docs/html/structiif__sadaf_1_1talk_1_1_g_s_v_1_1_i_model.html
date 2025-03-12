@@ -32,9 +32,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;2.0</span>
    </div>
-   <div id="projectbrief">An computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
+   <div id="projectbrief">A computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -121,10 +121,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a07fd4cd84e820394c7bdbd5d39a25a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2218483b83ac3496cded967bb8f19a7" id="r_ad2218483b83ac3496cded967bb8f19a7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2218483b83ac3496cded967bb8f19a7">domain_cardinality</a> () const =0</td></tr>
 <tr class="separator:ad2218483b83ac3496cded967bb8f19a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa36050525b84578d1cdf4bef4da23fc7" id="r_aa36050525b84578d1cdf4bef4da23fc7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36050525b84578d1cdf4bef4da23fc7">termInterpretation</a> (std::string_view term, int world) const =0</td></tr>
-<tr class="separator:aa36050525b84578d1cdf4bef4da23fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e8b0e4e618646581bff0bc57268f222" id="r_a7e8b0e4e618646581bff0bc57268f222"><td class="memItemLeft" align="right" valign="top">virtual const std::set&lt; std::vector&lt; int &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e8b0e4e618646581bff0bc57268f222">predicateInterpretation</a> (std::string_view predicate, int world) const =0</td></tr>
-<tr class="separator:a7e8b0e4e618646581bff0bc57268f222"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a777fc87cc0d4b2d2fe8f7bfe43a2aaa6" id="r_a777fc87cc0d4b2d2fe8f7bfe43a2aaa6"><td class="memItemLeft" align="right" valign="top">virtual std::expected&lt; int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a777fc87cc0d4b2d2fe8f7bfe43a2aaa6">termInterpretation</a> (std::string_view term, int world) const =0</td></tr>
+<tr class="separator:a777fc87cc0d4b2d2fe8f7bfe43a2aaa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abab46ccc709b53bb1c6f1b35bf035042" id="r_abab46ccc709b53bb1c6f1b35bf035042"><td class="memItemLeft" align="right" valign="top">virtual std::expected&lt; const std::set&lt; std::vector&lt; int &gt; &gt; *, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abab46ccc709b53bb1c6f1b35bf035042">predicateInterpretation</a> (std::string_view predicate, int world) const =0</td></tr>
+<tr class="separator:abab46ccc709b53bb1c6f1b35bf035042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd8f443734bf576dba067655a639aa02" id="r_acd8f443734bf576dba067655a639aa02"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd8f443734bf576dba067655a639aa02">~IModel</a> ()</td></tr>
 <tr class="separator:acd8f443734bf576dba067655a639aa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -138,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <li>a function that retrieves, for any possible world in W, the interpretation of a predicate at that world (represented by a <code>std::set&lt;std::vector&lt;int&gt;&gt;</code>) </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="imodel_8hpp_source.html#l00021">21</a> of file <a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="imodel_8hpp_source.html#l00023">23</a> of file <a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="acd8f443734bf576dba067655a639aa02" name="acd8f443734bf576dba067655a639aa02"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd8f443734bf576dba067655a639aa02">&#9670;&#160;</a></span>~IModel()</h2>
@@ -163,7 +163,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="imodel_8hpp_source.html#l00027">27</a> of file <a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="imodel_8hpp_source.html#l00029">29</a> of file <a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>.</p>
 
 </div>
 </div>
@@ -193,8 +193,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7e8b0e4e618646581bff0bc57268f222" name="a7e8b0e4e618646581bff0bc57268f222"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e8b0e4e618646581bff0bc57268f222">&#9670;&#160;</a></span>predicateInterpretation()</h2>
+<a id="abab46ccc709b53bb1c6f1b35bf035042" name="abab46ccc709b53bb1c6f1b35bf035042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abab46ccc709b53bb1c6f1b35bf035042">&#9670;&#160;</a></span>predicateInterpretation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,7 +203,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual const std::set&lt; std::vector&lt; int &gt; &gt; &amp; iif_sadaf::talk::GSV::IModel::predicateInterpretation </td>
+          <td class="memname">virtual std::expected&lt; const std::set&lt; std::vector&lt; int &gt; &gt; *, std::string &gt; iif_sadaf::talk::GSV::IModel::predicateInterpretation </td>
           <td>(</td>
           <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>predicate</em></span>, </td>
         </tr>
@@ -222,8 +222,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa36050525b84578d1cdf4bef4da23fc7" name="aa36050525b84578d1cdf4bef4da23fc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa36050525b84578d1cdf4bef4da23fc7">&#9670;&#160;</a></span>termInterpretation()</h2>
+<a id="a777fc87cc0d4b2d2fe8f7bfe43a2aaa6" name="a777fc87cc0d4b2d2fe8f7bfe43a2aaa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a777fc87cc0d4b2d2fe8f7bfe43a2aaa6">&#9670;&#160;</a></span>termInterpretation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -232,7 +232,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int iif_sadaf::talk::GSV::IModel::termInterpretation </td>
+          <td class="memname">virtual std::expected&lt; int, std::string &gt; iif_sadaf::talk::GSV::IModel::termInterpretation </td>
           <td>(</td>
           <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>term</em></span>, </td>
         </tr>

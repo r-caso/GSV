@@ -32,9 +32,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;2.0</span>
    </div>
-   <div id="projectbrief">An computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
+   <div id="projectbrief">A computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -116,6 +116,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html">Evaluator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an evaluator for logical expressions.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_formatter.html">Formatter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A visitor for formatting Expression objects.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_formatter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for class representing a model for QML without accessiblity.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,33 +137,33 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a05013b91bbc11814a0cb8917dba6df36" id="r_a05013b91bbc11814a0cb8917dba6df36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05013b91bbc11814a0cb8917dba6df36">evaluate</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;input_state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:a05013b91bbc11814a0cb8917dba6df36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates an expression within a given information state and model.  <br /></td></tr>
-<tr class="separator:a05013b91bbc11814a0cb8917dba6df36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af159ecd7a4a85bdb9f78c9ee99c38b87" id="r_af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af159ecd7a4a85bdb9f78c9ee99c38b87">consistent</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an expression is consistent with a given information state, relative to a model.  <br /></td></tr>
-<tr class="separator:af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad10d6ec405741eca43a93f11057129ba" id="r_ad10d6ec405741eca43a93f11057129ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad10d6ec405741eca43a93f11057129ba">allows</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ad10d6ec405741eca43a93f11057129ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an information state allows a given expression.  <br /></td></tr>
-<tr class="separator:ad10d6ec405741eca43a93f11057129ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a204bb28ec3d862b9b52351bc14020190" id="r_a204bb28ec3d862b9b52351bc14020190"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a204bb28ec3d862b9b52351bc14020190">supports</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:a204bb28ec3d862b9b52351bc14020190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an information state supports a given expression.  <br /></td></tr>
-<tr class="separator:a204bb28ec3d862b9b52351bc14020190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93015f60e1d1beaec59c3717d4d62e73" id="r_a93015f60e1d1beaec59c3717d4d62e73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93015f60e1d1beaec59c3717d4d62e73">isSupportedBy</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:a93015f60e1d1beaec59c3717d4d62e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is supported by an information state.  <br /></td></tr>
-<tr class="separator:a93015f60e1d1beaec59c3717d4d62e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab37c9547d63ebf502082dc74f4f31d18" id="r_ab37c9547d63ebf502082dc74f4f31d18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab37c9547d63ebf502082dc74f4f31d18">consistent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ab37c9547d63ebf502082dc74f4f31d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent relative to a given model.  <br /></td></tr>
-<tr class="separator:ab37c9547d63ebf502082dc74f4f31d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbf1dc8c88abbb476eb33b5e0b7d95c2" id="r_acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbf1dc8c88abbb476eb33b5e0b7d95c2">coherent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is coherent relative to a given model.  <br /></td></tr>
-<tr class="separator:acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac4575eb3e3ae36cc8db89d4237ce3c1" id="r_aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac4575eb3e3ae36cc8db89d4237ce3c1">entails</a> (const std::vector&lt; Expression &gt; &amp;premises, const Expression &amp;conclusion, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a set of premises entails a given conclusion, relative to a given model.  <br /></td></tr>
-<tr class="separator:aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae427b6d771679bac3b66d16eab0da759" id="r_ae427b6d771679bac3b66d16eab0da759"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae427b6d771679bac3b66d16eab0da759">equivalent</a> (const Expression &amp;expr1, const Expression &amp;expr2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ae427b6d771679bac3b66d16eab0da759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether two expressions are equivalent, relative to a given model.  <br /></td></tr>
-<tr class="separator:ae427b6d771679bac3b66d16eab0da759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb13ee173a8ee16f475f8409255b3df6" id="r_afb13ee173a8ee16f475f8409255b3df6"><td class="memItemLeft" align="right" valign="top">std::expected&lt; <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb13ee173a8ee16f475f8409255b3df6">evaluate</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;input_state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:afb13ee173a8ee16f475f8409255b3df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates a logical expression within a given information state and model.  <br /></td></tr>
+<tr class="separator:afb13ee173a8ee16f475f8409255b3df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb257b64727fa7368581ad0487f6c12" id="r_a6bb257b64727fa7368581ad0487f6c12"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bb257b64727fa7368581ad0487f6c12">consistent</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:a6bb257b64727fa7368581ad0487f6c12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent with a given information state and model.  <br /></td></tr>
+<tr class="separator:a6bb257b64727fa7368581ad0487f6c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac93aeef273912a38411b0179ba200e6d" id="r_ac93aeef273912a38411b0179ba200e6d"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac93aeef273912a38411b0179ba200e6d">allows</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac93aeef273912a38411b0179ba200e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether an information state allows a given expression.  <br /></td></tr>
+<tr class="separator:ac93aeef273912a38411b0179ba200e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa764568ed310512e6fd886c1339688f9" id="r_aa764568ed310512e6fd886c1339688f9"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa764568ed310512e6fd886c1339688f9">supports</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:aa764568ed310512e6fd886c1339688f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an information state supports a given expression.  <br /></td></tr>
+<tr class="separator:aa764568ed310512e6fd886c1339688f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1f6f5024016642aeeef1079f42cf08b" id="r_ac1f6f5024016642aeeef1079f42cf08b"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1f6f5024016642aeeef1079f42cf08b">isSupportedBy</a> (const Expression &amp;expr, const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac1f6f5024016642aeeef1079f42cf08b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an expression is supported by a given information state.  <br /></td></tr>
+<tr class="separator:ac1f6f5024016642aeeef1079f42cf08b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e3fd713a39b933a9ff83f1f391b084" id="r_aa4e3fd713a39b933a9ff83f1f391b084"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4e3fd713a39b933a9ff83f1f391b084">consistent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:aa4e3fd713a39b933a9ff83f1f391b084"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent within a given model.  <br /></td></tr>
+<tr class="separator:aa4e3fd713a39b933a9ff83f1f391b084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af59f997201605d5c6790d6e1709faef6" id="r_af59f997201605d5c6790d6e1709faef6"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af59f997201605d5c6790d6e1709faef6">coherent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:af59f997201605d5c6790d6e1709faef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is coherent within a given model.  <br /></td></tr>
+<tr class="separator:af59f997201605d5c6790d6e1709faef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c87ac10560b2f2400f9c0a00b00c774" id="r_a0c87ac10560b2f2400f9c0a00b00c774"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c87ac10560b2f2400f9c0a00b00c774">entails</a> (const std::vector&lt; Expression &gt; &amp;premises, const Expression &amp;conclusion, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:a0c87ac10560b2f2400f9c0a00b00c774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a set of premises entails a conclusion within a given model.  <br /></td></tr>
+<tr class="separator:a0c87ac10560b2f2400f9c0a00b00c774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6ec222c65bfe884b2843ade81e221df" id="r_ac6ec222c65bfe884b2843ade81e221df"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6ec222c65bfe884b2843ade81e221df">equivalent</a> (const Expression &amp;expr1, const Expression &amp;expr2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac6ec222c65bfe884b2843ade81e221df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether two expressions are logically equivalent within a given model.  <br /></td></tr>
+<tr class="separator:ac6ec222c65bfe884b2843ade81e221df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15784c6bfad69056017df42dabab53cc" id="r_a15784c6bfad69056017df42dabab53cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15784c6bfad69056017df42dabab53cc">create</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
 <tr class="memdesc:a15784c6bfad69056017df42dabab53cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an information state based on a model.  <br /></td></tr>
 <tr class="separator:a15784c6bfad69056017df42dabab53cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,20 +184,30 @@ Functions</h2></td></tr>
 <tr class="separator:a3ee14f197a20b03ff31e354fbedc42b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab155b1f6d95b9cb341340bf40d141adc" id="r_ab155b1f6d95b9cb341340bf40d141adc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab155b1f6d95b9cb341340bf40d141adc">str</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state)</td></tr>
 <tr class="separator:ab155b1f6d95b9cb341340bf40d141adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a973bd84090af10b27ca342a7d08fda1c" id="r_a973bd84090af10b27ca342a7d08fda1c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a973bd84090af10b27ca342a7d08fda1c">repr</a> (const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state)</td></tr>
+<tr class="separator:a973bd84090af10b27ca342a7d08fda1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24826fb290283ac7aed48b3c22d88af6" id="r_a24826fb290283ac7aed48b3c22d88af6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24826fb290283ac7aed48b3c22d88af6">extends</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p1)</td></tr>
 <tr class="memdesc:a24826fb290283ac7aed48b3c22d88af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether one <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a> extends another.  <br /></td></tr>
 <tr class="separator:a24826fb290283ac7aed48b3c22d88af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50c08f609feb40cda1b2b782bcf84544" id="r_a50c08f609feb40cda1b2b782bcf84544"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50c08f609feb40cda1b2b782bcf84544">operator&lt;</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p1, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p2)</td></tr>
 <tr class="separator:a50c08f609feb40cda1b2b782bcf84544"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0c4a1c064233601a0bfcd5b76791e30" id="r_ac0c4a1c064233601a0bfcd5b76791e30"><td class="memItemLeft" align="right" valign="top">std::expected&lt; int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0c4a1c064233601a0bfcd5b76791e30">variableDenotation</a> (std::string_view variable, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p)</td></tr>
+<tr class="memdesc:ac0c4a1c064233601a0bfcd5b76791e30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the denotation of a variable within a given <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a>.  <br /></td></tr>
+<tr class="separator:ac0c4a1c064233601a0bfcd5b76791e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb0fe7568774f60669c86e72dca69a62" id="r_aeb0fe7568774f60669c86e72dca69a62"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb0fe7568774f60669c86e72dca69a62">str</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p)</td></tr>
 <tr class="separator:aeb0fe7568774f60669c86e72dca69a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853116ab24d54818e4828d2bc8812521" id="r_a853116ab24d54818e4828d2bc8812521"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a853116ab24d54818e4828d2bc8812521">repr</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;p)</td></tr>
+<tr class="separator:a853116ab24d54818e4828d2bc8812521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e9ec729c1ae6b648a071cedd89cd54b" id="r_a1e9ec729c1ae6b648a071cedd89cd54b"><td class="memItemLeft" align="right" valign="top">std::set&lt; std::string_view &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1e9ec729c1ae6b648a071cedd89cd54b">domain</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
+<tr class="memdesc:a1e9ec729c1ae6b648a071cedd89cd54b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the set of variable names in the referent system.  <br /></td></tr>
 <tr class="separator:a1e9ec729c1ae6b648a071cedd89cd54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f3533609bbd6a0505808a1a5e2afdaf" id="r_a3f3533609bbd6a0505808a1a5e2afdaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f3533609bbd6a0505808a1a5e2afdaf">extends</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r1)</td></tr>
 <tr class="memdesc:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether one <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> extends another.  <br /></td></tr>
 <tr class="separator:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13ef67c10d5515b1778ec55e11952d60" id="r_a13ef67c10d5515b1778ec55e11952d60"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13ef67c10d5515b1778ec55e11952d60">str</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
 <tr class="separator:a13ef67c10d5515b1778ec55e11952d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d62edfd1ea0ec9a0e075f28c6504fd0" id="r_a1d62edfd1ea0ec9a0e075f28c6504fd0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d62edfd1ea0ec9a0e075f28c6504fd0">repr</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
+<tr class="separator:a1d62edfd1ea0ec9a0e075f28c6504fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a38faa488c96113dce7387bd59f670e19" name="a38faa488c96113dce7387bd59f670e19"></a>
@@ -216,14 +229,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad10d6ec405741eca43a93f11057129ba" name="ad10d6ec405741eca43a93f11057129ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad10d6ec405741eca43a93f11057129ba">&#9670;&#160;</a></span>allows()</h2>
+<a id="ac93aeef273912a38411b0179ba200e6d" name="ac93aeef273912a38411b0179ba200e6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac93aeef273912a38411b0179ba200e6d">&#9670;&#160;</a></span>allows()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::allows </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::allows </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>state</em></span>, </td>
         </tr>
@@ -240,36 +253,30 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether an information state allows a given expression. </p>
-<p>This function is a direct alias for <code>consistent</code>, checking if the expression is compatible with the given state, relative to the provided model.</p>
+<p>Checks whether an information state allows a given expression. </p>
+<p>This function determines if the given expression is consistent with the provided information state and model. It simply delegates to <code><a class="el" href="#a6bb257b64727fa7368581ad0487f6c12" title="Determines whether an expression is consistent with a given information state and model.">consistent()</a></code>, meaning an expression is "allowed" if it does not result in an empty information state.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">state</td><td>The information state. </td></tr>
-    <tr><td class="paramname">expr</td><td>The expression to check. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing evaluation context. </td></tr>
+    <tr><td class="paramname">state</td><td>The initial information state. </td></tr>
+    <tr><td class="paramname">expr</td><td>The expression to evaluate. </td></tr>
+    <tr><td class="paramname">model</td><td>The model used for evaluation. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is allowed in the given state and model, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expression is consistent with the state, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00054">54</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00067">67</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
-<a id="acbf1dc8c88abbb476eb33b5e0b7d95c2" name="acbf1dc8c88abbb476eb33b5e0b7d95c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbf1dc8c88abbb476eb33b5e0b7d95c2">&#9670;&#160;</a></span>coherent()</h2>
+<a id="af59f997201605d5c6790d6e1709faef6" name="af59f997201605d5c6790d6e1709faef6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af59f997201605d5c6790d6e1709faef6">&#9670;&#160;</a></span>coherent()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::coherent </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::coherent </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span>, </td>
         </tr>
@@ -281,35 +288,29 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether an expression is coherent relative to a given model. </p>
-<p>This function iterates over all possible information states given the base model, and checks if at least one of them both supports the given expression and is non-empty. If the expression is not supported in any such information state, the function returns <code>false</code>.</p>
+<p>Determines whether an expression is coherent within a given model. </p>
+<p>This function checks if there exists at least one non-empty information state that supports the given expression. It iterates over different possible information states and ensures that at least one state both (1) is not empty and (2) supports the expression.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">expr</td><td>The expression to check for coherence. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing the world structure for evaluation. </td></tr>
+    <tr><td class="paramname">model</td><td>The model against which the expression is evaluated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is coherent across all worlds, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expression is coherent in at least one information state, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00185">185</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00218">218</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ab37c9547d63ebf502082dc74f4f31d18" name="ab37c9547d63ebf502082dc74f4f31d18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab37c9547d63ebf502082dc74f4f31d18">&#9670;&#160;</a></span>consistent() <span class="overload">[1/2]</span></h2>
+<a id="aa4e3fd713a39b933a9ff83f1f391b084" name="aa4e3fd713a39b933a9ff83f1f391b084"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e3fd713a39b933a9ff83f1f391b084">&#9670;&#160;</a></span>consistent() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::consistent </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::consistent </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span>, </td>
         </tr>
@@ -321,35 +322,29 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether an expression is consistent relative to a given model. </p>
-<p>This function iterates over all possible information states given the base model, and checks if at least one of them is consistent with the given expression. If the expression is inconsistent in all such information states, the function returns <code>false</code>.</p>
+<p>Determines whether an expression is consistent within a given model. </p>
+<p>This function checks if there exists at least one information state within the model where the given expression does not lead to an empty update. It iterates over different possible information states and ensures that at least one state allows a non-empty update of the expression.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">expr</td><td>The expression to check for consistency. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing the world structure for evaluation. </td></tr>
+    <tr><td class="paramname">model</td><td>The model against which the expression is evaluated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is consistent across all worlds, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expression is consistent in at least one information state, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00161">161</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00181">181</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
-<a id="af159ecd7a4a85bdb9f78c9ee99c38b87" name="af159ecd7a4a85bdb9f78c9ee99c38b87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af159ecd7a4a85bdb9f78c9ee99c38b87">&#9670;&#160;</a></span>consistent() <span class="overload">[2/2]</span></h2>
+<a id="a6bb257b64727fa7368581ad0487f6c12" name="a6bb257b64727fa7368581ad0487f6c12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb257b64727fa7368581ad0487f6c12">&#9670;&#160;</a></span>consistent() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::consistent </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::consistent </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span>, </td>
         </tr>
@@ -366,25 +361,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if an expression is consistent with a given information state, relative to a model. </p>
-<p>This function evaluates the expression with respect to the provided state. If the evaluation does not result in an empty information state, the expression is considered consistent. If an out of range exception occurs during evaluation (signaling that the update does not exist, or is not defined, for the input formula), the expression is deemed inconsistent.</p>
+<p>Determines whether an expression is consistent with a given information state and model. </p>
+<p>This function evaluates the given expression against the provided information state and model. If the evaluation succeeds and results in a non-empty information state, the expression is considered consistent.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">expr</td><td>The expression to check for consistency. </td></tr>
-    <tr><td class="paramname">state</td><td>The information state used for evaluation. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing contextual information for evaluation. </td></tr>
+    <tr><td class="paramname">expr</td><td>The expression to evaluate. </td></tr>
+    <tr><td class="paramname">state</td><td>The initial information state. </td></tr>
+    <tr><td class="paramname">model</td><td>The model used for evaluation. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is consistent with the state and model, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expression is consistent (i.e., it does not result in an empty state), <code>false</code> otherwise. Returns an error message if evaluation fails.</dd></dl>
+<ul>
+<li>If evaluation produces an empty information state, the expression is considered inconsistent.</li>
+<li>If an error occurs during evaluation, the error message is returned instead. </li>
+</ul>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00032">32</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00037">37</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,18 +425,28 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00008">8</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p>Retrieves the set of variable names in the referent system. </p>
+<p>This function extracts all variable names present in the given <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> instance and returns them as a set of string views.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> instance whose variable names are being queried. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::set&lt;std::string_view&gt; A set containing all variable names in the system. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00018">18</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aac4575eb3e3ae36cc8db89d4237ce3c1" name="aac4575eb3e3ae36cc8db89d4237ce3c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac4575eb3e3ae36cc8db89d4237ce3c1">&#9670;&#160;</a></span>entails()</h2>
+<a id="a0c87ac10560b2f2400f9c0a00b00c774" name="a0c87ac10560b2f2400f9c0a00b00c774"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c87ac10560b2f2400f9c0a00b00c774">&#9670;&#160;</a></span>entails()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::entails </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::entails </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; Expression &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>premises</em></span>, </td>
         </tr>
@@ -460,36 +463,30 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether a set of premises entails a given conclusion, relative to a given model. </p>
-<p>This function iterates over all possible information states relative to the base model, and checks whether applying the premises results in a state that supports the conclusion. If in any world the premises fail to support the conclusion, entailment fails.</p>
+<p>Determines whether a set of premises entails a conclusion within a given model. </p>
+<p>This function evaluates whether the conclusion follows from the premises in all possible information states. It iterates through subsets of possible worlds and applies updates from each premise to the current information state. The conclusion is then evaluated to check whether it is supported in the updated state.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">premises</td><td>A vector of expressions representing the premises. </td></tr>
     <tr><td class="paramname">conclusion</td><td>The expression representing the conclusion. </td></tr>
-    <tr><td class="paramname">model</td><td>The model in which entailment is evaluated. </td></tr>
+    <tr><td class="paramname">model</td><td>The model against which entailment is evaluated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the premises entail the conclusion in all worlds, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the conclusion is supported in all states updated by the premises, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00209">209</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00256">256</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ae427b6d771679bac3b66d16eab0da759" name="ae427b6d771679bac3b66d16eab0da759"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae427b6d771679bac3b66d16eab0da759">&#9670;&#160;</a></span>equivalent()</h2>
+<a id="ac6ec222c65bfe884b2843ade81e221df" name="ac6ec222c65bfe884b2843ade81e221df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6ec222c65bfe884b2843ade81e221df">&#9670;&#160;</a></span>equivalent()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::equivalent </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::equivalent </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr1</em></span>, </td>
         </tr>
@@ -506,36 +503,30 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether two expressions are equivalent, relative to a given model. </p>
-<p>Two expressions are considered equivalent if, in every possible information state, relative to the base model, their evaluation results in similar information states (under the <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html">GSV</a> definition of similarity).</p>
+<p>Determines whether two expressions are logically equivalent within a given model. </p>
+<p>This function evaluates whether the two expressions always produce similar updates to an information state across all possible subsets of worlds in the model. It iterates through these subsets, applying each expression and comparing their resulting states for similarity.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">expr1</td><td>The first expression to compare. </td></tr>
     <tr><td class="paramname">expr2</td><td>The second expression to compare. </td></tr>
-    <tr><td class="paramname">model</td><td>The model in which equivalence is evaluated. </td></tr>
+    <tr><td class="paramname">model</td><td>The model against which equivalence is evaluated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expressions are equivalent in all worlds, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr1</code> or &lsquo;expr2&rsquo; contain an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expressions always produce similar updates, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00293">293</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00384">384</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a05013b91bbc11814a0cb8917dba6df36" name="a05013b91bbc11814a0cb8917dba6df36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05013b91bbc11814a0cb8917dba6df36">&#9670;&#160;</a></span>evaluate()</h2>
+<a id="afb13ee173a8ee16f475f8409255b3df6" name="afb13ee173a8ee16f475f8409255b3df6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb13ee173a8ee16f475f8409255b3df6">&#9670;&#160;</a></span>evaluate()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> iif_sadaf::talk::GSV::evaluate </td>
+          <td class="memname">std::expected&lt; <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a>, std::string &gt; iif_sadaf::talk::GSV::evaluate </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span>, </td>
         </tr>
@@ -552,26 +543,20 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Evaluates an expression within a given information state and model. </p>
-<p>This function takes as input an &lsquo;<a class="el" href="#a38faa488c96113dce7387bd59f670e19" title="An alias for std::set&lt;Possibility&gt;">InformationState</a>&rsquo; object, applies an <code><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html" title="Represents an evaluator for logical expressions.">Evaluator</a></code> visitor to the input <code>Expression</code>, and returns the output <code><a class="el" href="#a38faa488c96113dce7387bd59f670e19" title="An alias for std::set&lt;Possibility&gt;">InformationState</a></code>, given the semantic values provided by the &lsquo;Model&rsquo; object. It utilizes <code>std::visit</code> to dynamically apply the appropriate evaluation logic based on the type of <code>expr</code>.</p>
+<p>Evaluates a logical expression within a given information state and model. </p>
+<p>This function applies an <code><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html" title="Represents an evaluator for logical expressions.">Evaluator</a></code> visitor to the provided expression, computing an updated information state based on the evaluation result.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">expr</td><td>The expression to evaluate. </td></tr>
-    <tr><td class="paramname">input_state</td><td>The initial information state used during evaluation. </td></tr>
-    <tr><td class="paramname">model</td><td>The model that provides contextual information for evaluation. </td></tr>
+    <tr><td class="paramname">expr</td><td>The logical expression to evaluate. </td></tr>
+    <tr><td class="paramname">input_state</td><td>The initial information state in which the expression is evaluated. </td></tr>
+    <tr><td class="paramname">model</td><td>The model providing the interpretation of terms and predicates. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The resulting <code><a class="el" href="#a38faa488c96113dce7387bd59f670e19" title="An alias for std::set&lt;Possibility&gt;">InformationState</a></code> after evaluating the expression. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument',if</td><td>formula does not accord with <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html">GSV</a> grammar </td></tr>
-    <tr><td class="paramname">`std::out_of_range'</td><td>if interpretation is undefined </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;InformationState, std::string&gt; The updated information state if evaluation is successful, or an error message if evaluation fails.</dd></dl>
+<p>The function processes the expression using <code>std::visit</code>, dispatching to the appropriate <code><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html" title="Represents an evaluator for logical expressions.">Evaluator</a></code> method based on the expression type. If evaluation encounters an error (e.g., an invalid operator or undefined term interpretation), an error message is returned instead of an updated state. </p>
 
-<p class="definition">Definition at line <a class="el" href="evaluator_8cpp_source.html#l00284">284</a> of file <a class="el" href="evaluator_8cpp_source.html">evaluator.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="evaluator_8cpp_source.html#l00476">476</a> of file <a class="el" href="evaluator_8cpp_source.html">evaluator.cpp</a>.</p>
 
 </div>
 </div>
@@ -681,7 +666,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if <code>r2</code> extends <code>r1</code>, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00064">64</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00079">79</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -725,14 +710,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a93015f60e1d1beaec59c3717d4d62e73" name="a93015f60e1d1beaec59c3717d4d62e73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93015f60e1d1beaec59c3717d4d62e73">&#9670;&#160;</a></span>isSupportedBy()</h2>
+<a id="ac1f6f5024016642aeeef1079f42cf08b" name="ac1f6f5024016642aeeef1079f42cf08b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1f6f5024016642aeeef1079f42cf08b">&#9670;&#160;</a></span>isSupportedBy()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::isSupportedBy </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::isSupportedBy </td>
           <td>(</td>
           <td class="paramtype">const Expression &amp;</td>          <td class="paramname"><span class="paramname"><em>expr</em></span>, </td>
         </tr>
@@ -749,25 +734,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determines whether an expression is supported by an information state. </p>
-<p>This function is an alias for <code>supports</code>, checking if the given state provides support for the specified expression.</p>
+<p>Checks if an expression is supported by a given information state. </p>
+<p>This function is equivalent to <code>supports(state, expr, model)</code>, verifying whether the evaluation of the expression does not introduce information absent from the given information state.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">expr</td><td>The expression being tested for support. </td></tr>
-    <tr><td class="paramname">state</td><td>The information state to check against. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing evaluation context. </td></tr>
+    <tr><td class="paramname">expr</td><td>The expression to evaluate. </td></tr>
+    <tr><td class="paramname">state</td><td>The initial information state. </td></tr>
+    <tr><td class="paramname">model</td><td>The model used for evaluation. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is supported by the state and model, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the expression is supported by the state, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00096">96</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00115">115</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
@@ -791,6 +770,63 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00071">71</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a973bd84090af10b27ca342a7d08fda1c" name="a973bd84090af10b27ca342a7d08fda1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a973bd84090af10b27ca342a7d08fda1c">&#9670;&#160;</a></span>repr() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string iif_sadaf::talk::GSV::repr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00148">148</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a853116ab24d54818e4828d2bc8812521" name="a853116ab24d54818e4828d2bc8812521"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a853116ab24d54818e4828d2bc8812521">&#9670;&#160;</a></span>repr() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string iif_sadaf::talk::GSV::repr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00124">124</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a1d62edfd1ea0ec9a0e075f28c6504fd0" name="a1d62edfd1ea0ec9a0e075f28c6504fd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d62edfd1ea0ec9a0e075f28c6504fd0">&#9670;&#160;</a></span>repr() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string iif_sadaf::talk::GSV::repr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>r</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00124">124</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -828,7 +864,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00076">76</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00104">104</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
 
 </div>
 </div>
@@ -847,7 +883,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00092">92</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00107">107</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -919,14 +955,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a204bb28ec3d862b9b52351bc14020190" name="a204bb28ec3d862b9b52351bc14020190"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a204bb28ec3d862b9b52351bc14020190">&#9670;&#160;</a></span>supports()</h2>
+<a id="aa764568ed310512e6fd886c1339688f9" name="aa764568ed310512e6fd886c1339688f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa764568ed310512e6fd886c1339688f9">&#9670;&#160;</a></span>supports()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool iif_sadaf::talk::GSV::supports </td>
+          <td class="memname">std::expected&lt; bool, std::string &gt; iif_sadaf::talk::GSV::supports </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>state</em></span>, </td>
         </tr>
@@ -943,25 +979,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if an information state supports a given expression. </p>
-<p>The function evaluates the expression with respect to the input state, relative to the provided model. If the output information state subsists in the original state, the expression is considered supported. If an out of range exception occurs during evaluation (signaling that the update does not exist, or is not defined, for the input formula), the expression is not supported by the input state.</p>
+<p>Determines whether an information state supports a given expression. </p>
+<p>This function checks if the evaluated update of the given expression subsists in the original information state. An expression is "supported" if its evaluation does not introduce information that is absent from the state.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">state</td><td>The information state to check. </td></tr>
-    <tr><td class="paramname">expr</td><td>The expression being tested for support. </td></tr>
-    <tr><td class="paramname">model</td><td>The model providing evaluation context. </td></tr>
+    <tr><td class="paramname">state</td><td>The initial information state. </td></tr>
+    <tr><td class="paramname">expr</td><td>The expression to evaluate. </td></tr>
+    <tr><td class="paramname">model</td><td>The model used for evaluation. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the expression is supported by the state and model, otherwise <code>false</code>. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">`std::invalid_argument'</td><td>if <code>expr</code> contains an invalid logical operator or quantifier. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;bool, std::string&gt; <code>true</code> if the evaluated update subsists in the initial state, <code>false</code> otherwise. Returns an error message if evaluation fails. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00074">74</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="semantic__relations_8cpp_source.html#l00085">85</a> of file <a class="el" href="semantic__relations_8cpp_source.html">semantic_relations.cpp</a>.</p>
 
 </div>
 </div>
@@ -1002,6 +1032,45 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A new updated information state. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="information__state_8cpp_source.html#l00043">43</a> of file <a class="el" href="information__state_8cpp_source.html">information_state.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ac0c4a1c064233601a0bfcd5b76791e30" name="ac0c4a1c064233601a0bfcd5b76791e30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0c4a1c064233601a0bfcd5b76791e30">&#9670;&#160;</a></span>variableDenotation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::expected&lt; int, std::string &gt; iif_sadaf::talk::GSV::variableDenotation </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>variable</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html">Possibility</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>p</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the denotation of a variable within a given <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a>. </p>
+<p>This function looks up the peg associated with the given variable in the <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a>'s <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> and then retrieves the corresponding individual from the assignment.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">variable</td><td>The name of the variable whose denotation is being retrieved. </td></tr>
+    <tr><td class="paramname">p</td><td>The <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_possibility.html" title="Represents a possibility as understood in the underlying semantics.">Possibility</a> in which the variable is interpreted.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;int, std::string&gt;<ul>
+<li>If successful, returns the individual assigned to the variable.</li>
+<li>If the variable is not found in the <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a>, returns an error message.</li>
+<li>If the peg retrieved from the <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> is not found in the assignment, returns an error message. </li>
+</ul>
+</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="possibility_8cpp_source.html#l00090">90</a> of file <a class="el" href="possibility_8cpp_source.html">possibility.cpp</a>.</p>
 
 </div>
 </div>
