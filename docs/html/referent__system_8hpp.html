@@ -32,9 +32,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;2.0</span>
    </div>
-   <div id="projectbrief">An computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
+   <div id="projectbrief">A computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -110,7 +110,8 @@ $(function(){initNavTree('referent__system_8hpp.html',''); initResizable(true); 
   <div class="headertitle"><div class="title">referent_system.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;set&gt;</code><br />
+<div class="textblock"><code>#include &lt;expected&gt;</code><br />
+<code>#include &lt;set&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
@@ -135,12 +136,15 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1e9ec729c1ae6b648a071cedd89cd54b" id="r_a1e9ec729c1ae6b648a071cedd89cd54b"><td class="memItemLeft" align="right" valign="top">std::set&lt; std::string_view &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a1e9ec729c1ae6b648a071cedd89cd54b">iif_sadaf::talk::GSV::domain</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
+<tr class="memdesc:a1e9ec729c1ae6b648a071cedd89cd54b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the set of variable names in the referent system.  <br /></td></tr>
 <tr class="separator:a1e9ec729c1ae6b648a071cedd89cd54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f3533609bbd6a0505808a1a5e2afdaf" id="r_a3f3533609bbd6a0505808a1a5e2afdaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a3f3533609bbd6a0505808a1a5e2afdaf">iif_sadaf::talk::GSV::extends</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r1)</td></tr>
 <tr class="memdesc:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether one <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a> extends another.  <br /></td></tr>
 <tr class="separator:a3f3533609bbd6a0505808a1a5e2afdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13ef67c10d5515b1778ec55e11952d60" id="r_a13ef67c10d5515b1778ec55e11952d60"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a13ef67c10d5515b1778ec55e11952d60">iif_sadaf::talk::GSV::str</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
 <tr class="separator:a13ef67c10d5515b1778ec55e11952d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d62edfd1ea0ec9a0e075f28c6504fd0" id="r_a1d62edfd1ea0ec9a0e075f28c6504fd0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a1d62edfd1ea0ec9a0e075f28c6504fd0">iif_sadaf::talk::GSV::repr</a> (const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;r)</td></tr>
+<tr class="separator:a1d62edfd1ea0ec9a0e075f28c6504fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -32,9 +32,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;2.0</span>
    </div>
-   <div id="projectbrief">An computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
+   <div id="projectbrief">A computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -128,9 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a016e22d95e2e0a39d904326b4419b6e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a755cc858b827eb7a0c77bbae7cbd9551" id="r_a755cc858b827eb7a0c77bbae7cbd9551"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a755cc858b827eb7a0c77bbae7cbd9551">operator=</a> (<a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html">ReferentSystem</a> &amp;&amp;other) noexcept</td></tr>
 <tr class="separator:a755cc858b827eb7a0c77bbae7cbd9551"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e5301b2e1f77a161a8a0f64b685971d" id="r_a7e5301b2e1f77a161a8a0f64b685971d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e5301b2e1f77a161a8a0f64b685971d">value</a> (std::string_view variable) const</td></tr>
-<tr class="memdesc:a7e5301b2e1f77a161a8a0f64b685971d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the peg value associated with a given variable.  <br /></td></tr>
-<tr class="separator:a7e5301b2e1f77a161a8a0f64b685971d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88873f5c0608aa6bd94e9a049e780a30" id="r_a88873f5c0608aa6bd94e9a049e780a30"><td class="memItemLeft" align="right" valign="top">std::expected&lt; int, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88873f5c0608aa6bd94e9a049e780a30">value</a> (std::string_view variable) const</td></tr>
+<tr class="memdesc:a88873f5c0608aa6bd94e9a049e780a30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the referent value associated with a given variable.  <br /></td></tr>
+<tr class="separator:a88873f5c0608aa6bd94e9a049e780a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -144,7 +144,7 @@ Public Attributes</h2></td></tr>
 <p>The <code><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html" title="Represents a referent system for variable assignments.">ReferentSystem</a></code> class provides a framework for handling variable-to-integer mappings within GAV. It allows for retrieval of variable values and tracks the number of pegs (or reference points) within the system.</p>
 <p>This class supports both copy and move semantics, ensuring flexibility in managing instances efficiently. </p>
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00020">20</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00021">21</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa6a6fb04dc326ef2133ab44e844f27a7" name="aa6a6fb04dc326ef2133ab44e844f27a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa6a6fb04dc326ef2133ab44e844f27a7">&#9670;&#160;</a></span>ReferentSystem() <span class="overload">[1/3]</span></h2>
@@ -219,7 +219,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00018">18</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00028">28</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -272,18 +272,18 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00023">23</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00033">33</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a7e5301b2e1f77a161a8a0f64b685971d" name="a7e5301b2e1f77a161a8a0f64b685971d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e5301b2e1f77a161a8a0f64b685971d">&#9670;&#160;</a></span>value()</h2>
+<a id="a88873f5c0608aa6bd94e9a049e780a30" name="a88873f5c0608aa6bd94e9a049e780a30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88873f5c0608aa6bd94e9a049e780a30">&#9670;&#160;</a></span>value()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int iif_sadaf::talk::GSV::ReferentSystem::value </td>
+          <td class="memname">std::expected&lt; int, std::string &gt; iif_sadaf::talk::GSV::ReferentSystem::value </td>
           <td>(</td>
           <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>variable</em></span></td><td>)</td>
           <td> const</td>
@@ -291,22 +291,17 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the peg value associated with a given variable. </p>
+<p>Retrieves the referent value associated with a given variable. </p>
+<p>This function checks whether the specified variable exists in the referent system. If the variable is found, its corresponding value is returned. Otherwise, an error message is returned indicating that the variable is not present.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">variable</td><td>The variable whose peg value is to be retrieved. </td></tr>
+    <tr><td class="paramname">variable</td><td>The variable whose referent value is being queried. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The peg value associated with the variable. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::out_of_range</td><td>If the variable has no associated peg. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::expected&lt;int, std::string&gt; The value associated with the variable, or an error message if the variable does not exist. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00040">40</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8cpp_source.html#l00054">54</a> of file <a class="el" href="referent__system_8cpp_source.html">referent_system.cpp</a>.</p>
 
 </div>
 </div>
@@ -323,7 +318,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00030">30</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00031">31</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
 
 </div>
 </div>
@@ -339,7 +334,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00031">31</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="referent__system_8hpp_source.html#l00032">32</a> of file <a class="el" href="referent__system_8hpp_source.html">referent_system.hpp</a>.</p>
 
 </div>
 </div>

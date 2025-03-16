@@ -11,15 +11,15 @@ BinaryNode::BinaryNode(Operator op, Expression lhs, Expression rhs)
     : op(op), lhs(std::move(lhs)), rhs(std::move(rhs))
 { }
 
-QuantificationNode::QuantificationNode(Quantifier quantifier, std::string variable, Expression scope)
+QuantificationNode::QuantificationNode(Quantifier quantifier, Term variable, Expression scope)
     : quantifier(quantifier), variable(std::move(variable)), scope(std::move(scope))
 { }
 
-IdentityNode::IdentityNode(std::string lhs, std::string rhs)
+IdentityNode::IdentityNode(Term lhs, Term rhs)
     : lhs(std::move(lhs)), rhs(std::move(rhs))
 { }
 
-PredicationNode::PredicationNode(std::string predicate, std::vector<std::string> arguments)
+PredicationNode::PredicationNode(std::string predicate, std::vector<Term> arguments)
     : predicate(std::move(predicate)), arguments(std::move(arguments))
 { }
 

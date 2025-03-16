@@ -1,10 +1,20 @@
 #include "referent_system.hpp"
 
 #include <algorithm>
+#include <format>
 #include <stdexcept>
 
 namespace iif_sadaf::talk::GSV {
 
+/**
+ * @brief Retrieves the set of variable names in the referent system.
+ * 
+ * This function extracts all variable names present in the given 
+ * ReferentSystem instance and returns them as a set of string views.
+ * 
+ * @param r The ReferentSystem instance whose variable names are being queried.
+ * @return std::set<std::string_view> A set containing all variable names in the system.
+ */
 std::set<std::string_view> domain(const ReferentSystem& r)
 {
 	std::set<std::string_view> domain;
@@ -31,17 +41,20 @@ ReferentSystem& ReferentSystem::operator=(ReferentSystem&& other) noexcept
 }
 
 /**
- * @brief Retrieves the peg value associated with a given variable.
+ * @brief Retrieves the referent value associated with a given variable.
  *
- * @param variable The variable whose peg value is to be retrieved.
- * @return The peg value associated with the variable.
- * @throws std::out_of_range If the variable has no associated peg.
+ * This function checks whether the specified variable exists in the referent system.
+ * If the variable is found, its corresponding value is returned. Otherwise, an error
+ * message is returned indicating that the variable is not present.
+ *
+ * @param variable The variable whose referent value is being queried.
+ * @return std::expected<int, std::string> The value associated with the variable,
+ *         or an error message if the variable does not exist.
  */
-int ReferentSystem::value(std::string_view variable) const
+std::expected<int, std::string> ReferentSystem::value(std::string_view variable) const
 {
 	if (!variablePegAssociation.contains(variable)) {
-        const std::string error_msg = "Variable " + std::string(variable) + " has no anaphoric antecedent or binding quantifier";
-		throw(std::out_of_range(error_msg));
+        return std::unexpected(std::format("Referent system does not contain variable {}", std::string(variable)));
 	}
 
 	return variablePegAssociation.at(variable);
@@ -61,6 +74,8 @@ int ReferentSystem::value(std::string_view variable) const
  * @param r1 The base ReferentSystem.
  * @return True if `r2` extends `r1`, false otherwise.
  */
+
+ // TODO check that these calls to value() are safe
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 {
 	if (r1.pegs > r2.pegs) {
@@ -75,7 +90,7 @@ bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 	}
 
 	const auto old_var_same_or_new_peg = [&](std::string_view variable) -> bool {
-		return r1.value(variable) == r2.value(variable) || r1.pegs <= r2.value(variable);
+		return r1.value(variable).value() == r2.value(variable).value() || r1.pegs <= r2.value(variable).value();
 	};
 
 	if (!std::ranges::all_of(domain_r1, old_var_same_or_new_peg)) {
@@ -83,7 +98,7 @@ bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 	}
 
 	const auto new_var_new_peg = [&](std::string_view variable) -> bool {
-		return domain_r1.contains(variable) || r1.pegs <= r2.value(variable);
+		return domain_r1.contains(variable) || r1.pegs <= r2.value(variable).value();
 	};
 
 	return std::ranges::all_of(domain_r2, new_var_new_peg);

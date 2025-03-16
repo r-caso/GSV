@@ -5,6 +5,16 @@
 #include <variant>
 #include <vector>
 
+struct Term {
+    enum class Type : uint8_t {
+        CONSTANT,
+        VARIABLE
+    };
+
+    Type type;
+    std::string literal;
+};
+
 struct UnaryNode;
 struct BinaryNode;
 struct QuantificationNode;
@@ -49,25 +59,25 @@ struct BinaryNode {
 };
 
 struct QuantificationNode {
-    QuantificationNode(Quantifier quantifier, std::string variable, Expression scope);
+    QuantificationNode(Quantifier quantifier, Term variable, Expression scope);
 
     Quantifier quantifier;
-    std::string variable;
+    Term variable;
     Expression scope;
 };
 
 struct IdentityNode {
-    IdentityNode(std::string lhs, std::string rhs);
+    IdentityNode(Term lhs, Term rhs);
 
-    std::string lhs;
-    std::string rhs;
+    Term lhs;
+    Term rhs;
 };
 
 struct PredicationNode {
-    PredicationNode(std::string predicate, std::vector<std::string> arguments);
+    PredicationNode(std::string predicate, std::vector<Term> arguments);
 
     std::string predicate;
-    std::vector<std::string> arguments;
+    std::vector<Term> arguments;
 };
 
 Expression negate(const Expression& expr);

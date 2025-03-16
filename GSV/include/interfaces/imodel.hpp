@@ -1,6 +1,8 @@
 #pragma once
 
+#include <expected>
 #include <set>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -22,8 +24,8 @@ struct IModel {
 public:
 	virtual int world_cardinality() const = 0;
 	virtual int domain_cardinality() const = 0;
-	virtual int termInterpretation(std::string_view term, int world) const = 0;
-	virtual const std::set<std::vector<int>>& predicateInterpretation(std::string_view predicate, int world) const = 0;
+	virtual std::expected<int, std::string> termInterpretation(std::string_view term, int world) const = 0;
+	virtual std::expected<const std::set<std::vector<int>>*, std::string> predicateInterpretation(std::string_view predicate, int world) const = 0;
 	virtual ~IModel() {};
 };
 

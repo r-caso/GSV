@@ -1,7 +1,6 @@
 #include "model.hpp"
 
-#include <stdexcept>
-
+#include <format>
 
 /**
  * @brief Constructs a Model with a given number of worlds and individuals.
@@ -40,17 +39,14 @@ int Model::domain_cardinality() const
  * @param term The term to be interpreted.
  * @param world The world in which the term is interpreted.
  * @return The assigned individual for the term in the given world.
- * @throws std::out_of_range if the term does not exist.
  */
-int Model::termInterpretation(std::string_view term, int world) const
+std::expected<int, std::string> Model::termInterpretation(std::string_view term, int world) const
 {
 	if (!m_termInterpretation.contains(std::string(term))) {
-		std::string error_msg = "Non-existent term: " + std::string(term);
-		throw(std::out_of_range(error_msg));
+		return std::unexpected(std::format("Non-existent term: {}", std::string(term)));
 	}
 	return m_termInterpretation.at(std::string(term)).at(world);
 }
-
 
 /**
  * @brief Retrieves the interpretation of a predicate in a given world.
@@ -58,15 +54,13 @@ int Model::termInterpretation(std::string_view term, int world) const
  * @param predicate The predicate to be interpreted.
  * @param world The world in which the predicate is interpreted.
  * @return The set of tuples representing the predicate's interpretation.
- * @throws std::out_of_range if the predicate does not exist.
  */
-const std::set<std::vector<int>>& Model::predicateInterpretation(std::string_view predicate, int world) const
+std::expected<const std::set<std::vector<int>>*, std::string> Model::predicateInterpretation(std::string_view predicate, int world) const
 {
 	if (!m_predicateInterpretation.contains(std::string(predicate))) {
-		std::string error_msg = "Non-existent predicate: " + std::string(predicate);
-		throw(std::out_of_range(error_msg));
+		return std::unexpected(std::format("Non-existent predicate: {}", std::string(predicate)));
 	}
-	return m_predicateInterpretation.at(std::string(predicate)).at(world);
+	return &m_predicateInterpretation.at(std::string(predicate)).at(world);
 }
 
 /*
@@ -75,8 +69,9 @@ const std::set<std::vector<int>>& Model::predicateInterpretation(std::string_vie
 
 std::string str(const Model& m)
 {
-	return "World domain cardinality:      "
-		+ std::to_string(m.world_cardinality())
-		+ "\nIndividual domain cardinality: "
-		+ std::to_string(m.domain_cardinality());
+	return std::format(
+		"World domain cardinality:      {}\nIndividual domain cardinality: {}",
+		std::to_string(m.world_cardinality()),
+		std::to_string(m.domain_cardinality())
+	);
 }

@@ -1,11 +1,14 @@
 #include "evaluator.hpp"
 
 #include <algorithm>
+#include <expected>
+#include <format>
 #include <functional>
 #include <ranges>
 #include <stdexcept>
 
-#include "variable.hpp"
+#include "formatter.hpp"
+#include "possibility.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
@@ -22,127 +25,233 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
 	}
 }
 
-int variableDenotation(std::string_view variable, const Possibility& p)
-{
-	return p.assignment.at(p.referentSystem->value(variable));
-}
-
 } // ANONYMOUS NAMESPACE
 
 /**
-* @brief Evaluates a unary logical expression on an InformationState.
-*
-* Applies an operator (such as necessity, possibility, or negation) to
-* modify the given state accordingly.
-*
-* @param expr The unary expression to evaluate.
-* @param params The input information state and IModel pointer
-* @return The modified InformationState after applying the operation.
-* @throws std::invalid_argument if the operator is invalid.
-*/
-InformationState Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+ * @brief Evaluates a unary logical expression and updates the information state accordingly.
+ *
+ * This function applies a unary operator (such as necessity, possibility, or negation)
+ * to an expression and modifies the provided information state based on the result.
+ *
+ * @param expr A shared pointer to a UnaryNode representing the unary expression.
+ * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
+ * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
+ *         or an error message if evaluation fails.
+ *
+ * @details The function first evaluates the prejacent (the inner expression of the unary operator).
+ *          If evaluation fails, an error message is returned. Otherwise, it applies the appropriate
+ *          modification to the information state:
+ *          - **E_POS (Epistemic Possibility)**: If the prejacent state is empty, the input state is cleared.
+ *          - **E_NEC (Epistemic Necessity)**: If the prejacent state is not contained in the input state, the input state is cleared.
+ *          - **NEG (Negation)**: The input state is filtered to remove elements that subsist in the prejacent update.
+ *
+ *          If an unrecognized operator is encountered, an error message is returned.
+ */
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState hypothetical_update = std::visit(Evaluator(), expr->scope, params);
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
+	const auto prejacent_update = std::visit(Evaluator(), expr->scope, params);
+
+	if (!prejacent_update.has_value()) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)), 
+				prejacent_update.error()
+			)
+		);
+	}
+
+	InformationState& input_state = std::get<std::pair<InformationState, const IModel*>>(params).first;
 
 	if (expr->op == Operator::E_POS) {
-		if (hypothetical_update.empty()) {
+		if (prejacent_update.value().empty()) {
 			input_state.clear();
 		}
 	}
 	else if (expr->op == Operator::E_NEC) {
-		if (!subsistsIn(input_state, hypothetical_update)) {
+		if (!subsistsIn(input_state, prejacent_update.value())) {
 			input_state.clear();
 		}
 	}
 	else if (expr->op == Operator::NEG) {
-		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, hypothetical_update); });
+		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, prejacent_update.value()); });
 	}
 	else {
-		throw(std::invalid_argument("Invalid operator for unary formula"));
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				"Invalid unary operator"
+			)
+		);
 	}
 
 	return std::move(input_state);
 }
 
 /**
-* @brief Evaluates a binary logical expression on an InformationState.
-*
-* Processes logical operations such as conjunction, disjunction, and
-* implication, modifying the state accordingly.
-*
-* @param expr The binary expression to evaluate.
-* @param params The input information state and IModel pointer
-* @return The modified InformationState after applying the operation.
-* @throws std::invalid_argument if the operator is invalid.
-*/
-InformationState Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+ * @brief Evaluates a binary logical expression and updates the information state accordingly.
+ *
+ * This function applies binary logical operators (such as conjunction, disjunction, and implication)
+ * to an expression and modifies the provided information state based on the result.
+ *
+ * @param expr A shared pointer to a BinaryNode representing the binary expression.
+ * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
+ * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
+ *         or an error message if evaluation fails.
+ *
+ * @details The function evaluates the left-hand side (lhs) and right-hand side (rhs) of the binary expression
+ *          and modifies the information state based on the operator:
+ *
+ *          - **CON (Conjunction)**: The lhs is evaluated first, and the resulting state is then used to evaluate the rhs.
+ *          - **DIS (Disjunction)**: The lhs is negated and evaluated separately, then the rhs is evaluated using the
+ *            negated lhs state. The final state contains possibilities present in either lhs or rhs.
+ *          - **IMP (Implication)**: Evaluates the lhs, then checks if every possibility in the lhs has all its
+ *            descendants subsisting in the rhs update.
+ *
+ *          If an unrecognized operator is encountered, an error message is returned.
+ *
+ *          If any evaluation fails at any step, the function returns an error message indicating which part of
+ *          the formula caused the failure.
+ */
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
+	// Conjunction is sequential update, treated separately
 	if (expr->op == Operator::CON) {
+		const auto lhs_update = std::visit(Evaluator(), expr->lhs, params);
+
+		if (!lhs_update.has_value()) {
+			return std::unexpected(
+				std::format(
+					"In evaluating formula {}:\n{}",
+					std::visit(Formatter(), Expression(expr)), 
+					lhs_update.error()
+				)
+			);
+		}
+
 		return std::visit(
-			Evaluator(),
-			expr->rhs, 
-			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), expr->lhs, params), model))
+				Evaluator(),
+				expr->rhs,
+				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(lhs_update.value(), model)
+			)
 		);
 	}
 
+	// All other updates are filtering updates
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	InformationState hypothetical_update_lhs = std::visit(Evaluator(), expr->lhs, params);
+	const auto hypothetical_lhs_update = std::visit(Evaluator(), expr->lhs, params);
+
+	if (!hypothetical_lhs_update.has_value()) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				hypothetical_lhs_update.error()
+			)
+		);
+	}
 
 	if (expr->op == Operator::DIS) {
-		InformationState hypothetical_update_rhs = std::visit(
+		const auto negated_lhs_update = std::visit(Evaluator(), negate(expr->lhs), params);
+		
+		if (!negated_lhs_update.has_value()) {
+			return std::unexpected(
+				std::format(
+					"In evaluating formula {}:\n{}", 
+					std::visit(Formatter(), Expression(expr)),
+					negated_lhs_update.error()
+				)
+			);
+		}
+		
+		const auto hypothetical_rhs_update = std::visit(
 			Evaluator(),
 			expr->rhs,
-			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(std::visit(Evaluator(), negate(expr->lhs), params), model))
+			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(negated_lhs_update.value(), model))
 		);
 
+		if (!hypothetical_rhs_update.has_value()) {
+			return std::unexpected(
+				std::format(
+					"In evaluating formula {}:\n{}", 
+					std::visit(Formatter(), Expression(expr)),
+					hypothetical_rhs_update.error()
+				)
+			);
+		}
+
 		const auto in_lhs_or_in_rhs = [&](const Possibility& p) -> bool {
-			return hypothetical_update_lhs.contains(p) || hypothetical_update_rhs.contains(p);
+			return hypothetical_lhs_update.value().contains(p) || hypothetical_rhs_update.value().contains(p);
 		};
 
 		filter(input_state, in_lhs_or_in_rhs);
 	}
 	else if (expr->op == Operator::IMP) {
-		InformationState hypothetical_update_consequent = std::visit(
+		const auto hypothetical_consequent_update = std::visit(
 			Evaluator(),
 			expr->rhs,
-			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(hypothetical_update_lhs, model))
+			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(hypothetical_lhs_update.value(), model))
 		);
 
-		auto all_descendants_subsist = [&](const Possibility& p) -> bool {
-			auto not_descendant_or_subsists = [&](const Possibility& p_star) -> bool {
-				return !isDescendantOf(p_star, p, hypothetical_update_lhs) || subsistsIn(p_star, hypothetical_update_consequent);
+		if (!hypothetical_consequent_update.has_value()) {
+			return std::unexpected(
+				std::format(
+					"In evaluating formula {}:\n{}", 
+					std::visit(Formatter(), Expression(expr)), 
+					hypothetical_consequent_update.error()
+				)
+			);
+		}
+
+		const auto all_descendants_subsist = [&](const Possibility& p) -> bool {
+			const auto not_descendant_or_subsists = [&](const Possibility& p_star) -> bool {
+				return !isDescendantOf(p_star, p, hypothetical_lhs_update.value()) || subsistsIn(p_star, hypothetical_consequent_update.value());
 			};
-			return std::ranges::all_of(hypothetical_update_lhs, not_descendant_or_subsists);
+			return std::ranges::all_of(hypothetical_lhs_update.value(), not_descendant_or_subsists);
 		};
 
 		const auto if_subsists_all_descendants_do = [&](const Possibility& p) -> bool {
-			return !subsistsIn(p, hypothetical_update_lhs) || all_descendants_subsist(p);
+			return !subsistsIn(p, hypothetical_lhs_update.value()) || all_descendants_subsist(p);
 		};
 
 		filter(input_state, if_subsists_all_descendants_do);
 	}
 	else {
-		throw(std::invalid_argument("Invalid operator for binary formula"));
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				"Invalid operator for binary formula"
+			)
+		);
 	}
 
 	return std::move(input_state);
 }
 
 /**
-* @brief Evaluates a quantified expression on an InformationState.
-*
-* Handles existential and universal quantifiers by iterating over possible
-* individuals in the model and updating the state accordingly.
-*
-* @param expr The quantification expression to evaluate.
-* @param params The input information state and IModel pointer
-* @return The modified InformationState after applying the quantification.
-* @throws std::invalid_argument if the quantifier is invalid.
-*/
-InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+ * @brief Evaluates a quantified expression within a given information state and model.
+ *
+ * This function processes logical quantification (existential or universal) over a variable,
+ * applying the quantifier's scope to all possible values in the model's domain.
+ *
+ * @param expr A shared pointer to the `QuantificationNode` representing the quantified expression.
+ * @param params A variant containing the current `InformationState` and a pointer to the `IModel`.
+ * @return std::expected<InformationState, std::string> The updated information state after
+ *         applying quantification, or an error message if evaluation fails.
+ *
+ * @details
+ * - **Existential Quantification (Ex F(x))**: Evaluates the scope F(x) for all values in the domain,
+ *   then merges all resulting information states.
+ * - **Universal Quantification (Vx F(x))**: Evaluates F(x) for all values in the domain and filters
+ *   the input state, keeping only those possibilities that subsist in all hypothetical updates.
+ * - If an error occurs during evaluation (e.g., invalid quantifier or undefined term),
+ *   an error message is returned instead of an updated state.
+ */
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
@@ -151,12 +260,24 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 		std::vector<InformationState> all_state_variants;
 
         for (const int i : std::views::iota(0, model->domain_cardinality())) {
-            const InformationState s_variant = update(input_state, expr->variable, i);
-			all_state_variants.push_back(std::visit(
+            const InformationState s_variant = update(input_state, expr->variable.literal, i);
+			const auto hypothetical_s_variant_update = std::visit(
 				Evaluator(),
 				expr->scope,
-				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(s_variant, model)))
+				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(s_variant, model))
 			);
+			
+			if (!hypothetical_s_variant_update.has_value()) {
+				return std::unexpected(
+					std::format(
+						"In evaluating formula {}:\n{}",
+						std::visit(Formatter(), Expression(expr)),
+						hypothetical_s_variant_update.error()
+					)
+				);
+			}
+			
+			all_state_variants.push_back(hypothetical_s_variant_update.value());
 		}
 
 		InformationState output;
@@ -168,17 +289,27 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 
 		return output;
 	}
-
     if (expr->quantifier == Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
         for (const int d : std::views::iota(0, model->domain_cardinality())) {
-            const InformationState hypothetical_update = std::visit(
+            const auto hypothetical_update = std::visit(
 				Evaluator(),
 				expr->scope,
-				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(update(input_state, expr->variable, d), model))
+				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(update(input_state, expr->variable.literal, d), model))
 			);
-			all_hypothetical_updates.push_back(hypothetical_update);
+
+			if (!hypothetical_update.has_value()) {
+				return std::unexpected(
+					std::format(
+						"In evaluating formula {}:\n{}", 
+						std::visit(Formatter(), Expression(expr)), 
+						hypothetical_update.error()
+					)
+				);
+			}
+
+			all_hypothetical_updates.push_back(hypothetical_update.value());
 		}
 
 		const auto subsists_in_all_hyp_updates = [&](const Possibility& p) -> bool {
@@ -191,97 +322,158 @@ InformationState Evaluator::operator()(const std::shared_ptr<QuantificationNode>
 		filter(input_state, subsists_in_all_hyp_updates);
 	}
 	else {
-		throw(std::invalid_argument("Invalid quantifier"));
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				"Invalid quantifier"
+			)
+		);
 	}
 
 	return std::move(input_state);
 }
 
 /**
-* @brief Evaluates an identity expression, filtering based on variable or term equality.
-*
-* Compares the denotation of two terms or variables and retains only the
-* possibilities where they are equal.
-* 
-* May throw std::out_of_range if either the LHS or the RHS of the identity lack
-* an interpretation in the base model for the information state, or are variables
-* without a binding quantifier or a proper anaphoric antecedent.
-*
-* @param expr The identity expression to evaluate.
-* @param params The input information state and IModel pointer
-* @return The filtered InformationState after applying identity conditions.
-* @throws std::invalid_argument if the quantifier is invalid.
-*/
-InformationState Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+ * @brief Evaluates an identity expression and filters the information state accordingly.
+ *
+ * This function determines whether two terms (variables or constants) in the given expression
+ * denote the same entity within the provided model and information state. It then filters
+ * the information state, retaining only those possibilities where the denotations match.
+ *
+ * @param expr A shared pointer to an IdentityNode representing the identity expression.
+ * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
+ * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
+ *         or an error message if evaluation fails.
+ *
+ * @details The function follows these steps:
+ *          1. Extracts the left-hand side (lhs) and right-hand side (rhs) terms from the expression.
+ *          2. Determines the denotation of each term:
+ *             - If the term is a variable, its denotation is obtained from the current possibility.
+ *             - If the term is a constant, its interpretation is retrieved from the model.
+ *          3. Compares the denotations to check for identity.
+ *          4. Filters the information state, retaining only those possibilities where the lhs and rhs
+ *             have the same denotation.
+ *
+ *          If a denotation is out of range (e.g., an unbound variable), an error message is returned.
+ */
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
-	auto assigns_same_denotation = [&](const Possibility& p) -> bool { 
-		const int lhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->lhs, p) : model.termInterpretation(expr->lhs, p.world);
-		const int rhs_denotation = isVariable(expr->lhs) ? variableDenotation(expr->rhs, p) : model.termInterpretation(expr->rhs, p.world);
-		return lhs_denotation == rhs_denotation;
+	auto assigns_same_denotation = [&](const Possibility& p) -> bool {
+		const auto lhs_denotation = expr->lhs.type == Term::Type::VARIABLE ? variableDenotation(expr->lhs.literal, p) : model.termInterpretation(expr->lhs.literal, p.world);
+		const auto rhs_denotation = expr->rhs.type == Term::Type::VARIABLE ? variableDenotation(expr->rhs.literal, p) : model.termInterpretation(expr->rhs.literal, p.world);
+
+		if (!lhs_denotation.has_value()) {
+			throw std::out_of_range(lhs_denotation.error());
+		}
+		if (!rhs_denotation.has_value()) {
+			throw std::out_of_range(rhs_denotation.error());
+		}
+		
+		return lhs_denotation.value() == rhs_denotation.value();
 	};
 
-	filter(input_state, assigns_same_denotation);
-
-	return std::move(input_state);
+	try {
+		filter(input_state, assigns_same_denotation);
+		return std::move(input_state);
+	}
+	catch (const std::out_of_range& e) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				e.what()
+			)
+		);
+	}
 }
 
 /**
- * @brief Evaluates a predicate expression by filtering states based on predicate denotation.
+ * @brief Evaluates a predication expression and filters the information state accordingly.
  *
- * Checks if a given predicate holds in the current world and filters
- * possibilities accordingly.
- * 
- * May throw std::out_of_range if (i) any argument to the predicate lacks an interpretation
- * in the base model for the information state, or is a variable without a binding quantifier
- * or a proper anaphoric antecedent, or (ii) the predicate lacks an interpretation in the
- * base model for the information state.
+ * This function checks whether a given predicate holds for a set of terms (variables or constants)
+ * in each possibility of the current information state. It retains only those possibilities where
+ * the predicate applies to the corresponding denotations.
  *
- * @param expr The predicate expression to evaluate.
- * @param params The input information state and IModel pointer
- * @return The filtered InformationState after evaluating the predicate.
- * @throws std::invalid_argument if the quantifier is invalid.
+ * @param expr A shared pointer to a PredicationNode representing the predication expression.
+ * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
+ * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
+ *         or an error message if evaluation fails.
+ *
+ * @details The function performs the following steps:
+ *          1. Extracts the arguments of the predicate and determines their denotations:
+ *             - If an argument is a variable, its denotation is obtained from the current possibility.
+ *             - If an argument is a constant, its interpretation is retrieved from the model.
+ *          2. Constructs a tuple of these denotations.
+ *          3. Checks if the tuple belongs to the extension of the predicate in the given world.
+ *          4. Filters the information state, keeping only those possibilities where the predicate holds.
+ *
+ *          If an argument's denotation is out of range (e.g., an unbound variable) or the predicate
+ *          interpretation is missing, an error message is returned.
  */
-InformationState Evaluator::operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
-	auto tuple_in_extension = [&](const Possibility& p) -> bool {
+	const auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
 		
-		for (const std::string& argument : expr->arguments) {
-			const int denotation = isVariable(argument) ? variableDenotation(argument, p) : model.termInterpretation(argument, p.world);
-			tuple.push_back(denotation);
+		for (const Term& argument : expr->arguments) {
+			const auto denotation = argument.type == Term::Type::VARIABLE ? variableDenotation(argument.literal, p) : model.termInterpretation(argument.literal, p.world);
+			if (denotation.has_value()) {
+				tuple.push_back(denotation.value());
+			}
+			else {
+				throw std::out_of_range(denotation.error());
+			}
 		}
 
-		return model.predicateInterpretation(expr->predicate, p.world).contains(tuple);
+		const auto predint = model.predicateInterpretation(expr->predicate, p.world);
+		if (predint.has_value()) {
+			return predint.value()->contains(tuple);
+		}
+		else {
+			throw std::out_of_range(predint.error());
+		}
 	};
 
-	filter(input_state, tuple_in_extension);
-
-	return std::move(input_state);
+	try {
+		filter(input_state, tuple_in_extension);
+		return std::move(input_state);
+	}
+	catch (const std::invalid_argument& e) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(Formatter(), Expression(expr)),
+				e.what()
+			)
+		);
+	}
 }
 
 /**
- * @brief Evaluates an expression within a given information state and model.
+ * @brief Evaluates a logical expression within a given information state and model.
  *
- * This function takes as input an `InformationState' object, applies
- * an `Evaluator` visitor to the input `Expression`, and returns the
- * output `InformationState`, given the semantic values provided by the
- * `Model' object. It utilizes `std::visit` to dynamically apply the
- * appropriate evaluation logic based on the type of `expr`.
+ * This function applies an `Evaluator` visitor to the provided expression, computing
+ * an updated information state based on the evaluation result.
  *
- * @param expr The expression to evaluate.
- * @param input_state The initial information state used during evaluation.
- * @param model The model that provides contextual information for evaluation.
- * @return The resulting `InformationState` after evaluating the expression.
- * @throws `std::invalid_argument', if formula does not accord with GSV grammar
- * @throws `std::out_of_range' if interpretation is undefined
+ * @param expr The logical expression to evaluate.
+ * @param input_state The initial information state in which the expression is evaluated.
+ * @param model The model providing the interpretation of terms and predicates.
+ * @return std::expected<InformationState, std::string> The updated information state if
+ *         evaluation is successful, or an error message if evaluation fails.
+ *
+ * @details The function processes the expression using `std::visit`, dispatching to the
+ *          appropriate `Evaluator` method based on the expression type. If evaluation
+ *          encounters an error (e.g., an invalid operator or undefined term interpretation),
+ *          an error message is returned instead of an updated state.
  */
-InformationState evaluate(const Expression& expr, const InformationState& input_state, const IModel& model)
+std::expected<InformationState, std::string> evaluate(const Expression& expr, const InformationState& input_state, const IModel& model)
 {
 	return std::visit(
 		Evaluator(),

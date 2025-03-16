@@ -32,9 +32,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;1.0</span>
+   <div id="projectname">GSV evaluator library<span id="projectnumber">&#160;2.0</span>
    </div>
-   <div id="projectbrief">An computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
+   <div id="projectbrief">A computational implementation of Groenendijk, Stokhof and Veltman&#39;s update semantics for Quantified Modal Logic</div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -111,12 +111,14 @@ $(function(){initNavTree('semantic__relations_8cpp.html',''); initResizable(true
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="semantic__relations_8hpp_source.html">semantic_relations.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;format&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="evaluator_8hpp_source.html">evaluator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="formatter_8hpp_source.html">formatter.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="information__state_8hpp_source.html">information_state.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="possibility_8hpp_source.html">possibility.hpp</a>&quot;</code><br />
@@ -134,30 +136,30 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af159ecd7a4a85bdb9f78c9ee99c38b87" id="r_af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#af159ecd7a4a85bdb9f78c9ee99c38b87">iif_sadaf::talk::GSV::consistent</a> (const Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an expression is consistent with a given information state, relative to a model.  <br /></td></tr>
-<tr class="separator:af159ecd7a4a85bdb9f78c9ee99c38b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad10d6ec405741eca43a93f11057129ba" id="r_ad10d6ec405741eca43a93f11057129ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ad10d6ec405741eca43a93f11057129ba">iif_sadaf::talk::GSV::allows</a> (const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ad10d6ec405741eca43a93f11057129ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an information state allows a given expression.  <br /></td></tr>
-<tr class="separator:ad10d6ec405741eca43a93f11057129ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a204bb28ec3d862b9b52351bc14020190" id="r_a204bb28ec3d862b9b52351bc14020190"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a204bb28ec3d862b9b52351bc14020190">iif_sadaf::talk::GSV::supports</a> (const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:a204bb28ec3d862b9b52351bc14020190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an information state supports a given expression.  <br /></td></tr>
-<tr class="separator:a204bb28ec3d862b9b52351bc14020190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93015f60e1d1beaec59c3717d4d62e73" id="r_a93015f60e1d1beaec59c3717d4d62e73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a93015f60e1d1beaec59c3717d4d62e73">iif_sadaf::talk::GSV::isSupportedBy</a> (const Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:a93015f60e1d1beaec59c3717d4d62e73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is supported by an information state.  <br /></td></tr>
-<tr class="separator:a93015f60e1d1beaec59c3717d4d62e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab37c9547d63ebf502082dc74f4f31d18" id="r_ab37c9547d63ebf502082dc74f4f31d18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ab37c9547d63ebf502082dc74f4f31d18">iif_sadaf::talk::GSV::consistent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ab37c9547d63ebf502082dc74f4f31d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent relative to a given model.  <br /></td></tr>
-<tr class="separator:ab37c9547d63ebf502082dc74f4f31d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbf1dc8c88abbb476eb33b5e0b7d95c2" id="r_acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#acbf1dc8c88abbb476eb33b5e0b7d95c2">iif_sadaf::talk::GSV::coherent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is coherent relative to a given model.  <br /></td></tr>
-<tr class="separator:acbf1dc8c88abbb476eb33b5e0b7d95c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac4575eb3e3ae36cc8db89d4237ce3c1" id="r_aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#aac4575eb3e3ae36cc8db89d4237ce3c1">iif_sadaf::talk::GSV::entails</a> (const std::vector&lt; Expression &gt; &amp;premises, const Expression &amp;conclusion, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a set of premises entails a given conclusion, relative to a given model.  <br /></td></tr>
-<tr class="separator:aac4575eb3e3ae36cc8db89d4237ce3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae427b6d771679bac3b66d16eab0da759" id="r_ae427b6d771679bac3b66d16eab0da759"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ae427b6d771679bac3b66d16eab0da759">iif_sadaf::talk::GSV::equivalent</a> (const Expression &amp;expr1, const Expression &amp;expr2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:ae427b6d771679bac3b66d16eab0da759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether two expressions are equivalent, relative to a given model.  <br /></td></tr>
-<tr class="separator:ae427b6d771679bac3b66d16eab0da759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb257b64727fa7368581ad0487f6c12" id="r_a6bb257b64727fa7368581ad0487f6c12"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a6bb257b64727fa7368581ad0487f6c12">iif_sadaf::talk::GSV::consistent</a> (const Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:a6bb257b64727fa7368581ad0487f6c12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent with a given information state and model.  <br /></td></tr>
+<tr class="separator:a6bb257b64727fa7368581ad0487f6c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac93aeef273912a38411b0179ba200e6d" id="r_ac93aeef273912a38411b0179ba200e6d"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ac93aeef273912a38411b0179ba200e6d">iif_sadaf::talk::GSV::allows</a> (const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac93aeef273912a38411b0179ba200e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether an information state allows a given expression.  <br /></td></tr>
+<tr class="separator:ac93aeef273912a38411b0179ba200e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa764568ed310512e6fd886c1339688f9" id="r_aa764568ed310512e6fd886c1339688f9"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#aa764568ed310512e6fd886c1339688f9">iif_sadaf::talk::GSV::supports</a> (const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:aa764568ed310512e6fd886c1339688f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an information state supports a given expression.  <br /></td></tr>
+<tr class="separator:aa764568ed310512e6fd886c1339688f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1f6f5024016642aeeef1079f42cf08b" id="r_ac1f6f5024016642aeeef1079f42cf08b"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ac1f6f5024016642aeeef1079f42cf08b">iif_sadaf::talk::GSV::isSupportedBy</a> (const Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac1f6f5024016642aeeef1079f42cf08b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an expression is supported by a given information state.  <br /></td></tr>
+<tr class="separator:ac1f6f5024016642aeeef1079f42cf08b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e3fd713a39b933a9ff83f1f391b084" id="r_aa4e3fd713a39b933a9ff83f1f391b084"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#aa4e3fd713a39b933a9ff83f1f391b084">iif_sadaf::talk::GSV::consistent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:aa4e3fd713a39b933a9ff83f1f391b084"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is consistent within a given model.  <br /></td></tr>
+<tr class="separator:aa4e3fd713a39b933a9ff83f1f391b084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af59f997201605d5c6790d6e1709faef6" id="r_af59f997201605d5c6790d6e1709faef6"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#af59f997201605d5c6790d6e1709faef6">iif_sadaf::talk::GSV::coherent</a> (const Expression &amp;expr, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:af59f997201605d5c6790d6e1709faef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether an expression is coherent within a given model.  <br /></td></tr>
+<tr class="separator:af59f997201605d5c6790d6e1709faef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c87ac10560b2f2400f9c0a00b00c774" id="r_a0c87ac10560b2f2400f9c0a00b00c774"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a0c87ac10560b2f2400f9c0a00b00c774">iif_sadaf::talk::GSV::entails</a> (const std::vector&lt; Expression &gt; &amp;premises, const Expression &amp;conclusion, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:a0c87ac10560b2f2400f9c0a00b00c774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a set of premises entails a conclusion within a given model.  <br /></td></tr>
+<tr class="separator:a0c87ac10560b2f2400f9c0a00b00c774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6ec222c65bfe884b2843ade81e221df" id="r_ac6ec222c65bfe884b2843ade81e221df"><td class="memItemLeft" align="right" valign="top">std::expected&lt; bool, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ac6ec222c65bfe884b2843ade81e221df">iif_sadaf::talk::GSV::equivalent</a> (const Expression &amp;expr1, const Expression &amp;expr2, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:ac6ec222c65bfe884b2843ade81e221df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether two expressions are logically equivalent within a given model.  <br /></td></tr>
+<tr class="separator:ac6ec222c65bfe884b2843ade81e221df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

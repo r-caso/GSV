@@ -52,7 +52,7 @@ Since the GSV evaluator library runs the semantic interpretation on the abstract
 Once you have the `InformationState` that serves as input to the interpretation process, and the `Expression` object that is to be interpreted, you may call the `Evaluator()` as you would do with any other visitor:
 
 ```c++
-const GSV::InformationState output_state = std::visit(
+const std::expected<InformationState, std::string> evaluation_result = std::visit(
     GSV::Evaluator(),
     expression,
     std::variant<std::pair<InformationState, const IModel*>>(
@@ -61,48 +61,52 @@ const GSV::InformationState output_state = std::visit(
 );
 ```
 
-`GSV::Evaluator()` takes an `InformationState` and an `const IModel*` as input parameters, and gives back an (updated) `InformationState` as output. Due to the way `std::visit` is implemented in C++, you need to pass both input parameters wrapped in a `std::variant`. If you want a simpler way of handling the visitor call, you may also access the `GSV::Evaluator()` visitor through the `GSV::evaluate()` convenience function:
+`GSV::Evaluator()` takes an `InformationState` and a `const IModel*` as input parameters, and returns an (updated) `InformationState` as expected value, and an error message as an unexpected value. Due to the way `std::visit` is implemented in C++, you need to pass both input parameters wrapped in a `std::variant`. If you want a simpler way of handling the visitor call, you may also access the `GSV::Evaluator()` visitor through the `GSV::evaluate()` convenience function:
 
 ```c++
-// InformatoinState GSV::evaluate(const Expression& expr,
-//                                const InformationState& input_state,
-//                                const IModel& m);
+// std::expected<InformationState, std::string> evaluate(
+//     const Expression& expr,
+//     const InformationState& input_state,
+//     const IModel& model)
 
-const InformationState output_state = GSV::evaluate(expr, input_state, model);
+const auto evaluation_result = GSV::evaluate(expr, input_state, model);
+```
+You can check whether the evaluation was successful by calling the `has_value()` method of `std::expected`:
+
+```c++
+if (!evaluation_result.has_value()) {
+    // code to handle error
+    // use evaluation_result.error() to access the error message
+}
+else {
+    // code to handle success
+    // use evaluation_result.value() to access the output information state
+}
 ```
 
 ### Semantic relations
 
 Besides the GSV evaluator visitor, the GSV Evaluator Library also contains functions implementing semantic concepts like consistency, coherence, entailment and equivalence. These relations are declared in [`semantic_relations.hpp`](GSV/include/semantic_relations.hpp).
 
-### Exceptions
+In general, the return value of these functions is `std::expected<bool, std::string>`.
 
-The `GSV::Evaluator()` visitor, the `GSV::evaluate()` function, as well as all the functions implementing semantic concepts throw exceptions under certain conditions, detailed in the corresponding documentation.
+### Error messages
 
-The two kinds of exceptions thrown are:
-
-- `std::out_of_range`, in one of two cases: when a variable has no binding quantifier or suitable anaphoric antecedent, and when a non-logical term lacks an interpretation in the base `IModel` object.
-- `std::invalid_argument`, when the formula or formulas under evaluation have operators or quantifiers not allowed by the GSV grammar (negation, conjunction, disjunction, conditional, existential and universal quantifiers, possibility and necessity operators).
-
-Make sure to catch those exceptions when calling those functions. Keep in mind the following:
-
-- any `std::invalid_argument` exception signals that an invalid formula (relative to GSV grammar) has been passed to the library---you are responsible for providing correct input to the semantic component;
-- a `std::out_of_range` exception with the error message "Variable [...] has no anaphoric antecedent or binding quantifier" signals that the interpretation process is undefined for the given formula;
-- other `std::out_of_range` exceptions may signal, for example, that some non-logical term (a singular term or predicate) lacks an interpretation in the base model---you are responsible for providing base interpretations for all the non-logical expressions that appear in the formulas under evaluation.
+The `GSV::Evaluator()` visitor, the `GSV::evaluate()` function, as well as all the functions implementing semantic concepts return error messages under certain conditions, detailed in the corresponding documentation.
 
 ### `IModel` objects
 
-The GSV Evaluator Library expects any object that complies with the `IModel` interface to handle errors through exceptions. Particularly, it is expected that the `termInterpretation()` and `predicateInterpretation()` functions raise an exception if the term or predicate lacks an interpretation in the model. Do not report these errors through special return values (like a negative integer or an empty set), as the GSV Evaluator Library will not interpret those return values as reporting errors.
+The GSV Evaluator Library expects any object that complies with the `IModel` interface to handle errors through the use of `std::expected`. Particularly, it is expected that the `termInterpretation()` and `predicateInterpretation()` functions return an error message if the term or predicate lacks an interpretation in the model.
 
 ### Implementing a parser for QML
 
-If you implement a parser for QML formulas, keep in mind that only the following logical expressions are allowd by the GSV grammar:
+If you implement a parser for QML formulas, keep in mind that only the following logical expressions are allowed by the GSV grammar:
 
 - **Unary operators**: negation, possibility, necessity.
 - **Binary operators**: conjunction, disjunction, conditional.
 - **Quantifiers**: existential, universal.
 
-Any logical expression outside of these (e.g., a biconditional, or another kind of quantifier) will not be handled gracefully by the library, and will raise `std::invalid_argument` exception.
+Any logical expression outside of these (e.g., a biconditional, or another kind of quantifier) will be handled gracefully by the library, resulting in the return of an error message.
 
 ## Contributing
 
