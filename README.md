@@ -60,6 +60,7 @@ GSV/
 ├── gsv-relations/         # Semantic relations
 │   ├── include/           # Public headers
 │   └── src/               # Implementation files
+├── include/               # convenience include header
 └── interfaces/            # Shared interface definitions
 third_party/
 └── semantics/             # Third-party semantic libraries
@@ -120,14 +121,60 @@ cmake --install . --prefix /path/to/GSV
 
 ### Including in Your Project
 
+Once installed, you can use GSV in your CMake project in multiple ways:
+
 ```cmake
 find_package(GSV REQUIRED)
+
+# Link to the entire GSV interface
 target_link_libraries(your_target PRIVATE GSV::GSV)
+
+# OR link to specific components
+target_link_libraries(your_target PRIVATE GSV::core GSV::evaluator)
+
+# OR link to just one component
+target_link_libraries(your_target PRIVATE GSV::evaluator)
 ```
 
-If you have installed GSV as a non-system library, you should tell CMake where to find it.
+If you have installed GSV as a non-system library, you should tell CMake where to find it. Use the `-DCMAKE_PREFIX_PATH=/path/to/GSV` flag for the command line interface, or the `"CMAKE_PREFIX_PATH" : "/path/to/GSV"` under `cacheVariables` in `CMakePresets.json`.
 
 ### QML Formula Evaluation
+
+#### Includes
+
+The GSV library has several components:
+
+- gsv-core, which contains the main semantic primitives
+- gsv-evaluator, which runs a semantic evaluation on QMLExpressions
+- gsv-relations, which checks for semantic relations definable within the GSV semantic framework
+
+These components can be accessed through their specific headers:
+```c++
+#include <GSV/core/information_state.hpp>
+#include <GSV/core/possibility.hpp>
+#include <GSV/core/referent_system.hpp>
+
+#include <GSV/evaluator/evaluator.hpp>
+
+#include <GSV/relations/semantic_relations.hpp>
+```
+
+Additionally, the `gsv-core` component has a convenience header that pulls in al functions and data structures defined in it:
+```c++
+#include <GSV/core/core.hpp>
+```
+
+You can also access the `IModel` interface, to produce model objects that comply with it:
+```c++
+#include <GSV/interfaces/imodel.hpp>
+```
+
+Take notice that the GSV library also includes a convenience header that pulls in every function and class:
+```c++
+#include <GSV/GSV.hpp>
+```
+
+#### Formula evaluation
 
 The main callable within the GSV evaluator library is the `Evaluator()` visitor. To invoke it:
 
