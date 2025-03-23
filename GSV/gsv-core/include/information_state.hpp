@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 
-#include "model.hpp"
+#include "imodel.hpp"
 #include "possibility.hpp"
 
 namespace iif_sadaf::talk::GSV {
