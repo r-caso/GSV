@@ -7,7 +7,8 @@
 #include <ranges>
 #include <stdexcept>
 
-#include "formatter.hpp"
+#include <QMLExpression/formatter.hpp>
+
 #include "possibility.hpp"
 
 namespace iif_sadaf::talk::GSV {
@@ -25,6 +26,11 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
 	}
 }
 
+QMLExpression::Expression negate(const QMLExpression::Expression& expr)
+{
+	return std::make_shared<QMLExpression::UnaryNode>(QMLExpression::Operator::NEGATION, expr);
+}
+
 } // ANONYMOUS NAMESPACE
 
 /**
@@ -33,7 +39,7 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
  * This function applies a unary operator (such as necessity, possibility, or negation)
  * to an expression and modifies the provided information state based on the result.
  *
- * @param expr A shared pointer to a UnaryNode representing the unary expression.
+ * @param expr A shared pointer to a QMLExpression::UnaryNode representing the unary expression.
  * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
  * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
  *         or an error message if evaluation fails.
@@ -47,7 +53,7 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
  *
  *          If an unrecognized operator is encountered, an error message is returned.
  */
-std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	const auto prejacent_update = std::visit(Evaluator(), expr->scope, params);
 
@@ -55,7 +61,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)), 
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				prejacent_update.error()
 			)
 		);
@@ -63,24 +69,24 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
 	InformationState& input_state = std::get<std::pair<InformationState, const IModel*>>(params).first;
 
-	if (expr->op == Operator::E_POS) {
+	if (expr->op == QMLExpression::Operator::EPISTEMIC_POSSIBILITY) {
 		if (prejacent_update.value().empty()) {
 			input_state.clear();
 		}
 	}
-	else if (expr->op == Operator::E_NEC) {
+	else if (expr->op == QMLExpression::Operator::EPISTEMIC_NECESSITY) {
 		if (!subsistsIn(input_state, prejacent_update.value())) {
 			input_state.clear();
 		}
 	}
-	else if (expr->op == Operator::NEG) {
+	else if (expr->op == QMLExpression::Operator::NEGATION) {
 		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, prejacent_update.value()); });
 	}
 	else {
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				"Invalid unary operator"
 			)
 		);
@@ -95,7 +101,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  * This function applies binary logical operators (such as conjunction, disjunction, and implication)
  * to an expression and modifies the provided information state based on the result.
  *
- * @param expr A shared pointer to a BinaryNode representing the binary expression.
+ * @param expr A shared pointer to a QMLExpression::BinaryNode representing the binary expression.
  * @param params A variant containing a pair of the current InformationState and a pointer to the model (IModel).
  * @return std::expected<InformationState, std::string> The updated information state if evaluation is successful,
  *         or an error message if evaluation fails.
@@ -114,19 +120,19 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *          If any evaluation fails at any step, the function returns an error message indicating which part of
  *          the formula caused the failure.
  */
-std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	// Conjunction is sequential update, treated separately
-	if (expr->op == Operator::CON) {
+	if (expr->op == QMLExpression::Operator::CONJUNCTION) {
 		const auto lhs_update = std::visit(Evaluator(), expr->lhs, params);
 
 		if (!lhs_update.has_value()) {
 			return std::unexpected(
 				std::format(
 					"In evaluating formula {}:\n{}",
-					std::visit(Formatter(), Expression(expr)), 
+					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
 					lhs_update.error()
 				)
 			);
@@ -148,20 +154,20 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				hypothetical_lhs_update.error()
 			)
 		);
 	}
 
-	if (expr->op == Operator::DIS) {
+	if (expr->op == QMLExpression::Operator::DISJUNCTION) {
 		const auto negated_lhs_update = std::visit(Evaluator(), negate(expr->lhs), params);
 		
 		if (!negated_lhs_update.has_value()) {
 			return std::unexpected(
 				std::format(
 					"In evaluating formula {}:\n{}", 
-					std::visit(Formatter(), Expression(expr)),
+					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 					negated_lhs_update.error()
 				)
 			);
@@ -177,7 +183,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 			return std::unexpected(
 				std::format(
 					"In evaluating formula {}:\n{}", 
-					std::visit(Formatter(), Expression(expr)),
+					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 					hypothetical_rhs_update.error()
 				)
 			);
@@ -189,7 +195,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
 		filter(input_state, in_lhs_or_in_rhs);
 	}
-	else if (expr->op == Operator::IMP) {
+	else if (expr->op == QMLExpression::Operator::CONDITIONAL) {
 		const auto hypothetical_consequent_update = std::visit(
 			Evaluator(),
 			expr->rhs,
@@ -200,7 +206,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 			return std::unexpected(
 				std::format(
 					"In evaluating formula {}:\n{}", 
-					std::visit(Formatter(), Expression(expr)), 
+					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
 					hypothetical_consequent_update.error()
 				)
 			);
@@ -223,7 +229,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				"Invalid operator for binary formula"
 			)
 		);
@@ -251,12 +257,12 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  * - If an error occurs during evaluation (e.g., invalid quantifier or undefined term),
  *   an error message is returned instead of an updated state.
  */
-std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
-	if (expr->quantifier == Quantifier::EXISTENTIAL) {
+	if (expr->quantifier == QMLExpression::Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
         for (const int i : std::views::iota(0, model->domain_cardinality())) {
@@ -271,7 +277,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 				return std::unexpected(
 					std::format(
 						"In evaluating formula {}:\n{}",
-						std::visit(Formatter(), Expression(expr)),
+						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 						hypothetical_s_variant_update.error()
 					)
 				);
@@ -289,7 +295,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
 		return output;
 	}
-    if (expr->quantifier == Quantifier::UNIVERSAL) {
+    if (expr->quantifier == QMLExpression::Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
         for (const int d : std::views::iota(0, model->domain_cardinality())) {
@@ -303,7 +309,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 				return std::unexpected(
 					std::format(
 						"In evaluating formula {}:\n{}", 
-						std::visit(Formatter(), Expression(expr)), 
+						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
 						hypothetical_update.error()
 					)
 				);
@@ -325,7 +331,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				"Invalid quantifier"
 			)
 		);
@@ -357,14 +363,14 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *
  *          If a denotation is out of range (e.g., an unbound variable), an error message is returned.
  */
-std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool {
-		const auto lhs_denotation = expr->lhs.type == Term::Type::VARIABLE ? variableDenotation(expr->lhs.literal, p) : model.termInterpretation(expr->lhs.literal, p.world);
-		const auto rhs_denotation = expr->rhs.type == Term::Type::VARIABLE ? variableDenotation(expr->rhs.literal, p) : model.termInterpretation(expr->rhs.literal, p.world);
+		const auto lhs_denotation = expr->lhs.type == QMLExpression::Term::Type::VARIABLE ? variableDenotation(expr->lhs.literal, p) : model.termInterpretation(expr->lhs.literal, p.world);
+		const auto rhs_denotation = expr->rhs.type == QMLExpression::Term::Type::VARIABLE ? variableDenotation(expr->rhs.literal, p) : model.termInterpretation(expr->rhs.literal, p.world);
 
 		if (!lhs_denotation.has_value()) {
 			throw std::out_of_range(lhs_denotation.error());
@@ -384,7 +390,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				e.what()
 			)
 		);
@@ -414,7 +420,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *          If an argument's denotation is out of range (e.g., an unbound variable) or the predicate
  *          interpretation is missing, an error message is returned.
  */
-std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
+std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
 	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
 	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
@@ -422,8 +428,8 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 	const auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
 		
-		for (const Term& argument : expr->arguments) {
-			const auto denotation = argument.type == Term::Type::VARIABLE ? variableDenotation(argument.literal, p) : model.termInterpretation(argument.literal, p.world);
+		for (const QMLExpression::Term& argument : expr->arguments) {
+			const auto denotation = argument.type == QMLExpression::Term::Type::VARIABLE ? variableDenotation(argument.literal, p) : model.termInterpretation(argument.literal, p.world);
 			if (denotation.has_value()) {
 				tuple.push_back(denotation.value());
 			}
@@ -449,7 +455,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				e.what()
 			)
 		);
@@ -473,7 +479,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *          encounters an error (e.g., an invalid operator or undefined term interpretation),
  *          an error message is returned instead of an updated state.
  */
-std::expected<InformationState, std::string> evaluate(const Expression& expr, const InformationState& input_state, const IModel& model)
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model)
 {
 	return std::visit(
 		Evaluator(),

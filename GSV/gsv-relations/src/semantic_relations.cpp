@@ -8,8 +8,9 @@
 #include <variant>
 #include <vector>
 
+#include <QMLExpression/formatter.hpp>
+
 #include "evaluator.hpp"
-#include "formatter.hpp"
 #include "imodel.hpp"
 #include "information_state.hpp"
 #include "possibility.hpp"
@@ -34,7 +35,7 @@ namespace iif_sadaf::talk::GSV {
  * - If evaluation produces an empty information state, the expression is considered inconsistent.
  * - If an error occurs during evaluation, the error message is returned instead.
  */
-std::expected<bool, std::string> consistent(const Expression& expr, const InformationState& state, const IModel& model)
+std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model)
 {
 	const auto hypothetical_update = evaluate(expr, state, model);
 
@@ -42,7 +43,7 @@ std::expected<bool, std::string> consistent(const Expression& expr, const Inform
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				hypothetical_update.error()
 			)
 		);
@@ -64,7 +65,7 @@ std::expected<bool, std::string> consistent(const Expression& expr, const Inform
  * @return std::expected<bool, std::string> `true` if the expression is consistent with the state,
  *         `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> allows(const InformationState& state, const Expression& expr, const IModel& model)
+std::expected<bool, std::string> allows(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model)
 {
 	return consistent(expr, state, model);
 }
@@ -82,7 +83,7 @@ std::expected<bool, std::string> allows(const InformationState& state, const Exp
  * @return std::expected<bool, std::string> `true` if the evaluated update subsists
  *         in the initial state, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> supports(const InformationState& state, const Expression& expr, const IModel& model)
+std::expected<bool, std::string> supports(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model)
 {
 	const auto hypothetical_update = evaluate(expr, state, model);
 	
@@ -90,7 +91,7 @@ std::expected<bool, std::string> supports(const InformationState& state, const E
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",
-				std::visit(Formatter(), Expression(expr)),
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 				hypothetical_update.error()
 			)
 		);
@@ -112,7 +113,7 @@ std::expected<bool, std::string> supports(const InformationState& state, const E
  * @return std::expected<bool, std::string> `true` if the expression is supported
  *         by the state, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> isSupportedBy(const Expression& expr, const InformationState& state, const IModel& model)
+std::expected<bool, std::string> isSupportedBy(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model)
 {
 	return supports(state, expr, model);
 }
@@ -178,7 +179,7 @@ std::vector<InformationState> generateSubStates(int n, int k) {
  *         consistent in at least one information state, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> consistent(const Expression& expr, const IModel& model)
+std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const IModel& model)
 {
 	for (const int i : std::views::iota(0, model.world_cardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
@@ -215,7 +216,7 @@ std::expected<bool, std::string> consistent(const Expression& expr, const IModel
  *         in at least one information state, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> coherent(const Expression& expr, const IModel& model)
+std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr, const IModel& model)
 {
 	for (const int i : std::views::iota(0, model.world_cardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
@@ -253,19 +254,19 @@ std::expected<bool, std::string> coherent(const Expression& expr, const IModel& 
  *         in all states updated by the premises, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> entails(const std::vector<Expression>& premises, const Expression& conclusion, const IModel& model)
+std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
 {
 	for (const int i : std::views::iota(0, model.world_cardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
 		for (InformationState& input_state : states) {
 			// Update input state with premises
-			for (const Expression& expr : premises) {
+			for (const QMLExpression::Expression& expr : premises) {
 				const auto update = evaluate(expr, input_state, model);
 				if (!update.has_value()) {
 					return std::unexpected(
 						std::format(
 							"In evaluating formula {}:\n{}",
-							std::visit(Formatter(), Expression(expr)),
+							std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
 							update.error()
 						)
 					);
@@ -281,7 +282,7 @@ std::expected<bool, std::string> entails(const std::vector<Expression>& premises
 				return std::unexpected(
 					std::format(
 						"In evaluating formula {}:\n{}",
-						std::visit(Formatter(), Expression(conclusion)),
+						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
 						update.error()
 					)
 				);
@@ -293,7 +294,7 @@ std::expected<bool, std::string> entails(const std::vector<Expression>& premises
 				return std::unexpected(
 					std::format(
 						"In evaluating formula {}:\n{}",
-						std::visit(Formatter(), Expression(conclusion)),
+						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
 						does_support.error()
 					)
 				);
@@ -381,7 +382,7 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
  * @return std::expected<bool, std::string> `true` if the expressions always produce
  *         similar updates, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> equivalent(const Expression& expr1, const Expression& expr2, const IModel& model)
+std::expected<bool, std::string> equivalent(const QMLExpression::Expression& expr1, const QMLExpression::Expression& expr2, const IModel& model)
 {
 	for (const int i : std::views::iota(0, model.world_cardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
