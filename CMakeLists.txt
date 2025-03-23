@@ -65,18 +65,42 @@ install(DIRECTORY
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/interfaces
 )
 
-target_sources(GSV PRIVATE
-    GSV/src/evaluator.cpp
-    GSV/src/semantic_relations.cpp
-
-    GSV/src/semantics/information_state.cpp
-    GSV/src/semantics/possibility.cpp
-    GSV/src/semantics/referent_system.cpp
-
-    GSV/src/utility/formatter.cpp
-    
-    third_party/semantics/model.cpp
-    third_party/syntax/expression.cpp
+# Export targets
+install(EXPORT GSVTargets
+    FILE GSVTargets.cmake
+    NAMESPACE GSV::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/GSV
 )
 
-target_include_directories(GSV PUBLIC GSV/include GSV/include/interfaces GSV/include/semantics GSV/include/utility third_party/semantics third_party/spdlog/include third_party/syntax)
+# Create and install package config files
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/GSVConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+# Create GSVConfig.cmake.in
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/GSVConfig.cmake.in"
+"@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(QMLExpression REQUIRED)
+
+include(\"\${CMAKE_CURRENT_LIST_DIR}/GSVTargets.cmake\")
+check_required_components(GSV)
+")
+
+# Configure the config file
+configure_package_config_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/GSVConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/GSVConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/GSV
+)
+
+# Install the config files
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/GSVConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/GSVConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/GSV
+)
