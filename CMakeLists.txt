@@ -28,6 +28,10 @@ add_subdirectory(${GSV_RELATIONS_DIR})
 
 # Define the main interface library
 add_library(GSV INTERFACE)
+target_include_directories(GSV INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSV/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 target_link_libraries(GSV INTERFACE
     gsv-core
     gsv-evaluator
@@ -63,6 +67,10 @@ install(DIRECTORY
 install(DIRECTORY 
     ${GSV_INTERFACES_DIR}/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/interfaces
+)
+install(DIRECTORY 
+    ${CMAKE_CURRENT_SOURCE_DIR}/GSV/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV
 )
 
 # Export targets
