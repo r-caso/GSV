@@ -315,10 +315,10 @@ std::expected<bool, std::string> similar(const Possibility& p1, const Possibilit
 		const auto denotation_at_p1 = variableDenotation(variable, p1);
 		const auto denotation_at_p2 = variableDenotation(variable, p2);
 		if (!denotation_at_p1.has_value()) {
-			throw std::invalid_argument(denotation_at_p1.error());
+			throw std::out_of_range(denotation_at_p1.error());
 		}
 		if (!denotation_at_p2.has_value()) {
-			throw std::invalid_argument(denotation_at_p2.error());
+			throw std::out_of_range(denotation_at_p2.error());
 		}
 		return denotation_at_p1.value() == denotation_at_p2.value();
 	};
@@ -328,7 +328,7 @@ std::expected<bool, std::string> similar(const Possibility& p1, const Possibilit
 			&& domain(*p1.referentSystem) == domain(*p2.referentSystem)
 			&& std::ranges::all_of(domain(*p1.referentSystem), have_same_denotation);
 	}
-	catch (const std::invalid_argument& e) {
+	catch (const std::out_of_range& e) {
 		return std::unexpected(e.what());
 	}
 }
@@ -339,7 +339,7 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
 		const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
 			const auto comparison_result = similar(p, p_dash);
 			if (!comparison_result.has_value()) {
-				throw std::invalid_argument(comparison_result.error());
+				throw std::out_of_range(comparison_result.error());
 			}
 			return comparison_result.value();
 		};
@@ -350,7 +350,7 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
 		const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
 			const auto comparison_result = similar(p, p_dash);
 			if (!comparison_result.has_value()) {
-				throw std::invalid_argument(comparison_result.error());
+				throw std::out_of_range(comparison_result.error());
 			}
 			return comparison_result.value();
 		};
@@ -361,7 +361,7 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
 		return std::ranges::all_of(s1, has_similar_possibility_in_s2)
 			&& std::ranges::all_of(s2, has_similar_possibility_in_s1);
 	}
-	catch (const std::invalid_argument& e) {
+	catch (const std::out_of_range& e) {
 		return std::unexpected(e.what());
 	}
 }
@@ -390,11 +390,11 @@ std::expected<bool, std::string> equivalent(const QMLExpression::Expression& exp
 		const auto dissimilar_updates = [&](const InformationState& state) ->bool { 
 			const auto expr1_update = evaluate(expr1, state, model);
 			if (!expr1_update.has_value()) {
-				throw std::invalid_argument(expr1_update.error());
+				throw std::out_of_range(expr1_update.error());
 			}
 			const auto expr2_update = evaluate(expr2, state, model);
 			if (!expr2_update.has_value()) {
-				throw std::invalid_argument(expr2_update.error());
+				throw std::out_of_range(expr2_update.error());
 			}
 
 			return !similar(expr1_update.value(), expr2_update.value());
@@ -405,7 +405,7 @@ std::expected<bool, std::string> equivalent(const QMLExpression::Expression& exp
 				return false;
 			}
 		}
-		catch (const std::invalid_argument& e) {
+		catch (const std::out_of_range& e) {
 			return std::unexpected(e.what());
 		}
 	}

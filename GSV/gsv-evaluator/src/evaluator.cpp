@@ -451,7 +451,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 		filter(input_state, tuple_in_extension);
 		return std::move(input_state);
 	}
-	catch (const std::invalid_argument& e) {
+	catch (const std::out_of_range& e) {
 		return std::unexpected(
 			std::format(
 				"In evaluating formula {}:\n{}",

@@ -19,9 +19,6 @@ namespace iif_sadaf::talk::GSV {
  * 
  * Due to the way `std::visit` is implemented in C++, the input `InformationState`
  * and `IModel*` must be wrapped in a `std::variant` and passed as a single argument.
- * 
- * The application of `GSV::EValuator()` may throw std::invalid_argument, under
- * various circumstances (see the member functions' documentation for details).
  */
 struct Evaluator {
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
