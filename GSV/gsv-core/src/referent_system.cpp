@@ -7,13 +7,13 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief Retrieves the set of variable names in the referent system.
+ * @brief Retrieves the set of variables in the referent system.
  * 
- * This function extracts all variable names present in the given 
- * ReferentSystem instance and returns them as a set of string views.
+ * This function extracts all variables present in the given 
+ * ReferentSystem instance and returns them as a set of std::string_view's.
  * 
- * @param r The ReferentSystem instance whose variable names are being queried.
- * @return std::set<std::string_view> A set containing all variable names in the system.
+ * @param r The ReferentSystem instance whose variables are being queried.
+ * @return std::set<std::string_view> A set containing all variables in the system.
  */
 std::set<std::string_view> domain(const ReferentSystem& r)
 {
@@ -74,10 +74,9 @@ std::expected<int, std::string> ReferentSystem::value(std::string_view variable)
  * @param r1 The base ReferentSystem.
  * @return True if `r2` extends `r1`, false otherwise.
  */
-
- // TODO check that these calls to value() are safe
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 {
+	// TODO check that these calls to value() are safe
 	if (r1.pegs > r2.pegs) {
 		return false;
 	}

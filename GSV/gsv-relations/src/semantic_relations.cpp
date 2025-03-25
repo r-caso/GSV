@@ -18,7 +18,7 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief Determines whether an expression is consistent with a given information state and model.
+ * @brief Determines whether an expression is consistent with a given information state, relative to a base model.
  * 
  * This function evaluates the given expression against the provided information state and model.
  * If the evaluation succeeds and results in a non-empty information state, the expression is 
@@ -168,8 +168,8 @@ std::vector<InformationState> generateSubStates(int n, int k) {
 /**
  * @brief Determines whether an expression is consistent within a given model.
  *
- * This function checks if there exists at least one information state within
- * the model where the given expression does not lead to an empty update.
+ * This function checks if there exists at least one information state definable in terms of
+ * the base model where the given expression does not lead to an empty update.
  * It iterates over different possible information states and ensures that
  * at least one state allows a non-empty update of the expression.
  *
@@ -205,7 +205,7 @@ std::expected<bool, std::string> consistent(const QMLExpression::Expression& exp
 /**
  * @brief Determines whether an expression is coherent within a given model.
  *
- * This function checks if there exists at least one non-empty information state
+ * This function checks if there exists at least one non-empty information state definable with respect to the base model
  * that supports the given expression. It iterates over different possible
  * information states and ensures that at least one state both (1) is not empty
  * and (2) supports the expression.
@@ -240,7 +240,7 @@ std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr,
 }
 
 /**
- * @brief Determines whether a set of premises entails a conclusion within a given model.
+ * @brief Determines whether a set of premises entails a conclusion, relative to a given model.
  *
  * This function evaluates whether the conclusion follows from the premises in all
  * possible information states. It iterates through subsets of possible worlds and
@@ -369,7 +369,7 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
 } // ANONYMOUS NAMESPACE
 
 /**
- * @brief Determines whether two expressions are logically equivalent within a given model.
+ * @brief Determines whether two expressions are logically equivalent, relative to a given model.
  *
  * This function evaluates whether the two expressions always produce similar updates
  * to an information state across all possible subsets of worlds in the model. It

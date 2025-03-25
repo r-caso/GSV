@@ -9,7 +9,7 @@
 namespace iif_sadaf::talk::GSV {
 
 /**
- * @brief Interface for class representing a model for QML without accessiblity.
+ * @brief Interface for class representing a model for Quantified Modal Logic.
  *
  * The IModel interface defines the minimal requirements on any implementation of 
  * a QML model that works with the GSV evaluator library.
@@ -17,8 +17,8 @@ namespace iif_sadaf::talk::GSV {
  * Any such implementation should contain four functions:
  * - a function retrieving the cardinality of the set W of worlds
  * - a function retrieving the cardinality of the domain of individuals
- * - a function that retrieves, for any possible world in W, the interpretation of a singular term at that world (represented by an `int`)
- * - a function that retrieves, for any possible world in W, the interpretation of a predicate at that world (represented by a `std::set<std::vector<int>>`)
+ * - a function that retrieves, for any possible world in the model, the interpretation of a singular term at that world (represented by an `int`), and returns an error message if the term is not interpreted in the model
+ * - a function that retrieves, for any possible world in the model, the interpretation of a predicate at that world (represented by a `std::set<std::vector<int>>`), and returns an error message if the predicate is not interpreted in the model
  */
 struct IModel {
 public:

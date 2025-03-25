@@ -47,9 +47,9 @@ QMLExpression::Expression negate(const QMLExpression::Expression& expr)
  * @details The function first evaluates the prejacent (the inner expression of the unary operator).
  *          If evaluation fails, an error message is returned. Otherwise, it applies the appropriate
  *          modification to the information state:
- *          - **E_POS (Epistemic Possibility)**: If the prejacent state is empty, the input state is cleared.
- *          - **E_NEC (Epistemic Necessity)**: If the prejacent state is not contained in the input state, the input state is cleared.
- *          - **NEG (Negation)**: The input state is filtered to remove elements that subsist in the prejacent update.
+ *          - **EPISTEMIC_POSSIBILITY**: If the prejacent state is empty, the input state is cleared.
+ *          - **EPISTEMIC_NECESSITY**: If the prejacent state is not contained in the input state, the input state is cleared.
+ *          - **NEGATION**: The input state is filtered to remove elements that subsist in the prejacent update.
  *
  *          If an unrecognized operator is encountered, an error message is returned.
  */
@@ -109,10 +109,10 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  * @details The function evaluates the left-hand side (lhs) and right-hand side (rhs) of the binary expression
  *          and modifies the information state based on the operator:
  *
- *          - **CON (Conjunction)**: The lhs is evaluated first, and the resulting state is then used to evaluate the rhs.
- *          - **DIS (Disjunction)**: The lhs is negated and evaluated separately, then the rhs is evaluated using the
+ *          - **CONJUNCTION**: The lhs is evaluated first, and the resulting state is then used to evaluate the rhs.
+ *          - **DISJUNCTION**: The lhs is negated and evaluated separately, then the rhs is evaluated using the
  *            negated lhs state. The final state contains possibilities present in either lhs or rhs.
- *          - **IMP (Implication)**: Evaluates the lhs, then checks if every possibility in the lhs has all its
+ *          - **IMPLICATION**: Evaluates the lhs, then checks if every possibility in the lhs has all its
  *            descendants subsisting in the rhs update.
  *
  *          If an unrecognized operator is encountered, an error message is returned.
@@ -239,7 +239,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 }
 
 /**
- * @brief Evaluates a quantified expression within a given information state and model.
+ * @brief Evaluates a quantified logical expression and updates the information state accordingly.
  *
  * This function processes logical quantification (existential or universal) over a variable,
  * applying the quantifier's scope to all possible values in the model's domain.
@@ -250,9 +250,9 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *         applying quantification, or an error message if evaluation fails.
  *
  * @details
- * - **Existential Quantification (Ex F(x))**: Evaluates the scope F(x) for all values in the domain,
+ * - **Existential Quantification**: Evaluates the scope of the quantifier for all values in the domain,
  *   then merges all resulting information states.
- * - **Universal Quantification (Vx F(x))**: Evaluates F(x) for all values in the domain and filters
+ * - **Universal Quantification**: Evaluates the scope of the quantifier for all values in the domain and filters
  *   the input state, keeping only those possibilities that subsist in all hypothetical updates.
  * - If an error occurs during evaluation (e.g., invalid quantifier or undefined term),
  *   an error message is returned instead of an updated state.
@@ -463,7 +463,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 }
 
 /**
- * @brief Evaluates a logical expression within a given information state and model.
+ * @brief Evaluates a logical expression within a given information state, relative to a base model.
  *
  * This function applies an `Evaluator` visitor to the provided expression, computing
  * an updated information state based on the evaluation result.

@@ -15,9 +15,6 @@ namespace iif_sadaf::talk::GSV {
  * The `Possibility` class models possiblities in the GSV framework, 
  * which are defined as tuples of a referent system, an assignment if
  * individuals to pegs, and a possible world index.
- *
- * This class supports copy and move semantics, allowing for efficient
- * duplication and transfer of instances.
  */
 struct Possibility {
 public:
