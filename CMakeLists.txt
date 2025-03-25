@@ -13,15 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(QMLExpression REQUIRED)
+find_package(QMLModel REQUIRED)
 
 set(GSV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GSV)
-set(GSV_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 set(GSV_INTERFACES_DIR ${GSV_SOURCE_DIR}/interfaces)
+set(GSV_ADAPTERS_DIR ${GSV_SOURCE_DIR}/gsv-adapters)
 set(GSV_CORE_DIR ${GSV_SOURCE_DIR}/gsv-core)
 set(GSV_EVALUATOR_DIR ${GSV_SOURCE_DIR}/gsv-evaluator)
 set(GSV_RELATIONS_DIR ${GSV_SOURCE_DIR}/gsv-relations)
 
 # Add subdirectories with component libraries
+add_subdirectory(${GSV_ADAPTERS_DIR})
 add_subdirectory(${GSV_CORE_DIR})
 add_subdirectory(${GSV_EVALUATOR_DIR})
 add_subdirectory(${GSV_RELATIONS_DIR})
@@ -33,6 +35,7 @@ target_include_directories(GSV INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(GSV INTERFACE
+    gsv-adapters
     gsv-core
     gsv-evaluator
     gsv-relations
@@ -43,7 +46,7 @@ target_link_libraries(GSV INTERFACE
 include(GNUInstallDirs)
 
 # Install all component libraries and the main interface library
-install(TARGETS gsv-core gsv-evaluator gsv-relations GSV
+install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-relations GSV
     EXPORT GSVTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -52,6 +55,10 @@ install(TARGETS gsv-core gsv-evaluator gsv-relations GSV
 )
 
 # Install header files from each component
+install(DIRECTORY 
+    ${GSV_ADAPTERS_DIR}/include/qml_model-adapter
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/adapters
+)
 install(DIRECTORY 
     ${GSV_CORE_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/core
