@@ -8,6 +8,13 @@
 
 namespace iif_sadaf::talk::GSV {
 
+/**
+ * @brief Adapter class to interface with a QMLModel.
+ *
+ * This class adapts a QMLModel to conform to the IModel interface, providing
+ * implementations for model-related operations such as retrieving world and
+ * domain cardinalities, and the interpretation of terms and predicates.
+ */
 class QMLModelAdapter : public IModel {
 public:
 	explicit QMLModelAdapter(const QMLModel::QMLModel& qmlModel);
@@ -24,18 +31,9 @@ public:
 	std::expected<int, std::string> termInterpretation(std::string_view term, int world) const override;
 	std::expected<const std::set<std::vector<int>>*, std::string> predicateInterpretation(std::string_view predicate, int world) const override;
 
-	std::string str() const
-	{
-		return "";
-	}
-
 private:
 	class Impl;
 	std::unique_ptr<Impl> pImpl;
 };
-
-std::unique_ptr<IModel> createQMLModelAdapter(const QMLModel::QMLModel& qmlModel);
-std::unique_ptr<IModel> createQMLModelAdapter(std::unique_ptr<QMLModel::QMLModel> qmlModel);
-std::unique_ptr<IModel> createQMLModelAdapter(const void* modelPtr);
 
 }

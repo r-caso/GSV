@@ -2,13 +2,14 @@
 add_library(gsv-adapters STATIC)
 
 target_sources(gsv-adapters PRIVATE
-    ${GSV_ADAPTERS_DIR}/src/qml_model-adapter/qml_model_adapter.cpp
+    ${GSV_ADAPTERS_DIR}/src/qml_model_adapter/qml_model_adapter.cpp
 )
 
 # Set BUILD_INTERFACE and INSTALL_INTERFACE for include directories
 target_include_directories(gsv-adapters 
     PUBLIC 
-        $<BUILD_INTERFACE:${GSV_ADAPTERS_DIR}/include/qml_model-adapter>
+        $<BUILD_INTERFACE:${GSV_ADAPTERS_DIR}/include>
+        $<BUILD_INTERFACE:${GSV_ADAPTERS_DIR}/include/qml_model_adapter>
         $<BUILD_INTERFACE:${GSV_INTERFACES_DIR}>
         $<INSTALL_INTERFACE:include/GSV/adapters>
 )
