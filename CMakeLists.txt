@@ -56,7 +56,7 @@ install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-relations GSV
 
 # Install header files from each component
 install(DIRECTORY 
-    ${GSV_ADAPTERS_DIR}/include/qml_model-adapter
+    ${GSV_ADAPTERS_DIR}/include/qml_model_adapter
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/adapters
 )
 install(DIRECTORY 
