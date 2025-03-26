@@ -2,20 +2,6 @@
 
 namespace iif_sadaf::talk::GSV {
 
-class QMLModelAdapter::Impl {
-public:
-    explicit Impl(const QMLModel::QMLModel& model) : ownedModel(nullptr), modelRef(&model) {}
-    
-    explicit Impl(std::unique_ptr<QMLModel::QMLModel> model) 
-        : ownedModel(std::move(model)), modelRef(ownedModel.get()) {}
-    
-    const QMLModel::QMLModel& getModel() const { return *modelRef; }
-
-private:
-    std::unique_ptr<QMLModel::QMLModel> ownedModel;
-    const QMLModel::QMLModel* modelRef;
-};
-
 /**
  * @brief Constructs an adapter for an existing QMLModel instance.
  *
