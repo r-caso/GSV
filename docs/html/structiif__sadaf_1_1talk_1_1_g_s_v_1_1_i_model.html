@@ -110,10 +110,19 @@ $(function(){initNavTree('structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html','
 </div><!--header-->
 <div class="contents">
 
-<p>Interface for class representing a model for QML without accessiblity.  
+<p>Interface for class representing a model for Quantified Modal Logic.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for iif_sadaf::talk::GSV::IModel:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.png" usemap="#iif_5Fsadaf::talk::GSV::IModel_map" alt=""/>
+  <map id="iif_5Fsadaf::talk::GSV::IModel_map" name="iif_5Fsadaf::talk::GSV::IModel_map">
+<area href="classiif__sadaf_1_1talk_1_1_g_s_v_1_1_q_m_l_model_adapter.html" title="Adapter class to interface with a QMLModel." alt="iif_sadaf::talk::GSV::QMLModelAdapter" shape="rect" coords="0,56,231,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -129,13 +138,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acd8f443734bf576dba067655a639aa02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Interface for class representing a model for QML without accessiblity. </p>
-<p>The <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html" title="Interface for class representing a model for QML without accessiblity.">IModel</a> interface defines the minimal requirements on any implementation of a QML model that works with the <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html">GSV</a> evaluator library.</p>
+<div class="textblock"><p>Interface for class representing a model for Quantified Modal Logic. </p>
+<p>The <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html" title="Interface for class representing a model for Quantified Modal Logic.">IModel</a> interface defines the minimal requirements on any implementation of a QML model that works with the <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html">GSV</a> evaluator library.</p>
 <p>Any such implementation should contain four functions:</p><ul>
 <li>a function retrieving the cardinality of the set W of worlds</li>
 <li>a function retrieving the cardinality of the domain of individuals</li>
-<li>a function that retrieves, for any possible world in W, the interpretation of a singular term at that world (represented by an <code>int</code>)</li>
-<li>a function that retrieves, for any possible world in W, the interpretation of a predicate at that world (represented by a <code>std::set&lt;std::vector&lt;int&gt;&gt;</code>) </li>
+<li>a function that retrieves, for any possible world in the model, the interpretation of a singular term at that world (represented by an <code>int</code>), and returns an error message if the term is not interpreted in the model</li>
+<li>a function that retrieves, for any possible world in the model, the interpretation of a predicate at that world (represented by a <code>std::set&lt;std::vector&lt;int&gt;&gt;</code>), and returns an error message if the predicate is not interpreted in the model </li>
 </ul>
 
 <p class="definition">Definition at line <a class="el" href="imodel_8hpp_source.html#l00023">23</a> of file <a class="el" href="imodel_8hpp_source.html">imodel.hpp</a>.</p>
@@ -191,6 +200,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classiif__sadaf_1_1talk_1_1_g_s_v_1_1_q_m_l_model_adapter.html#a6da8ac2df9cdf03f17c4a9579a94c7aa">iif_sadaf::talk::GSV::QMLModelAdapter</a>.</p>
+
 </div>
 </div>
 <a id="abab46ccc709b53bb1c6f1b35bf035042" name="abab46ccc709b53bb1c6f1b35bf035042"></a>
@@ -219,6 +230,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classiif__sadaf_1_1talk_1_1_g_s_v_1_1_q_m_l_model_adapter.html#ad98b9e37e6aa9b298a1b17124cab7f42">iif_sadaf::talk::GSV::QMLModelAdapter</a>.</p>
 
 </div>
 </div>
@@ -249,6 +262,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Implemented in <a class="el" href="classiif__sadaf_1_1talk_1_1_g_s_v_1_1_q_m_l_model_adapter.html#a1f8873aa2bbc405f697eb14597f4db0d">iif_sadaf::talk::GSV::QMLModelAdapter</a>.</p>
+
 </div>
 </div>
 <a id="a07fd4cd84e820394c7bdbd5d39a25a38" name="a07fd4cd84e820394c7bdbd5d39a25a38"></a>
@@ -273,6 +288,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classiif__sadaf_1_1talk_1_1_g_s_v_1_1_q_m_l_model_adapter.html#a94a89e8b36141aca07db9cf520aeff7e">iif_sadaf::talk::GSV::QMLModelAdapter</a>.</p>
 
 </div>
 </div>

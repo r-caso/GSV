@@ -111,7 +111,7 @@ $(function(){initNavTree('evaluator_8hpp.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;expected&gt;</code><br />
-<code>#include &quot;expression.hpp&quot;</code><br />
+<code>#include &lt;QMLExpression/expression.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="information__state_8hpp_source.html">information_state.hpp</a>&quot;</code><br />
 </div>
 <p><a href="evaluator_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -119,7 +119,7 @@ $(function(){initNavTree('evaluator_8hpp.html',''); initResizable(true); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html">iif_sadaf::talk::GSV::Evaluator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an evaluator for logical expressions.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html">GSV</a> evaluation function for QML formulas.  <a href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_evaluator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -133,16 +133,16 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afb13ee173a8ee16f475f8409255b3df6" id="r_afb13ee173a8ee16f475f8409255b3df6"><td class="memItemLeft" align="right" valign="top">std::expected&lt; <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#afb13ee173a8ee16f475f8409255b3df6">iif_sadaf::talk::GSV::evaluate</a> (const Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;input_state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
-<tr class="memdesc:afb13ee173a8ee16f475f8409255b3df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates a logical expression within a given information state and model.  <br /></td></tr>
-<tr class="separator:afb13ee173a8ee16f475f8409255b3df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe5c8578e02247fc0bd1f6cf34b528c8" id="r_abe5c8578e02247fc0bd1f6cf34b528c8"><td class="memItemLeft" align="right" valign="top">std::expected&lt; <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#abe5c8578e02247fc0bd1f6cf34b528c8">iif_sadaf::talk::GSV::evaluate</a> (const QMLExpression::Expression &amp;expr, const <a class="el" href="namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#a38faa488c96113dce7387bd59f670e19">InformationState</a> &amp;input_state, const <a class="el" href="structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html">IModel</a> &amp;model)</td></tr>
+<tr class="memdesc:abe5c8578e02247fc0bd1f6cf34b528c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates a logical expression within a given information state, relative to a base model.  <br /></td></tr>
+<tr class="separator:abe5c8578e02247fc0bd1f6cf34b528c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_2670355794f6a9edb7e75d9119c3a065.html">GSV</a></li><li class="navelem"><a class="el" href="dir_984d206019a727f577e1fb9e4f1245b9.html">include</a></li><li class="navelem"><a class="el" href="evaluator_8hpp.html">evaluator.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_2670355794f6a9edb7e75d9119c3a065.html">GSV</a></li><li class="navelem"><a class="el" href="dir_aab0d2a1668fcac38a7a4d5028f05687.html">gsv-evaluator</a></li><li class="navelem"><a class="el" href="dir_deaa1ef3c30ebb89d2d01a20fa02a407.html">include</a></li><li class="navelem"><a class="el" href="evaluator_8hpp.html">evaluator.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>

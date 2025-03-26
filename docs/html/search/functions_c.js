@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['world_5fcardinality_0',['world_cardinality',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_i_model.html#a07fd4cd84e820394c7bdbd5d39a25a38',1,'iif_sadaf::talk::GSV::IModel']]]
+  ['value_0',['value',['../structiif__sadaf_1_1talk_1_1_g_s_v_1_1_referent_system.html#a88873f5c0608aa6bd94e9a049e780a30',1,'iif_sadaf::talk::GSV::ReferentSystem']]],
+  ['variabledenotation_1',['variableDenotation',['../namespaceiif__sadaf_1_1talk_1_1_g_s_v.html#ac0c4a1c064233601a0bfcd5b76791e30',1,'iif_sadaf::talk::GSV']]]
 ];
