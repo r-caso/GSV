@@ -14,4 +14,4 @@ target_include_directories(gsv-adapters
         $<INSTALL_INTERFACE:include/GSV/adapters>
 )
 
-target_link_libraries(gsv-adapters PRIVATE QMLModel::QMLModel)
+target_link_libraries(gsv-adapters PUBLIC QMLModel::QMLModel)
