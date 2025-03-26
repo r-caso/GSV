@@ -10,7 +10,7 @@ This library has been developed as part of work as a Researcher at [IIF/SADAF/CO
 
 ## Components
 
-The library is structured into three primary components:
+The library is structured into four components:
 
 ### 1. GSV Core (`gsv-core`)
 
@@ -47,23 +47,35 @@ Defines standard semantic relations:
 
 This component enables reasoning about relationships between different semantic expressions.
 
-## Directory Structure
+### 4. Model adapters
+
+The GSV library requires an external library providing an implementation of a standard QML model. The library expects the model to comply with the `IModel` interface, declared in [imodel.hpp](GSV/interfaces/imodel.hpp).
+
+To that effect, GSV implements a collection of model adapters, designed to bridge between an external QML model library, and the `IModel` interface.
+
+For the time being, the only external library supported is the [QMLModel library](https://github.com/r-caso/QMLModel).
+
+## Directory structure
 
 ```
 GSV/
-├── gsv-core/              # Core semantic primitives
-│   ├── include/           # Public headers
-│   └── src/               # Implementation files
-├── gsv-evaluator/         # Evaluation engine
-│   ├── include/           # Public headers
-│   └── src/               # Implementation files
-├── gsv-relations/         # Semantic relations
-│   ├── include/           # Public headers
-│   └── src/               # Implementation files
-├── include/               # convenience include header
-└── interfaces/            # Shared interface definitions
-third_party/
-└── semantics/             # Third-party semantic libraries
+├── gsv-adapters/                        # Core semantic primitives
+│   ├── include/                         # Public headers
+│   │   └── qml_model_adapter/           
+│   └── src/                             # Implementation files
+│       └── qml_model_adapter/           # Public headers
+├── gsv-core/                            # Core semantic primitives
+│   ├── include/                         # Public headers
+│   └── src/                             # Implementation files
+├── gsv-evaluator/                       # Evaluation engine
+│   ├── include/                         # Public headers
+│   └── src/                             # Implementation files
+├── gsv-relations/                       # Semantic relations
+│   ├── include/                         # Public headers
+│   └── src/                             # Implementation files
+├── include/                             # convenience include header
+└── interfaces/                          # Shared interface definitions
+docs/
 ```
 
 ## Installation
@@ -78,12 +90,13 @@ git clone git@github.com:r-caso/GSV.git
 - C++23 compatible compiler
 - CMake 3.22 or newer
 - [QMLExpression library](https://github.com/r-caso/QMLExpression)
+- [QMLModel library](https://github.com/r-caso/QMLModel)
 
-The GSV library requires the [QMLExpression](https://github.com/r-caso/QMLExpression) library. To install it, follow the instructions in the README (notice that it need not be installed as a system library).
+The GSV library requires the [QMLExpression](https://github.com/r-caso/QMLExpression) and the [QMLModel library](https://github.com/r-caso/QMLModel) libraries. To install them, follow the instructions in the corresponding README (notice that they need not be installed as system libraries).
 
 ### Building
 
-Once you have a working installation of QMLExpression, to build the QMLParser library, navigate to the QMLParser root folder, and do the following:
+Once you have a working installation of QMLExpression and QMLModel, to build the QMLParser library, navigate to the QMLParser root folder, and do the following:
 
 ```bash
 mkdir build
@@ -91,14 +104,14 @@ cd build
 cmake ..
 cmake --build .
 ```
-If QMLExpression is not installed as a system library, you have to tell CMake. Instead of cmake .., do:
+If QMLExpression and/or QMLModel are not installed as a system libraries, you have to tell CMake. Instead of `cmake ..`, do:
 
 ```bash
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/QMLExpression
+cmake .. -DCMAKE_PREFIX_PATH=/path_1/to/QMLExpression;/path_2/to/QMLModel
 ```
 Or you can add the following key-value pair in the cacheVariables array of your `CMakePresets.json`:
 ```bash
-"CMAKE_PREFIX_PATH" : "/path/to/QMLExpression"
+"CMAKE_PREFIX_PATH" : "/path_1/to/QMLExpression;/path_2/to/QMLModel"
 ```
 
 ### Installation with CMake
@@ -144,12 +157,15 @@ If you have installed GSV as a non-system library, you should tell CMake where t
 
 The GSV library has several components:
 
+- gsv-adapters, which contains the adapters for external QML model providers
 - gsv-core, which contains the main semantic primitives
 - gsv-evaluator, which runs a semantic evaluation on QMLExpressions
 - gsv-relations, which checks for semantic relations definable within the GSV semantic framework
 
 These components can be accessed through their specific headers:
 ```c++
+#include <GSV/adapters/qml_model_adapter.hpp>
+
 #include <GSV/core/information_state.hpp>
 #include <GSV/core/possibility.hpp>
 #include <GSV/core/referent_system.hpp>
@@ -159,8 +175,10 @@ These components can be accessed through their specific headers:
 #include <GSV/relations/semantic_relations.hpp>
 ```
 
-Additionally, the `gsv-core` component has a convenience header that pulls in al functions and data structures defined in it:
+Additionally, the `gsv-core` and `gsv-adapters` components have convenience headers that pull in all functions and data structures defined in them:
 ```c++
+#include <GSV/adapters/adapters.hpp>
+
 #include <GSV/core/core.hpp>
 ```
 
@@ -178,21 +196,18 @@ Take notice that the GSV library also includes a convenience header that pulls i
 
 The main callable within the GSV evaluator library is the `Evaluator()` visitor. To invoke it:
 
-1. First, instantiate a `Model` object that adheres to the `IModel` interface declared in [`imodel.hpp`](GSV/interfaces/imodel.hpp):
+1. First, instantiate an adapter that adheres to the `IModel` interface declared in [`imodel.hpp`](GSV/interfaces/imodel.hpp). This step requires the use of one of the adapters defined in the gsv-adapters component:
 
 ```cpp
-const int number_of_worlds = 10; // pick your value
-const int number_of_individuals = 10; // pick your value
+namespace GSV = iif_sadaf::talk::GSV;
 
-const Model model(number_of_worlds, number_of_individuals);
+QMLModel m(...);
+GSV::QMLModelAdapter model(m);
 ```
-
-A mockup of a fully working `Model` class is declared in the [`model.hpp`](third_party/semantics/model.hpp) file. If you use this class, you should populate the interpretation functions.
 
 2. Instantiate an `InformationState` object for semantic interpretation:
 
 ```cpp
-namespace GSV = iif_sadaf::talk::GSV;
 const GSV::InformationState input_state = GSV::create(model);
 ```
 
@@ -283,6 +298,8 @@ Any logical expression outside of these (e.g., a biconditional, or another kind 
 ### IModel Objects
 
 The GSV Evaluator Library expects any object that complies with the `IModel` interface to handle errors through the use of `std::expected`. Particularly, it is expected that the `termInterpretation()` and `predicateInterpretation()` functions return an error message if the term or predicate lacks an interpretation in the model.
+
+For now, the only supported model librar is [QMLModel](https://github.com/r-caso/QMLModel). If you want to add your own, write the adapter, and follow the instructions in **Contributing** below.
 
 ## Contributing
 
