@@ -1,3 +1,3 @@
 #pragma once
 
-#include "qml_model_adapters.hpp"
+#include "qml_model_adapter.hpp"
