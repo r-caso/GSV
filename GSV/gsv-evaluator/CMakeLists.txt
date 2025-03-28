@@ -1,4 +1,6 @@
 # gsv-evaluator, valuation function for QMLExpressions
+find_package(QMLExpression REQUIRED)
+
 add_library(gsv-evaluator STATIC)
 
 target_sources(gsv-evaluator PRIVATE
