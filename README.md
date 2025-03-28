@@ -164,7 +164,7 @@ The GSV library has several components:
 
 These components can be accessed through their specific headers:
 ```c++
-#include <GSV/adapters/qml_model_adapter.hpp>
+#include <GSV/adapters/qml_model_adapter/qml_model_adapter.hpp>
 
 #include <GSV/core/information_state.hpp>
 #include <GSV/core/possibility.hpp>
@@ -178,7 +178,8 @@ These components can be accessed through their specific headers:
 Additionally, the `gsv-core` and `gsv-adapters` components have convenience headers that pull in all functions and data structures defined in them:
 ```c++
 #include <GSV/adapters/adapters.hpp>
-
+```
+```c++
 #include <GSV/core/core.hpp>
 ```
 
