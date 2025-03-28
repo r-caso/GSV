@@ -240,12 +240,9 @@ std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr,
 }
 
 /**
- * @brief Determines whether a set of premises entails a conclusion, relative to a given model.
+ * @brief An implementation of GSV's logical consequence relation.
  *
- * This function evaluates whether the conclusion follows from the premises in all
- * possible information states. It iterates through subsets of possible worlds and
- * applies updates from each premise to the current information state. The conclusion
- * is then evaluated to check whether it is supported in the updated state.
+ * This function is an alias for `entails_G()`.
  *
  * @param premises A vector of expressions representing the premises.
  * @param conclusion The expression representing the conclusion.
@@ -255,6 +252,94 @@ std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr,
  *         Returns an error message if evaluation fails.
  */
 std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+{
+	return entails_G(premises, conclusion, model);
+}
+
+/**
+ * @brief An implementation of Veltmann's Update Semantics' logical consequence relation at the ignorant state.
+ *
+ * This function determines whether the state that results from sequentially updating the
+ * ignorant state with the premises supports the conclusion (provided the update with the
+ * conclusion is defined).
+ *  
+ * The 0 subscript encodes the fact that the entailment relation is evaluated relative
+ * to the ignorant state only.
+ *
+ * @param premises A vector of expressions representing the premises.
+ * @param conclusion The expression representing the conclusion.
+ * @param model The model against which entailment is evaluated.
+ * @return std::expected<bool, std::string> `true` if the conclusion is supported
+ *         in all states updated by the premises, `false` otherwise.
+ *         Returns an error message if evaluation fails.
+ */
+std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+{
+	InformationState ignorant_state = create(model);
+
+	// Update input state with premises
+	for (const QMLExpression::Expression& expr : premises) {
+		const auto update = evaluate(expr, ignorant_state, model);
+		if (!update.has_value()) {
+			return std::unexpected(
+				std::format(
+					"In evaluating formula {}:\n{}",
+					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
+					update.error()
+				)
+			);
+		}
+		ignorant_state = update.value();
+	}
+
+	// check if update with conclusion exists
+	const auto update = evaluate(conclusion, ignorant_state, model);
+
+	// update does not exist
+	if (!update.has_value()) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
+				update.error()
+			)
+		);
+	}
+
+	// update exists, check for support
+	const auto does_support = supports(ignorant_state, conclusion, model);
+	if (!does_support.has_value()) {
+		return std::unexpected(
+			std::format(
+				"In evaluating formula {}:\n{}",
+				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
+				does_support.error()
+			)
+		);
+	}
+	return does_support.value();
+}
+
+/**
+ * @brief An implementation of Veltmann's Update Semantics' logical consequence relation at every state.
+ *
+ * This function iterates through all possible information states definable relative to
+ * the base model, and determines whether, for each of them, the state that results from
+ * sequentially updating that state with the premises supports the conclusion
+ * (provided the update with the conclusion is defined). It this holds, the entailment
+ * relation holds. Otherwise, it fails to hold.
+ *
+ * The G subscript (for general) encodes the fact that the entailment relation is evaluated
+ * relative to every possible information state.
+ * 
+ * @param premises A vector of expressions representing the premises.
+ * @param conclusion The expression representing the conclusion.
+ * @param model The model against which entailment is evaluated.
+ * @return std::expected<bool, std::string> `true` if the conclusion is supported
+ *         in all states updated by the premises, `false` otherwise.
+ *         Returns an error message if evaluation fails.
+ */
+std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
 {
 	for (const int i : std::views::iota(0, model.world_cardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
@@ -304,6 +389,57 @@ std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expres
 			}
 		}
 	}
+	return true;
+}
+
+/**
+ * @brief An implementation of Veltmann's Update Semantics' entailment-as-support logical consequence relation.
+ *
+ * This function iterates through all possible information states definable relative to
+ * the base model, and determines whether they either fail to satisfy some of the premises,
+ * or they satisfy the conclusion. If this holds, the entailment relation holds. Otherwise,
+ * it fails to hold.
+ * 
+ * The C subscript (for classical) encodes the fact that the entailment relation is the
+ * one that resembles the most the classical notion of entailment, in which the premises
+ * have no dynamic effect on the context at which the conclusion is evaluated.
+ *
+ * @param premises A vector of expressions representing the premises.
+ * @param conclusion The expression representing the conclusion.
+ * @param model The model against which entailment is evaluated.
+ * @return std::expected<bool, std::string> `true` if the conclusion is supported
+ *         in all states updated by the premises, `false` otherwise.
+ *         Returns an error message if evaluation fails.
+ */
+std::expected<bool, std::string> entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+{
+	for (const int i : std::views::iota(0, model.world_cardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+		for (InformationState& input_state : states) {
+
+			const auto supports_all_premises = [&](InformationState& state) -> bool {
+				const auto is_supported = [&](const QMLExpression::Expression& premise) -> bool {
+					const auto result = supports(state, premise, model);
+					if (!result.has_value()) {
+						throw std::out_of_range(result.error());
+					}
+					return result.value();
+					};
+				return std::ranges::all_of(premises, is_supported);
+				};
+
+			const auto supports_conclusion = supports(input_state, conclusion, model);
+
+			if (!supports_conclusion.has_value()) {
+				return std::unexpected(supports_conclusion.error());
+			}
+
+			if (supports_all_premises(input_state) && !supports_conclusion.value()) {
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 

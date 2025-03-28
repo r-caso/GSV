@@ -281,6 +281,29 @@ if (entails_result.has_value() && entails_result.value()) {
 }
 ```
 
+Notice that there are four entailment relation functions, three of them subscripted:
+```c++
+std::expected<bool, std::string> GSV::entails_0(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+std::expected<bool, std::string> GSV::entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+std::expected<bool, std::string> GSV::entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+```
+And one without subscript:
+```c++
+std::expected<bool, std::string> GSV::entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+```
+
+This requires a brief remark:
+
+1. The subscripted logical consequence relations are defined in Veltmann's Update Semantics (as presented in [Defaults in Update Semantics](https://link.springer.com/article/10.1007/BF00248150)), upon which GSV is based, and encode three different concepts:
+ 
+    - (i) entailment as sequential update on the ignorant information state,
+    - (ii) entailment as sequential update on every possible information state,
+    - (iii) entailment as support by every information state.
+
+2. The non-subscripted logical consequence relation is the official GSV's entailment relation, and is simply an alias for `entails_G()`.
+
+If you want to access the official GSV consequence relation, use `entails()`. The other consequence relations are refinable in the GSV framework, and 
+
 ### Error Handling
 
 The `GSV::Evaluator()` visitor, the `GSV::evaluate()` function, and all the functions implementing semantic concepts return error messages under certain conditions, detailed in the corresponding documentation.

@@ -19,6 +19,9 @@ std::expected<bool, std::string> isSupportedBy(const QMLExpression::Expression& 
 std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const IModel& model);
 std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr, const IModel& model);
 std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
+std::expected<bool, std::string> entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model);
 std::expected<bool, std::string> equivalent(const QMLExpression::Expression& expr1, const QMLExpression::Expression& expr2, const IModel& model);
 
 }
