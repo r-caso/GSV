@@ -101,6 +101,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/GSVConfig.cmake.in"
 
 include(CMakeFindDependencyMacro)
 find_dependency(QMLExpression REQUIRED)
+find_dependency(QMLModel REQUIRED)
 
 include(\"\${CMAKE_CURRENT_LIST_DIR}/GSVTargets.cmake\")
 check_required_components(GSV)
