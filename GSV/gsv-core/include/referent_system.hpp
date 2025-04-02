@@ -32,6 +32,5 @@ public:
 std::set<std::string_view> domain(const ReferentSystem& r);
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1);
 std::string str(const ReferentSystem& r);
-std::string repr(const ReferentSystem& r);
 
 }

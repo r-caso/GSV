@@ -105,36 +105,19 @@ bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 
 std::string str(const ReferentSystem& r)
 {
-	std::string desc = "Number of pegs: " + std::to_string(r.pegs) + "\n";
-	desc += "Variable to peg association:\n";
-
 	if (r.variablePegAssociation.empty()) {
-		desc += "  [ empty ]\n";
-		return desc;
+		return "{ }";
 	}
+
+	std::string vp_association;
 
 	for (const auto& [variable, peg] : r.variablePegAssociation) {
-		desc += "  - " + std::string(variable) + " -> peg_" + std::to_string(peg) + "\n";
+		vp_association += std::format("{} -> peg{}, ", std::string(variable), std::to_string(peg));
 	}
 
-	return desc;
-}
+	vp_association.resize(vp_association.size() - 2);
 
-std::string repr(const ReferentSystem& r)
-{
-	std::string desc = "R-System : [ ";
-
-	if (r.variablePegAssociation.empty()) {
-		return desc + "]";
-	}
-
-	for (const auto& [variable, peg] : r.variablePegAssociation) {
-		desc += "{ " + std::string(variable) + " : " + std::to_string(peg) + " }, ";
-	}
-
-	desc.resize(desc.size() - 2);
-
-	return desc + " ]";
+	return std::format("{{ {} }}", vp_association);
 }
 
 }

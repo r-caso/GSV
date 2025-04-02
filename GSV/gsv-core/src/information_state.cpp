@@ -1,6 +1,7 @@
 #include "information_state.hpp"
 
 #include <algorithm>
+#include <format>
 #include <iostream>
 #include <memory>
 
@@ -132,28 +133,13 @@ bool subsistsIn(const InformationState& s1, const InformationState& s2)
 
 std::string str(const InformationState& state)
 {
-	std::string desc;
-
-	desc += "--------------------\n";
-	for (const Possibility& p : state) {
-		desc += str(p);
-		desc += "--------------------\n";
-	}
-
-	desc.pop_back();
-
-	return desc;
-}
-
-std::string repr(const InformationState& state)
-{
-	std::string desc = "Information State : [\n";
+	std::string contents;
 
 	for (const Possibility& p : state) {
-		desc += "  " + repr(p) + "\n";
+		contents += std::format("\t{}\n", str(p));
 	}
 
-	return desc + "]";
+	return std::format("Information State : [\n{}]", contents);
 }
 
 }

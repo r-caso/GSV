@@ -1,6 +1,7 @@
 #include "possibility.hpp"
 
 #include <algorithm>
+#include <format>
 
 namespace iif_sadaf::talk::GSV {
 
@@ -103,42 +104,24 @@ std::expected<int, std::string> variableDenotation(std::string_view variable, co
 
 std::string str(const Possibility& p)
 {
-	std::string desc = "[ ] Referent System:\n" + str(*p.referentSystem);
-	desc += "[ ] Assignment function: \n";
+	std::string assignment_contents;
 
 	if (p.assignment.empty()) {
-		desc += "  [ empty ]\n";
-		
+		assignment_contents = "{ }";
 	}
 	else {
 		for (const auto& [peg, individual] : p.assignment) {
-			desc += "  - peg_" + std::to_string(peg) + " -> e_" + std::to_string(individual) + "\n";
+			assignment_contents += std::format("peg{} -> e{}, ", std::to_string(peg), std::to_string(individual));
 		}
+		assignment_contents.resize(assignment_contents.size() - 2);
+		assignment_contents = std::format("{{ {} }}", assignment_contents);
 	}
 
-	desc += "[ ] Possible world: w_" + std::to_string(p.world) + "\n";
-
-	return desc;
-}
-
-std::string repr(const Possibility& p)
-{
-	std::string desc = "Possibility : [ " + repr(*p.referentSystem) + ", Assignment : [ ";
-
-	if (p.assignment.empty()) {
-		desc += "]";
-	}
-	else {
-		for (const auto& [peg, individual] : p.assignment) {
-			desc += "{ " + std::to_string(peg) + " : " + std::to_string(individual) + " }, ";
-		}
-		desc.resize(desc.size() - 2);
-		desc += " ]";
-	}
-
-	desc += ", World : " + std::to_string(p.world) + " ]";
-
-	return desc;
+	return std::format("[ R-System : {}, Assignment : {}, World : w{} ]",
+		str(*p.referentSystem),
+		assignment_contents,
+		std::to_string(p.world)
+	);
 }
 
 }

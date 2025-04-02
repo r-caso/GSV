@@ -36,6 +36,5 @@ bool operator<(const Possibility& p1, const Possibility& p2);
 std::expected<int, std::string> variableDenotation(std::string_view variable, const Possibility& p);
 
 std::string str(const Possibility& p);
-std::string repr(const Possibility& p);
 
 }
