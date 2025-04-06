@@ -181,8 +181,8 @@ std::vector<InformationState> generateSubStates(int n, int k) {
  */
 std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const IModel& model)
 {
-	for (const int i : std::views::iota(0, model.world_cardinality())) {
-		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+	for (const int i : std::views::iota(0, model.worldCardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		const auto is_consistent = [&](const InformationState& state) -> bool {
 			const auto result = consistent(expr, state, model); 
 			if (!result.has_value()) {
@@ -218,8 +218,8 @@ std::expected<bool, std::string> consistent(const QMLExpression::Expression& exp
  */
 std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr, const IModel& model)
 {
-	for (const int i : std::views::iota(0, model.world_cardinality())) {
-		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+	for (const int i : std::views::iota(0, model.worldCardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		const auto is_not_empty_or_supports_expression = [&](const InformationState& state) -> bool {
 			const auto result = supports(state, expr, model);
 			if (!result.has_value()) {
@@ -341,8 +341,8 @@ std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expr
  */
 std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
 {
-	for (const int i : std::views::iota(0, model.world_cardinality())) {
-		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+	for (const int i : std::views::iota(0, model.worldCardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		for (InformationState& input_state : states) {
 			// Update input state with premises
 			for (const QMLExpression::Expression& expr : premises) {
@@ -413,8 +413,8 @@ std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expr
  */
 std::expected<bool, std::string> entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
 {
-	for (const int i : std::views::iota(0, model.world_cardinality())) {
-		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+	for (const int i : std::views::iota(0, model.worldCardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		for (InformationState& input_state : states) {
 
 			const auto supports_all_premises = [&](InformationState& state) -> bool {
@@ -520,8 +520,8 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
  */
 std::expected<bool, std::string> equivalent(const QMLExpression::Expression& expr1, const QMLExpression::Expression& expr2, const IModel& model)
 {
-	for (const int i : std::views::iota(0, model.world_cardinality())) {
-		std::vector<InformationState> states = generateSubStates(model.world_cardinality() - 1, i);
+	for (const int i : std::views::iota(0, model.worldCardinality())) {
+		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 
 		const auto dissimilar_updates = [&](const InformationState& state) ->bool { 
 			const auto expr1_update = evaluate(expr1, state, model);

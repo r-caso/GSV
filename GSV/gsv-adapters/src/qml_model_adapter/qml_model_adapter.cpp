@@ -23,7 +23,7 @@ QMLModelAdapter::QMLModelAdapter(std::unique_ptr<QMLModel::QMLModel> QMLModelMod
  *
  * @return The number of worlds in the model.
  */
-int QMLModelAdapter::world_cardinality() const
+int QMLModelAdapter::worldCardinality() const
 {
     return pImpl->getModel().world_cardinality();
 }
@@ -33,7 +33,7 @@ int QMLModelAdapter::world_cardinality() const
  *
  * @return The number of individuals in the domain of the model.
  */
-int QMLModelAdapter::domain_cardinality() const
+int QMLModelAdapter::domainCardinality() const
 {
     return pImpl->getModel().domain_cardinality();
 }

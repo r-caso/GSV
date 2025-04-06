@@ -265,7 +265,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 	if (expr->quantifier == QMLExpression::Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
-        for (const int i : std::views::iota(0, model->domain_cardinality())) {
+        for (const int i : std::views::iota(0, model->domainCardinality())) {
             const InformationState s_variant = update(input_state, expr->variable.literal, i);
 			const auto hypothetical_s_variant_update = std::visit(
 				Evaluator(),
@@ -298,7 +298,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
     if (expr->quantifier == QMLExpression::Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
-        for (const int d : std::views::iota(0, model->domain_cardinality())) {
+        for (const int d : std::views::iota(0, model->domainCardinality())) {
             const auto hypothetical_update = std::visit(
 				Evaluator(),
 				expr->scope,

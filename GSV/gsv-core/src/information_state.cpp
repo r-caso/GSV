@@ -22,7 +22,7 @@ InformationState create(const IModel& model)
 
 	auto r_system = std::make_shared<ReferentSystem>();
 
-	const int number_of_worlds = model.world_cardinality();
+	const int number_of_worlds = model.worldCardinality();
 	for (int i = 0; i < number_of_worlds; ++i) {
 		possibilities.emplace(r_system, i);
 	}
