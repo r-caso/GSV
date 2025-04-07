@@ -22,6 +22,6 @@ bool isDescendantOf(const Possibility& p2, const Possibility& p1, const Informat
 bool subsistsIn(const Possibility& p, const InformationState& s);
 bool subsistsIn(const InformationState& s1, const InformationState& s2);
 
-std::string str(const InformationState& state);
+std::string str(const InformationState& state, bool label = true, const std::string& indent_str = {});
 
 }

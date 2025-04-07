@@ -20,9 +20,11 @@ set(GSV_INTERFACES_DIR ${GSV_SOURCE_DIR}/interfaces)
 set(GSV_ADAPTERS_DIR ${GSV_SOURCE_DIR}/gsv-adapters)
 set(GSV_CORE_DIR ${GSV_SOURCE_DIR}/gsv-core)
 set(GSV_EVALUATOR_DIR ${GSV_SOURCE_DIR}/gsv-evaluator)
+set(GSV_LOGGER_DIR ${GSV_SOURCE_DIR}/gsv-logger)
 set(GSV_RELATIONS_DIR ${GSV_SOURCE_DIR}/gsv-relations)
 
 # Add subdirectories with component libraries
+add_subdirectory(${GSV_LOGGER_DIR})
 add_subdirectory(${GSV_ADAPTERS_DIR})
 add_subdirectory(${GSV_CORE_DIR})
 add_subdirectory(${GSV_EVALUATOR_DIR})
@@ -46,7 +48,7 @@ target_link_libraries(GSV INTERFACE
 include(GNUInstallDirs)
 
 # Install all component libraries and the main interface library
-install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-relations GSV
+install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-logger gsv-relations GSV
     EXPORT GSVTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

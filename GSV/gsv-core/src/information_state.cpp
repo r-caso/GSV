@@ -131,15 +131,16 @@ bool subsistsIn(const InformationState& s1, const InformationState& s2)
 	return std::ranges::all_of(s1, subsists_in_s2);
 }
 
-std::string str(const InformationState& state)
+std::string str(const InformationState& state, bool label, const std::string& indent_str)
 {
+	const std::string label_str = label ? "Information State : " : "";
 	std::string contents;
 
 	for (const Possibility& p : state) {
-		contents += std::format("\t{}\n", str(p));
+		contents += std::format("{}\t{}\n", indent_str, str(p));
 	}
 
-	return std::format("Information State : [\n{}]", contents);
+	return std::format("{}{}[\n{}{}]", indent_str, label_str, contents, indent_str);
 }
 
 }

@@ -5,6 +5,8 @@
 #include <QMLExpression/expression.hpp>
 
 #include "information_state.hpp"
+#include "ilogger.hpp"
+#include "gsv-logger/logger_utils.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
@@ -22,13 +24,22 @@ namespace iif_sadaf::talk::GSV {
  * and `IModel*` must be wrapped in a `std::variant` and passed as a single argument.
  */
 struct Evaluator {
+public:
+    Evaluator(GSVLogger* logger = nullptr)
+        : m_Logger(normalize(logger))
+    { }
+
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+
+private:
+    GSVLogger* m_Logger;
+
 };
 
-std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model);
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, GSVLogger* logger = nullptr);
 
 }

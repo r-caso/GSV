@@ -31,6 +31,25 @@ QMLExpression::Expression negate(const QMLExpression::Expression& expr)
 	return std::make_shared<QMLExpression::UnaryNode>(QMLExpression::Operator::NEGATION, expr);
 }
 
+std::string explain_failure(const std::string& formula, const std::string& cause)
+{
+	return std::format("In evaluating formula {}:\n{}", formula, cause);
+}
+
+void startLog(GSVLogger* logger, const std::string& formula, const InformationState& state)
+{
+	logger->log(std::format("===> Starting evaluation of {}", formula));
+	logger->increaseDepth();
+	logger->log(std::format("Input information state is:\n{}", str(state, false, logger->currentIndent())));
+}
+
+void endLog(GSVLogger* logger, const std::string& formula, const InformationState& state)
+{
+	logger->log(std::format("Finished the evaluation of {}", formula));
+	logger->log("Output information state is:\n" + str(state, false, logger->currentIndent()));
+	logger->decreaseDepth();
+}
+
 } // ANONYMOUS NAMESPACE
 
 /**
@@ -55,44 +74,49 @@ QMLExpression::Expression negate(const QMLExpression::Expression& expr)
  */
 std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	const auto prejacent_update = std::visit(Evaluator(), expr->scope, params);
+	const std::string formula = QMLExpression::format(QMLExpression::Expression(expr));
+	InformationState& input_state = std::get<0>(params).first;
+
+	startLog(m_Logger, formula, input_state);
+
+	m_Logger->log("Calculating prejacent update");
+	const auto prejacent_update = std::visit(Evaluator(m_Logger), expr->scope, params);
+	m_Logger->log(std::format("Returning to evaluation of {}", formula));
 
 	if (!prejacent_update.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				prejacent_update.error()
-			)
-		);
+		return std::unexpected(explain_failure(formula, prejacent_update.error()));
 	}
 
-	InformationState& input_state = std::get<std::pair<InformationState, const IModel*>>(params).first;
-
 	if (expr->op == QMLExpression::Operator::EPISTEMIC_POSSIBILITY) {
+		m_Logger->log("Applying test for epistemic possibilty: ");
 		if (prejacent_update.value().empty()) {
+			m_Logger->log("compatibility test failed");
 			input_state.clear();
+		}
+		else {
+			m_Logger->log("compatibility test passed");
 		}
 	}
 	else if (expr->op == QMLExpression::Operator::EPISTEMIC_NECESSITY) {
+		m_Logger->log("Applying test for epistemic necessity: ");
 		if (!subsistsIn(input_state, prejacent_update.value())) {
+			m_Logger->log("support test failed");
 			input_state.clear();
+		}
+		else {
+			m_Logger->log("support test passed");
 		}
 	}
 	else if (expr->op == QMLExpression::Operator::NEGATION) {
+		m_Logger->log("Filtering with negation of the prejacent");
 		filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, prejacent_update.value()); });
 	}
 	else {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				"Invalid unary operator"
-			)
-		);
+		return std::unexpected(explain_failure(formula, "Invalid unary operator"));
 	}
 
-	return std::move(input_state);
+	endLog(m_Logger, formula, input_state);
+	return input_state;
 }
 
 /**
@@ -122,94 +146,89 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  */
 std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	const std::string formula = QMLExpression::format(QMLExpression::Expression(expr));
+	InformationState& input_state = std::get<0>(params).first;
+	const IModel* model = (std::get<0>(params)).second;
+
+	startLog(m_Logger, formula, input_state);
 
 	// Conjunction is sequential update, treated separately
 	if (expr->op == QMLExpression::Operator::CONJUNCTION) {
-		const auto lhs_update = std::visit(Evaluator(), expr->lhs, params);
+		m_Logger->log("Performing sequential update");
+		m_Logger->log("Updating with LHS");
+		const auto lhs_update = std::visit(Evaluator(m_Logger), expr->lhs, params);
+		m_Logger->log(std::format("Returning to evaluation of {}", formula));
 
 		if (!lhs_update.has_value()) {
-			return std::unexpected(
-				std::format(
-					"In evaluating formula {}:\n{}",
-					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
-					lhs_update.error()
-				)
-			);
+			return std::unexpected(explain_failure(formula, lhs_update.error()));
 		}
 
-		return std::visit(
-				Evaluator(),
+		m_Logger->log("Updating with RHS");
+		const auto rhs_update = std::visit(
+				Evaluator(m_Logger),
 				expr->rhs,
 				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(lhs_update.value(), model)
 			)
 		);
+
+		if (!rhs_update.has_value()) {
+			return std::unexpected(explain_failure(formula, rhs_update.error()));
+		}
+
+		endLog(m_Logger, formula, rhs_update.value());
+		return rhs_update.value();
 	}
 
 	// All other updates are filtering updates
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const auto hypothetical_lhs_update = std::visit(Evaluator(), expr->lhs, params);
+	m_Logger->log("Calculating hypothetical LHS update");
+	const auto hypothetical_lhs_update = std::visit(Evaluator(m_Logger), expr->lhs, params);
 
 	if (!hypothetical_lhs_update.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				hypothetical_lhs_update.error()
-			)
-		);
+		return std::unexpected(explain_failure(formula, hypothetical_lhs_update.error()));
 	}
 
+	m_Logger->log(std::format("Returning to evaluation of {}", formula));
+
 	if (expr->op == QMLExpression::Operator::DISJUNCTION) {
-		const auto negated_lhs_update = std::visit(Evaluator(), negate(expr->lhs), params);
+		m_Logger->log("Starting calculation of hypothetical RHS update");
+		m_Logger->log("Assuming negation of LHS");
+		const auto negated_lhs_update = std::visit(Evaluator(m_Logger), negate(expr->lhs), params);
+		m_Logger->log(std::format("Returning to evaluation of {}", formula));
 		
 		if (!negated_lhs_update.has_value()) {
-			return std::unexpected(
-				std::format(
-					"In evaluating formula {}:\n{}", 
-					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-					negated_lhs_update.error()
-				)
-			);
+			return std::unexpected(explain_failure(formula, negated_lhs_update.error()));
 		}
 		
+		m_Logger->log("Finishing calculation of hypothetical RHS update");
 		const auto hypothetical_rhs_update = std::visit(
-			Evaluator(),
+			Evaluator(m_Logger),
 			expr->rhs,
 			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(negated_lhs_update.value(), model))
 		);
 
 		if (!hypothetical_rhs_update.has_value()) {
-			return std::unexpected(
-				std::format(
-					"In evaluating formula {}:\n{}", 
-					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-					hypothetical_rhs_update.error()
-				)
-			);
+			return std::unexpected(explain_failure(formula, hypothetical_rhs_update.error()));
 		}
 
 		const auto in_lhs_or_in_rhs = [&](const Possibility& p) -> bool {
 			return hypothetical_lhs_update.value().contains(p) || hypothetical_rhs_update.value().contains(p);
 		};
 
+		m_Logger->log("Filtering for disjunction");
+
 		filter(input_state, in_lhs_or_in_rhs);
 	}
 	else if (expr->op == QMLExpression::Operator::CONDITIONAL) {
+		m_Logger->log("Calculating hypothetical RHS update");
 		const auto hypothetical_consequent_update = std::visit(
-			Evaluator(),
+			Evaluator(m_Logger),
 			expr->rhs,
 			std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(hypothetical_lhs_update.value(), model))
 		);
+		m_Logger->log(std::format("Returning to evaluation of {}", formula));
 
 		if (!hypothetical_consequent_update.has_value()) {
-			return std::unexpected(
-				std::format(
-					"In evaluating formula {}:\n{}", 
-					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
-					hypothetical_consequent_update.error()
-				)
-			);
+			return std::unexpected(explain_failure(formula, hypothetical_consequent_update.error()));
 		}
 
 		const auto all_descendants_subsist = [&](const Possibility& p) -> bool {
@@ -223,19 +242,15 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 			return !subsistsIn(p, hypothetical_lhs_update.value()) || all_descendants_subsist(p);
 		};
 
+		m_Logger->log("Filtering for conditional");
 		filter(input_state, if_subsists_all_descendants_do);
 	}
 	else {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				"Invalid operator for binary formula"
-			)
-		);
+		return std::unexpected(explain_failure(formula, "Invalid operator for binary formula"));
 	}
 
-	return std::move(input_state);
+	endLog(m_Logger, formula, input_state);
+	return input_state;
 }
 
 /**
@@ -259,30 +274,31 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  */
 std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const IModel* model = (std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	const std::string formula = QMLExpression::format(QMLExpression::Expression(expr));
+	InformationState& input_state = (std::get<0>(params)).first;
+	const IModel* model = (std::get<0>(params)).second;
+
+	startLog(m_Logger, formula, input_state);
 
 	if (expr->quantifier == QMLExpression::Quantifier::EXISTENTIAL) {
 		std::vector<InformationState> all_state_variants;
 
-        for (const int i : std::views::iota(0, model->domainCardinality())) {
-            const InformationState s_variant = update(input_state, expr->variable.literal, i);
+        for (const int d : std::views::iota(0, model->domainCardinality())) {
+			const std::string scope = QMLExpression::format(expr->scope);
+            const InformationState s_variant = update(input_state, expr->variable.literal, d);
+			m_Logger->log(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
 			const auto hypothetical_s_variant_update = std::visit(
-				Evaluator(),
+				Evaluator(m_Logger),
 				expr->scope,
 				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(s_variant, model))
 			);
+
+			m_Logger->log(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
 			
 			if (!hypothetical_s_variant_update.has_value()) {
-				return std::unexpected(
-					std::format(
-						"In evaluating formula {}:\n{}",
-						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-						hypothetical_s_variant_update.error()
-					)
-				);
+				return std::unexpected(explain_failure(formula, hypothetical_s_variant_update.error()));
 			}
-			
+
 			all_state_variants.push_back(hypothetical_s_variant_update.value());
 		}
 
@@ -293,26 +309,25 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 			}
 		}
 
+		endLog(m_Logger, formula, output);
 		return output;
 	}
     if (expr->quantifier == QMLExpression::Quantifier::UNIVERSAL) {
 		std::vector<InformationState> all_hypothetical_updates;
 
         for (const int d : std::views::iota(0, model->domainCardinality())) {
+			const std::string scope = QMLExpression::format(expr->scope);
+			m_Logger->log(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
             const auto hypothetical_update = std::visit(
-				Evaluator(),
+				Evaluator(m_Logger),
 				expr->scope,
 				std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(update(input_state, expr->variable.literal, d), model))
 			);
 
+			m_Logger->log(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
+
 			if (!hypothetical_update.has_value()) {
-				return std::unexpected(
-					std::format(
-						"In evaluating formula {}:\n{}", 
-						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), 
-						hypothetical_update.error()
-					)
-				);
+				return std::unexpected(explain_failure(formula, hypothetical_update.error()));
 			}
 
 			all_hypothetical_updates.push_back(hypothetical_update.value());
@@ -325,19 +340,15 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 			return std::ranges::all_of(all_hypothetical_updates, p_subsists_in_hyp_update);
 		};
 
+		m_Logger->log("Filtering for universal quantification");
 		filter(input_state, subsists_in_all_hyp_updates);
 	}
 	else {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				"Invalid quantifier"
-			)
-		);
+		return std::unexpected(explain_failure(formula, "Invalid quantifier"));
 	}
 
-	return std::move(input_state);
+	endLog(m_Logger, formula, input_state);
+	return input_state;
 }
 
 /**
@@ -365,8 +376,11 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  */
 std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
+	const std::string formula = QMLExpression::format(QMLExpression::Expression(expr));
+	InformationState& input_state = (std::get<0>(params)).first;
+	const IModel& model = *(std::get<0>(params)).second;
+
+	startLog(m_Logger, formula, input_state);
 
 	auto assigns_same_denotation = [&](const Possibility& p) -> bool {
 		const auto lhs_denotation = expr->lhs.type == QMLExpression::Term::Type::VARIABLE ? variableDenotation(expr->lhs.literal, p) : model.termInterpretation(expr->lhs.literal, p.world);
@@ -383,17 +397,13 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 	};
 
 	try {
+		m_Logger->log("Filtering for identity");
 		filter(input_state, assigns_same_denotation);
-		return std::move(input_state);
+		endLog(m_Logger, formula, input_state);
+		return input_state;
 	}
 	catch (const std::out_of_range& e) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				e.what()
-			)
-		);
+		return std::unexpected(explain_failure(formula, e.what()));
 	}
 }
 
@@ -422,9 +432,12 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  */
 std::expected<InformationState, std::string> Evaluator::operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const
 {
-	InformationState& input_state = (std::get<std::pair<InformationState, const IModel*>>(params)).first;
-	const IModel& model = *(std::get<std::pair<InformationState, const IModel*>>(params)).second;
-
+	const std::string formula = QMLExpression::format(QMLExpression::Expression(expr));
+	InformationState& input_state = (std::get<0>(params)).first;
+	const IModel& model = *(std::get<0>(params)).second;
+	
+	startLog(m_Logger, formula, input_state);
+		
 	const auto tuple_in_extension = [&](const Possibility& p) -> bool {
 		std::vector<int> tuple;
 		
@@ -448,17 +461,13 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 	};
 
 	try {
+		m_Logger->log("Filtering for predication");
 		filter(input_state, tuple_in_extension);
-		return std::move(input_state);
+		endLog(m_Logger, formula, input_state);
+		return input_state;
 	}
 	catch (const std::out_of_range& e) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				e.what()
-			)
-		);
+		return std::unexpected(explain_failure(formula, e.what()));
 	}
 }
 
@@ -479,10 +488,10 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *          encounters an error (e.g., an invalid operator or undefined term interpretation),
  *          an error message is returned instead of an updated state.
  */
-std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model)
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, GSVLogger* logger)
 {
 	return std::visit(
-		Evaluator(),
+		Evaluator(logger),
 		expr,
 		std::variant<std::pair<InformationState, const IModel*>>(std::make_pair(input_state, &model))
 	);

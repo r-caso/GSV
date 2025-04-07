@@ -16,5 +16,6 @@ target_include_directories(gsv-evaluator
 
 target_link_libraries(gsv-evaluator PUBLIC 
     gsv-core
+    gsv-logger
     QMLExpression::QMLExpression
 )
