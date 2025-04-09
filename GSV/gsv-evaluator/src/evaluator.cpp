@@ -10,6 +10,7 @@
 #include <QMLExpression/formatter.hpp>
 
 #include "possibility.hpp"
+#include "gsv-utils/error_reporting.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
@@ -29,11 +30,6 @@ void filter(InformationState& state, const std::function<bool(const Possibility&
 QMLExpression::Expression negate(const QMLExpression::Expression& expr)
 {
 	return std::make_shared<QMLExpression::UnaryNode>(QMLExpression::Operator::NEGATION, expr);
-}
-
-std::string explain_failure(const std::string& formula, const std::string& cause)
-{
-	return std::format("In evaluating formula {}:\n{}", formula, cause);
 }
 
 void startLog(GSVLogger* logger, const std::string& formula, const InformationState& state)

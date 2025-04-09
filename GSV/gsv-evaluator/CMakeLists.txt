@@ -14,7 +14,8 @@ target_include_directories(gsv-evaluator
         $<INSTALL_INTERFACE:include/GSV/evaluator>
 )
 
-target_link_libraries(gsv-evaluator PUBLIC 
+target_link_libraries(gsv-evaluator PUBLIC
+    gsv-utils
     gsv-core
     gsv-logger
     QMLExpression::QMLExpression
