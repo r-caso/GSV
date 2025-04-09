@@ -6,7 +6,7 @@ namespace iif_sadaf::talk::GSV {
 
 std::string explain_failure(const std::string& formula, const std::string& cause)
 {
-	return std::format("In evaluating formula {}:\n{}", formula, cause);
+    return std::format("In evaluating formula {}:\n{}", formula, cause);
 }
 
 }
