@@ -13,5 +13,6 @@ target_include_directories(gsv-relations
 )
 
 target_link_libraries(gsv-relations PUBLIC
+    gsv-logger
     gsv-evaluator
 )
