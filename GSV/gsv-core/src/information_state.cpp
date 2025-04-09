@@ -18,16 +18,16 @@ namespace iif_sadaf::talk::GSV {
  */
 InformationState create(const IModel& model)
 {
-	std::set<Possibility> possibilities;
+    std::set<Possibility> possibilities;
 
-	auto r_system = std::make_shared<ReferentSystem>();
+    auto r_system = std::make_shared<ReferentSystem>();
 
-	const int number_of_worlds = model.worldCardinality();
-	for (int i = 0; i < number_of_worlds; ++i) {
-		possibilities.emplace(r_system, i);
-	}
+    const int number_of_worlds = model.worldCardinality();
+    for (int i = 0; i < number_of_worlds; ++i) {
+        possibilities.emplace(r_system, i);
+    }
 
-	return possibilities;
+    return possibilities;
 }
 
 /**
@@ -43,26 +43,26 @@ InformationState create(const IModel& model)
  */
 InformationState update(const InformationState& input_state, std::string_view variable, int individual)
 {
-	InformationState output_state;
+    InformationState output_state;
 
-	auto r_star = std::make_shared<ReferentSystem>();
+    auto r_star = std::make_shared<ReferentSystem>();
 
-	for (const auto& p : input_state) {
-		Possibility p_star(r_star, p.world);
-		p_star.assignment = p.assignment;
-		r_star->pegs = p.referentSystem->pegs;
-		for (const auto& map : p.referentSystem->variablePegAssociation) {
+    for (const auto& p : input_state) {
+        Possibility p_star(r_star, p.world);
+        p_star.assignment = p.assignment;
+        r_star->pegs = p.referentSystem->pegs;
+        for (const auto& map : p.referentSystem->variablePegAssociation) {
             const std::string_view var = map.first;
             const int peg = map.second;
-			r_star->variablePegAssociation[var] = peg;
-		}
+            r_star->variablePegAssociation[var] = peg;
+        }
 
-		p_star.update(variable, individual);
+        p_star.update(variable, individual);
 
-		output_state.insert(p_star);
-	}
+        output_state.insert(p_star);
+    }
 
-	return output_state;
+    return output_state;
 }
 
 /**
@@ -76,14 +76,14 @@ InformationState update(const InformationState& input_state, std::string_view va
  */
 bool extends(const InformationState& s2, const InformationState& s1)
 {
-	const auto extends_possibility_in_s1 = [&](const Possibility& p2) -> bool {
-		const auto is_extended_by_p2 = [&](const Possibility& p1) -> bool {
-			return extends(p2, p1); 
-		};
-		return std::ranges::any_of(s1, is_extended_by_p2);
-	};
+    const auto extends_possibility_in_s1 = [&](const Possibility& p2) -> bool {
+        const auto is_extended_by_p2 = [&](const Possibility& p1) -> bool {
+            return extends(p2, p1); 
+        };
+        return std::ranges::any_of(s1, is_extended_by_p2);
+    };
 
-	return std::ranges::all_of(s2, extends_possibility_in_s1);
+    return std::ranges::all_of(s2, extends_possibility_in_s1);
 }
 
 /**
@@ -98,7 +98,7 @@ bool extends(const InformationState& s2, const InformationState& s1)
  */
 bool isDescendantOf(const Possibility& p2, const Possibility& p1, const InformationState& s)
 {
-	return s.contains(p2) && (extends(p2, p1));
+    return s.contains(p2) && (extends(p2, p1));
 }
 
 /**
@@ -112,8 +112,8 @@ bool isDescendantOf(const Possibility& p2, const Possibility& p1, const Informat
  */
 bool subsistsIn(const Possibility& p, const InformationState& s)
 {
-	const auto is_descendant_of_p_in_s = [&](const Possibility& p1) -> bool { return isDescendantOf(p1, p, s); };
-	return std::ranges::any_of(s, is_descendant_of_p_in_s);
+    const auto is_descendant_of_p_in_s = [&](const Possibility& p1) -> bool { return isDescendantOf(p1, p, s); };
+    return std::ranges::any_of(s, is_descendant_of_p_in_s);
 }
 
 /**
@@ -127,20 +127,20 @@ bool subsistsIn(const Possibility& p, const InformationState& s)
  */
 bool subsistsIn(const InformationState& s1, const InformationState& s2)
 {
-	const auto subsists_in_s2 = [&](const Possibility& p) -> bool { return subsistsIn(p, s2); };
-	return std::ranges::all_of(s1, subsists_in_s2);
+    const auto subsists_in_s2 = [&](const Possibility& p) -> bool { return subsistsIn(p, s2); };
+    return std::ranges::all_of(s1, subsists_in_s2);
 }
 
 std::string str(const InformationState& state, bool label, const std::string& indent_str)
 {
-	const std::string label_str = label ? "Information State : " : "";
-	std::string contents;
+    const std::string label_str = label ? "Information State : " : "";
+    std::string contents;
 
-	for (const Possibility& p : state) {
-		contents += std::format("{}\t{}\n", indent_str, str(p));
-	}
+    for (const Possibility& p : state) {
+        contents += std::format("{}\t{}\n", indent_str, str(p));
+    }
 
-	return std::format("{}{}[\n{}{}]", indent_str, label_str, contents, indent_str);
+    return std::format("{}{}[\n{}{}]", indent_str, label_str, contents, indent_str);
 }
 
 }
