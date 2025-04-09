@@ -18,17 +18,17 @@ namespace iif_sadaf::talk::GSV {
  */
 struct Possibility {
 public:
-	Possibility(std::shared_ptr<ReferentSystem> r_system, int world);
+    Possibility(std::shared_ptr<ReferentSystem> r_system, int world);
     Possibility(const Possibility& other) = default;
     Possibility& operator=(const Possibility& other) = default;
-	Possibility(Possibility&& other) noexcept;
-	Possibility& operator=(Possibility&& other) noexcept;
+    Possibility(Possibility&& other) noexcept;
+    Possibility& operator=(Possibility&& other) noexcept;
 
-	void update(std::string_view variable, int individual);
-	
-	std::shared_ptr<ReferentSystem> referentSystem;
-	std::unordered_map<int, int> assignment;
-	int world;
+    void update(std::string_view variable, int individual);
+    
+    std::shared_ptr<ReferentSystem> referentSystem;
+    std::unordered_map<int, int> assignment;
+    int world;
 };
 
 bool extends(const Possibility& p2, const Possibility& p1);
