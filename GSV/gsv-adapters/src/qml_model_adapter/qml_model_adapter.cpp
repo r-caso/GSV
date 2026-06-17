@@ -25,7 +25,7 @@ QMLModelAdapter::QMLModelAdapter(std::unique_ptr<QMLModel::QMLModel> QMLModelMod
  */
 int QMLModelAdapter::worldCardinality() const
 {
-    return pImpl->getModel().world_cardinality();
+    return pImpl->getModel().worldCardinality();
 }
 
 /**
@@ -35,7 +35,7 @@ int QMLModelAdapter::worldCardinality() const
  */
 int QMLModelAdapter::domainCardinality() const
 {
-    return pImpl->getModel().domain_cardinality();
+    return pImpl->getModel().domainCardinality();
 }
 
 /**

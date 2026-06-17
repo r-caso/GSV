@@ -3,6 +3,7 @@
 #include <expected>
 
 #include <QMLExpression/expression.hpp>
+#include <SimpleLogger/simple_logger.hpp>
 
 #include "information_state.hpp"
 
@@ -22,13 +23,22 @@ namespace iif_sadaf::talk::GSV {
  * and `IModel*` must be wrapped in a `std::variant` and passed as a single argument.
  */
 struct Evaluator {
-    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::BinaryNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::QuantificationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::IdentityNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
-    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::variant<std::pair<InformationState, const IModel*>> params) const;
+public:
+    Evaluator(simple_logger::SimpleLogger* logger = nullptr)
+        : m_Logger(simple_logger::normalize(logger))
+    { }
+
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::pair<InformationState, const IModel*> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::BinaryNode>& expr, std::pair<InformationState, const IModel*> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::QuantificationNode>& expr, std::pair<InformationState, const IModel*> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::IdentityNode>& expr, std::pair<InformationState, const IModel*> params) const;
+    std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::pair<InformationState, const IModel*> params) const;
+
+private:
+    simple_logger::SimpleLogger* m_Logger;
+
 };
 
-std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model);
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, simple_logger::SimpleLogger* logger = nullptr);
 
 }

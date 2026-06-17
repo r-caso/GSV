@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(QMLExpression REQUIRED)
 find_package(QMLModel REQUIRED)
+find_package(SimpleLogger REQUIRED)
 
 set(GSV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GSV)
 set(GSV_INTERFACES_DIR ${GSV_SOURCE_DIR}/interfaces)

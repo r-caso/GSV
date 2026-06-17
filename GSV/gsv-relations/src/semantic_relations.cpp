@@ -35,21 +35,25 @@ namespace iif_sadaf::talk::GSV {
  * - If evaluation produces an empty information state, the expression is considered inconsistent.
  * - If an error occurs during evaluation, the error message is returned instead.
  */
-std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model)
+std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	const auto hypothetical_update = evaluate(expr, state, model);
+    const std::string formula = std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr));
 
-	if (!hypothetical_update.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				hypothetical_update.error()
-			)
-		);
-	}
-	
-	return !hypothetical_update.value().empty();
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	logger->info(std::format("Current state is:\n{}", str(state, false)));
+
+	const auto hypothetical_update = evaluate(expr, state, model, detail_logger);
+
+    if (!hypothetical_update.has_value()) {
+        const std::string error_message = std::format("In evaluating formula {}:\n{}", formula, hypothetical_update.error());
+        logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+        return std::unexpected(error_message);
+    }
+    
+    const std::string result_string = hypothetical_update.value().empty() ? "False" : "True";
+    logger->info(std::format("Evaluation result: {}", result_string));
+    return !hypothetical_update.value().empty();
 }
 
 /**
@@ -65,9 +69,9 @@ std::expected<bool, std::string> consistent(const QMLExpression::Expression& exp
  * @return std::expected<bool, std::string> `true` if the expression is consistent with the state,
  *         `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> allows(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model)
+std::expected<bool, std::string> allows(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	return consistent(expr, state, model);
+	return consistent(expr, state, model, logger, log_details);
 }
 
 /**
@@ -83,21 +87,26 @@ std::expected<bool, std::string> allows(const InformationState& state, const QML
  * @return std::expected<bool, std::string> `true` if the evaluated update subsists
  *         in the initial state, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> supports(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model)
+std::expected<bool, std::string> supports(const InformationState& state, const QMLExpression::Expression& expr, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	const auto hypothetical_update = evaluate(expr, state, model);
+    const std::string formula = std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr));
+
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	logger->info(std::format("Current state is:\n{}", str(state, false)));
+
+	const auto hypothetical_update = evaluate(expr, state, model, detail_logger);
 	
 	if (!hypothetical_update.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-				hypothetical_update.error()
-			)
-		);
+		const std::string error_message = std::format("In evaluating formula {}:\n{}", formula, hypothetical_update.error());
+		logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+		return std::unexpected(error_message);
 	}
 	
-	return subsistsIn(state, hypothetical_update.value());
+	const bool evaluation_result = subsistsIn(state, hypothetical_update.value());
+	const std::string result_string = evaluation_result ? "True" : "False";
+	logger->info(std::format("Evaluation result: {}", result_string));
+	return evaluation_result;
 }
 
 /**
@@ -113,54 +122,54 @@ std::expected<bool, std::string> supports(const InformationState& state, const Q
  * @return std::expected<bool, std::string> `true` if the expression is supported
  *         by the state, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> isSupportedBy(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model)
+std::expected<bool, std::string> isSupportedBy(const QMLExpression::Expression& expr, const InformationState& state, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	return supports(state, expr, model);
+    return supports(state, expr, model, logger, log_details);
 }
 
 namespace {
 
 std::vector<InformationState> generateSubStates(int n, int k) {
-	std::vector<InformationState> result;
+    std::vector<InformationState> result;
 
-	if (k == 0) {
-		result.push_back(InformationState());
-		return result;
-	}
+    if (k == 0) {
+        result.push_back(InformationState());
+        return result;
+    }
 
-	if (k > n + 1) {
-		return result;
-	}
+    if (k > n + 1) {
+        return result;
+    }
 
-	int estimate = 1;
-	for (int i = 1; i <= k; i++) {
-		estimate = estimate * (n + 2 - i) / i;
-	}
-	result.reserve(estimate);
+    int estimate = 1;
+    for (int i = 1; i <= k; i++) {
+        estimate = estimate * (n + 2 - i) / i;
+    }
+    result.reserve(estimate);
 
-	std::function<void(int, InformationState&)> backtrack =
-		[&](int start, InformationState& current) {
-			if (current.size() == k) {
-				result.push_back(current);
-				return;
-			}
+    std::function<void(int, InformationState&)> backtrack =
+        [&](int start, InformationState& current) {
+            if (current.size() == k) {
+                result.push_back(current);
+                return;
+            }
 
-			ReferentSystem r;
+            ReferentSystem r;
 
-			for (int i = start; i <= n; ++i) {
-				Possibility p(std::make_shared<ReferentSystem>(r), i);
-				current.insert(p);
+            for (int i = start; i <= n; ++i) {
+                Possibility p(std::make_shared<ReferentSystem>(r), i);
+                current.insert(p);
 
-				backtrack(i + 1, current);
+                backtrack(i + 1, current);
 
-				current.erase(p);
-			}
-		};
+                current.erase(p);
+            }
+        };
 
-	InformationState current;
-	backtrack(0, current);
+    InformationState current;
+    backtrack(0, current);
 
-	return result;
+    return result;
 }
 
 } // ANONYMOUS NAMESPACE
@@ -179,26 +188,37 @@ std::vector<InformationState> generateSubStates(int n, int k) {
  *         consistent in at least one information state, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const IModel& model)
+std::expected<bool, std::string> consistent(const QMLExpression::Expression& expr, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+
 	for (const int i : std::views::iota(0, model.worldCardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		const auto is_consistent = [&](const InformationState& state) -> bool {
-			const auto result = consistent(expr, state, model); 
+			const auto result = consistent(expr, state, model, detail_logger, log_details); 
 			if (!result.has_value()) {
 				throw std::runtime_error(result.error());
 			}
-			return result.value();
+			const bool result_value = result.value();
+			if (!result_value) {
+				logger->info(std::format("Formula is inconsistent with the following information state:\n{}", str(state, false)));
+			}
+			return result_value;
 		};
 		try {
 			if (!std::ranges::any_of(states, is_consistent)) {
+				logger->info("Evaluation result: False");
 				return false;
 			}
 		}
 		catch (const std::runtime_error& e) {
-			return std::unexpected(e.what());
+			const std::string error_message = e.what();
+			logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+			return std::unexpected(error_message);
 		}
 	}
+	logger->info("Evaluation result: True");
 	return true;
 }
 
@@ -216,26 +236,37 @@ std::expected<bool, std::string> consistent(const QMLExpression::Expression& exp
  *         in at least one information state, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr, const IModel& model)
+std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	
 	for (const int i : std::views::iota(0, model.worldCardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		const auto is_not_empty_or_supports_expression = [&](const InformationState& state) -> bool {
-			const auto result = supports(state, expr, model);
+			const auto result = supports(state, expr, model, detail_logger, log_details);
 			if (!result.has_value()) {
 				throw std::runtime_error(result.error());
 			}
-			return !state.empty() && result.value(); 
+			const bool is_coherent= !state.empty() && result.value();
+			if (!is_coherent) {
+				logger->info(std::format("Formula is incoherent due to the following information state:\n{}", str(state, false)));
+			}
+			return is_coherent; 
 		};
 		try {
 			if (!std::ranges::any_of(states, is_not_empty_or_supports_expression)) {
+				logger->info("Evaluation result: False");
 				return false;
 			}
 		}
 		catch (const std::runtime_error& e) {
-			return std::unexpected(e.what());
+			const std::string error_message = e.what();
+			logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+			return std::unexpected(error_message);
 		}
 	}
+	logger->info("Evaluation result: True");
 	return true;
 }
 
@@ -251,9 +282,25 @@ std::expected<bool, std::string> coherent(const QMLExpression::Expression& expr,
  *         in all states updated by the premises, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	return entails_G(premises, conclusion, model);
+    return entails_G(premises, conclusion, model, logger, log_details);
+}
+
+namespace {
+	std::expected<void, std::string> sequentiallyUpdate(InformationState& state, const std::vector<QMLExpression::Expression>& expressions, const IModel& model, simple_logger::SimpleLogger* logger = nullptr)
+	{
+		logger = simple_logger::normalize(logger);
+
+		for (const QMLExpression::Expression& expr : expressions) {
+			const auto update = evaluate(expr, state, model, logger);
+			if (!update.has_value()) {
+				return std::unexpected(std::format("In evaluating formula {}:\n{}", std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)), update.error()));
+			}
+			state = update.value();
+		}
+		return {};
+	}
 }
 
 /**
@@ -273,51 +320,41 @@ std::expected<bool, std::string> entails(const std::vector<QMLExpression::Expres
  *         in all states updated by the premises, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
-	InformationState ignorant_state = create(model);
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
 
-	// Update input state with premises
-	for (const QMLExpression::Expression& expr : premises) {
-		const auto update = evaluate(expr, ignorant_state, model);
-		if (!update.has_value()) {
-			return std::unexpected(
-				std::format(
-					"In evaluating formula {}:\n{}",
-					std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-					update.error()
-				)
-			);
-		}
-		ignorant_state = update.value();
+    InformationState ignorant_state = create(model);
+
+	// update input state with premises
+	const auto sequential_update = sequentiallyUpdate(ignorant_state, premises, model, detail_logger);
+	if (!sequential_update.has_value()) {
+		const std::string error_message = sequential_update.error();
+		logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+		return std::unexpected(error_message);
 	}
 
 	// check if update with conclusion exists
-	const auto update = evaluate(conclusion, ignorant_state, model);
-
-	// update does not exist
-	if (!update.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
-				update.error()
-			)
-		);
+	const auto conclusion_update = evaluate(conclusion, ignorant_state, model, detail_logger);
+	if (!conclusion_update.has_value()) {
+		const std::string error_message = conclusion_update.error();
+		logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+		return std::unexpected(error_message);
 	}
 
 	// update exists, check for support
-	const auto does_support = supports(ignorant_state, conclusion, model);
+	const auto does_support = supports(ignorant_state, conclusion, model, detail_logger, log_details);
 	if (!does_support.has_value()) {
-		return std::unexpected(
-			std::format(
-				"In evaluating formula {}:\n{}",
-				std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
-				does_support.error()
-			)
-		);
+		const std::string error_message = does_support.error();
+		logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+		return std::unexpected(error_message);
 	}
-	return does_support.value();
+
+    const bool entailment_holds = does_support.value();
+    const std::string result_string = entailment_holds ? "True" : "False";
+    logger->info(std::format("Evaluation result: {}", result_string));
+    return entailment_holds;
 }
 
 /**
@@ -339,56 +376,45 @@ std::expected<bool, std::string> entails_0(const std::vector<QMLExpression::Expr
  *         in all states updated by the premises, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	
 	for (const int i : std::views::iota(0, model.worldCardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		for (InformationState& input_state : states) {
-			// Update input state with premises
-			for (const QMLExpression::Expression& expr : premises) {
-				const auto update = evaluate(expr, input_state, model);
-				if (!update.has_value()) {
-					return std::unexpected(
-						std::format(
-							"In evaluating formula {}:\n{}",
-							std::visit(QMLExpression::Formatter(), QMLExpression::Expression(expr)),
-							update.error()
-						)
-					);
-				}
-				input_state = update.value();
+			// update input state with premises
+			const auto sequential_update = sequentiallyUpdate(input_state, premises, model, detail_logger);
+			if (!sequential_update.has_value()) {
+				const std::string error_message = sequential_update.error();
+				logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+				return std::unexpected(error_message);
 			}
 
 			// check if update with conclusion exists
-			const auto update = evaluate(conclusion, input_state, model);
-
-			// update does not exist
-			if (!update.has_value()) {
-				return std::unexpected(
-					std::format(
-						"In evaluating formula {}:\n{}",
-						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
-						update.error()
-					)
-				);
+			const auto conclusion_update = evaluate(conclusion, input_state, model, detail_logger);
+			if (!conclusion_update.has_value()) {
+				const std::string error_message = conclusion_update.error();
+				logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+				return std::unexpected(error_message);
 			}
 
 			// update exists, check for support
-			const auto does_support = supports(input_state, conclusion, model);
+			const auto does_support = supports(input_state, conclusion, model, detail_logger, log_details);
 			if (!does_support.has_value()) {
-				return std::unexpected(
-					std::format(
-						"In evaluating formula {}:\n{}",
-						std::visit(QMLExpression::Formatter(), QMLExpression::Expression(conclusion)),
-						does_support.error()
-					)
-				);
+				const std::string error_message = does_support.error();
+				logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+				return std::unexpected(error_message);
 			}
 			if (!does_support.value()) {
+				logger->info(std::format("The following information state provides a counterexample to the argument:\n\n{}\n", str(input_state, false)));
+				logger->info("Evaluation result: False");
 				return false;
 			}
 		}
 	}
+	logger->info("Evaluation result: True");
 	return true;
 }
 
@@ -408,38 +434,59 @@ std::expected<bool, std::string> entails_G(const std::vector<QMLExpression::Expr
  * @param conclusion The expression representing the conclusion.
  * @param model The model against which entailment is evaluated.
  * @return std::expected<bool, std::string> `true` if the conclusion is supported
- *         in all states updated by the premises, `false` otherwise.
+ *         in all states that support the premises, `false` otherwise.
  *         Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model)
+std::expected<bool, std::string> entails_C(const std::vector<QMLExpression::Expression>& premises, const QMLExpression::Expression& conclusion, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	
 	for (const int i : std::views::iota(0, model.worldCardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 		for (InformationState& input_state : states) {
+			//go through every premise and check for support
+			bool supports_every_premise = true;
 
-			const auto supports_all_premises = [&](InformationState& state) -> bool {
-				const auto is_supported = [&](const QMLExpression::Expression& premise) -> bool {
-					const auto result = supports(state, premise, model);
-					if (!result.has_value()) {
-						throw std::out_of_range(result.error());
-					}
-					return result.value();
-					};
-				return std::ranges::all_of(premises, is_supported);
-				};
-
-			const auto supports_conclusion = supports(input_state, conclusion, model);
-
-			if (!supports_conclusion.has_value()) {
-				return std::unexpected(supports_conclusion.error());
+			for (const auto& premise : premises) {
+				const auto supports_premise = supports(input_state, premise, model, detail_logger, log_details);
+				if (!supports_premise.has_value()) {
+					const std::string error_message = supports_premise.error();
+					logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+					return std::unexpected(error_message);
+				}
+				if (!supports_premise.value()) {
+					supports_every_premise = false;
+					break;
+				}
 			}
 
-			if (supports_all_premises(input_state) && !supports_conclusion.value()) {
-				return false;
+            // if state does not support every permise, not a counterexample (continue to next iteration)
+            if (!supports_every_premise) {
+                continue;
+            }
+
+			// check whether state supports conclusion
+			const auto result = supports(input_state, conclusion, model, detail_logger, log_details);
+			if (!result.has_value()) {
+				const std::string error_message = result.error();
+				logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+				return std::unexpected(error_message);
 			}
+
+            // if it does, go to next iteration (not a counterexample)
+            if (result.value()) {
+                continue;
+            }
+
+			// if it does not, return false
+			logger->info(std::format("The following information state provides a counterexample to the argument:\n\n{}\n", str(input_state, false)));
+			logger->info("Evaluation result: False");
+			return false;
 		}
 	}
-
+	// if we get here, no state is a counterexample, return true
+	logger->info("Evaluation result: True");
 	return true;
 }
 
@@ -447,59 +494,59 @@ namespace {
 
 std::expected<bool, std::string> similar(const Possibility& p1, const Possibility& p2)
 {
-	const auto have_same_denotation = [&](std::string_view variable) -> bool {
-		const auto denotation_at_p1 = variableDenotation(variable, p1);
-		const auto denotation_at_p2 = variableDenotation(variable, p2);
-		if (!denotation_at_p1.has_value()) {
-			throw std::out_of_range(denotation_at_p1.error());
-		}
-		if (!denotation_at_p2.has_value()) {
-			throw std::out_of_range(denotation_at_p2.error());
-		}
-		return denotation_at_p1.value() == denotation_at_p2.value();
-	};
+    const auto have_same_denotation = [&](std::string_view variable) -> bool {
+        const auto denotation_at_p1 = variableDenotation(variable, p1);
+        const auto denotation_at_p2 = variableDenotation(variable, p2);
+        if (!denotation_at_p1.has_value()) {
+            throw std::out_of_range(denotation_at_p1.error());
+        }
+        if (!denotation_at_p2.has_value()) {
+            throw std::out_of_range(denotation_at_p2.error());
+        }
+        return denotation_at_p1.value() == denotation_at_p2.value();
+    };
 
-	try {
-		return p1.world == p2.world
-			&& domain(*p1.referentSystem) == domain(*p2.referentSystem)
-			&& std::ranges::all_of(domain(*p1.referentSystem), have_same_denotation);
-	}
-	catch (const std::out_of_range& e) {
-		return std::unexpected(e.what());
-	}
+    try {
+        return p1.world == p2.world
+            && domain(*p1.referentSystem) == domain(*p2.referentSystem)
+            && std::ranges::all_of(domain(*p1.referentSystem), have_same_denotation);
+    }
+    catch (const std::out_of_range& e) {
+        return std::unexpected(e.what());
+    }
 }
 
 std::expected<bool, std::string> similar(const InformationState& s1, const InformationState& s2)
 {
-	const auto has_similar_possibility_in_s2 = [&](const Possibility p) -> bool { 
-		const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
-			const auto comparison_result = similar(p, p_dash);
-			if (!comparison_result.has_value()) {
-				throw std::out_of_range(comparison_result.error());
-			}
-			return comparison_result.value();
-		};
-		return std::ranges::any_of(s2, is_similar_to_p); 
-	};
+    const auto has_similar_possibility_in_s2 = [&](const Possibility p) -> bool { 
+        const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
+            const auto comparison_result = similar(p, p_dash);
+            if (!comparison_result.has_value()) {
+                throw std::out_of_range(comparison_result.error());
+            }
+            return comparison_result.value();
+        };
+        return std::ranges::any_of(s2, is_similar_to_p); 
+    };
 
-	const auto has_similar_possibility_in_s1 = [&](const Possibility p) -> bool { 
-		const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
-			const auto comparison_result = similar(p, p_dash);
-			if (!comparison_result.has_value()) {
-				throw std::out_of_range(comparison_result.error());
-			}
-			return comparison_result.value();
-		};
-		return std::ranges::any_of(s1, is_similar_to_p);
-	};
+    const auto has_similar_possibility_in_s1 = [&](const Possibility p) -> bool { 
+        const auto is_similar_to_p = [&](const Possibility p_dash) -> bool {
+            const auto comparison_result = similar(p, p_dash);
+            if (!comparison_result.has_value()) {
+                throw std::out_of_range(comparison_result.error());
+            }
+            return comparison_result.value();
+        };
+        return std::ranges::any_of(s1, is_similar_to_p);
+    };
 
-	try {
-		return std::ranges::all_of(s1, has_similar_possibility_in_s2)
-			&& std::ranges::all_of(s2, has_similar_possibility_in_s1);
-	}
-	catch (const std::out_of_range& e) {
-		return std::unexpected(e.what());
-	}
+    try {
+        return std::ranges::all_of(s1, has_similar_possibility_in_s2)
+            && std::ranges::all_of(s2, has_similar_possibility_in_s1);
+    }
+    catch (const std::out_of_range& e) {
+        return std::unexpected(e.what());
+    }
 }
 
 } // ANONYMOUS NAMESPACE
@@ -518,35 +565,45 @@ std::expected<bool, std::string> similar(const InformationState& s1, const Infor
  * @return std::expected<bool, std::string> `true` if the expressions always produce
  *         similar updates, `false` otherwise. Returns an error message if evaluation fails.
  */
-std::expected<bool, std::string> equivalent(const QMLExpression::Expression& expr1, const QMLExpression::Expression& expr2, const IModel& model)
+std::expected<bool, std::string> equivalent(const QMLExpression::Expression& expr1, const QMLExpression::Expression& expr2, const IModel& model, simple_logger::SimpleLogger* logger, bool log_details)
 {
+	logger = simple_logger::normalize(logger);
+	simple_logger::SimpleLogger* detail_logger = log_details ? logger : nullptr;
+	
 	for (const int i : std::views::iota(0, model.worldCardinality())) {
 		std::vector<InformationState> states = generateSubStates(model.worldCardinality() - 1, i);
 
 		const auto dissimilar_updates = [&](const InformationState& state) ->bool { 
-			const auto expr1_update = evaluate(expr1, state, model);
+			const auto expr1_update = evaluate(expr1, state, model, detail_logger);
 			if (!expr1_update.has_value()) {
 				throw std::out_of_range(expr1_update.error());
 			}
-			const auto expr2_update = evaluate(expr2, state, model);
+			const auto expr2_update = evaluate(expr2, state, model, detail_logger);
 			if (!expr2_update.has_value()) {
 				throw std::out_of_range(expr2_update.error());
 			}
-
-			return !similar(expr1_update.value(), expr2_update.value());
+			const bool comparison_result = !similar(expr1_update.value(), expr2_update.value());
+			if (comparison_result) {
+				logger->info(std::format("The following information state provides a counterexample to the equivalence:\n{}", str(state, false)));
+			}
+			return comparison_result;
 		};
 
-		try {
-			if (std::ranges::any_of(states, dissimilar_updates)) {
-				return false;
-			}
-		}
-		catch (const std::out_of_range& e) {
-			return std::unexpected(e.what());
-		}
-	}
+        try {
+            if (std::ranges::any_of(states, dissimilar_updates)) {
+                logger->info("Evaluation result: False");
+                return false;
+            }
+        }
+        catch (const std::out_of_range& e) {
+            const std::string error_message = e.what();
+            logger->info(std::format("Evaluation failed with the following error:\n{}", error_message));
+            return std::unexpected(error_message);
+        }
+    }
 
-	return true;
+    logger->info("Evaluation result: True");
+    return true;
 }
 
 }

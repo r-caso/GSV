@@ -17,12 +17,12 @@ namespace iif_sadaf::talk::GSV {
  */
 std::set<std::string_view> domain(const ReferentSystem& r)
 {
-	std::set<std::string_view> domain;
-	for (const auto& [variable, peg] : r.variablePegAssociation) {
-		domain.insert(variable);
-	}
+    std::set<std::string_view> domain;
+    for (const auto& [variable, peg] : r.variablePegAssociation) {
+        domain.insert(variable);
+    }
 
-	return domain;
+    return domain;
 }
 
 ReferentSystem::ReferentSystem(ReferentSystem&& other) noexcept
@@ -53,11 +53,11 @@ ReferentSystem& ReferentSystem::operator=(ReferentSystem&& other) noexcept
  */
 std::expected<int, std::string> ReferentSystem::value(std::string_view variable) const
 {
-	if (!variablePegAssociation.contains(variable)) {
+    if (!variablePegAssociation.contains(variable)) {
         return std::unexpected(std::format("Referent system does not contain variable {}", std::string(variable)));
-	}
+    }
 
-	return variablePegAssociation.at(variable);
+    return variablePegAssociation.at(variable);
 }
 
 /**
@@ -76,48 +76,48 @@ std::expected<int, std::string> ReferentSystem::value(std::string_view variable)
  */
 bool extends(const ReferentSystem& r2, const ReferentSystem& r1)
 {
-	// TODO check that these calls to value() are safe
-	if (r1.pegs > r2.pegs) {
-		return false;
-	}
+    // TODO check that these calls to value() are safe
+    if (r1.pegs > r2.pegs) {
+        return false;
+    }
 
-	std::set<std::string_view> domain_r1 = domain(r1);
-	std::set<std::string_view> domain_r2 = domain(r2);
+    std::set<std::string_view> domain_r1 = domain(r1);
+    std::set<std::string_view> domain_r2 = domain(r2);
 
-	if (!std::ranges::includes(domain_r2, domain_r1)) {
-		return false;
-	}
+    if (!std::ranges::includes(domain_r2, domain_r1)) {
+        return false;
+    }
 
-	const auto old_var_same_or_new_peg = [&](std::string_view variable) -> bool {
-		return r1.value(variable).value() == r2.value(variable).value() || r1.pegs <= r2.value(variable).value();
-	};
+    const auto old_var_same_or_new_peg = [&](std::string_view variable) -> bool {
+        return r1.value(variable).value() == r2.value(variable).value() || r1.pegs <= r2.value(variable).value();
+    };
 
-	if (!std::ranges::all_of(domain_r1, old_var_same_or_new_peg)) {
-		return false;
-	}
+    if (!std::ranges::all_of(domain_r1, old_var_same_or_new_peg)) {
+        return false;
+    }
 
-	const auto new_var_new_peg = [&](std::string_view variable) -> bool {
-		return domain_r1.contains(variable) || r1.pegs <= r2.value(variable).value();
-	};
+    const auto new_var_new_peg = [&](std::string_view variable) -> bool {
+        return domain_r1.contains(variable) || r1.pegs <= r2.value(variable).value();
+    };
 
-	return std::ranges::all_of(domain_r2, new_var_new_peg);
+    return std::ranges::all_of(domain_r2, new_var_new_peg);
 }
 
 std::string str(const ReferentSystem& r)
 {
-	if (r.variablePegAssociation.empty()) {
-		return "{ }";
-	}
+    if (r.variablePegAssociation.empty()) {
+        return "{ }";
+    }
 
-	std::string vp_association;
+    std::string vp_association;
 
-	for (const auto& [variable, peg] : r.variablePegAssociation) {
-		vp_association += std::format("{} -> peg{}, ", std::string(variable), std::to_string(peg));
-	}
+    for (const auto& [variable, peg] : r.variablePegAssociation) {
+        vp_association += std::format("{} -> peg{}, ", std::string(variable), std::to_string(peg));
+    }
 
-	vp_association.resize(vp_association.size() - 2);
+    vp_association.resize(vp_association.size() - 2);
 
-	return std::format("{{ {} }}", vp_association);
+    return std::format("{{ {} }}", vp_association);
 }
 
 }

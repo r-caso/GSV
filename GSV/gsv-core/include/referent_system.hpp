@@ -17,16 +17,16 @@ namespace iif_sadaf::talk::GSV {
  */
 struct ReferentSystem {
 public:
-	ReferentSystem() = default;
+    ReferentSystem() = default;
     ReferentSystem(const ReferentSystem& other) = default;
     ReferentSystem& operator=(const ReferentSystem& other) = default;
     ReferentSystem(ReferentSystem&& other) noexcept;
     ReferentSystem& operator=(ReferentSystem&& other) noexcept;
 
-	std::expected<int, std::string> value(std::string_view variable) const;
+    std::expected<int, std::string> value(std::string_view variable) const;
 
-	int pegs = 0;
-	std::unordered_map<std::string_view, int> variablePegAssociation = {};
+    int pegs = 0;
+    std::unordered_map<std::string_view, int> variablePegAssociation = {};
 };
 
 std::set<std::string_view> domain(const ReferentSystem& r);
