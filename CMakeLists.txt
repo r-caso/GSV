@@ -14,19 +14,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(QMLExpression REQUIRED)
 find_package(QMLModel REQUIRED)
+find_package(SimpleLogger REQUIRED)
 
 set(GSV_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GSV)
 set(GSV_INTERFACES_DIR ${GSV_SOURCE_DIR}/interfaces)
 set(GSV_ADAPTERS_DIR ${GSV_SOURCE_DIR}/gsv-adapters)
 set(GSV_CORE_DIR ${GSV_SOURCE_DIR}/gsv-core)
 set(GSV_EVALUATOR_DIR ${GSV_SOURCE_DIR}/gsv-evaluator)
-set(GSV_LOGGER_DIR ${GSV_SOURCE_DIR}/gsv-logger)
 set(GSV_RELATIONS_DIR ${GSV_SOURCE_DIR}/gsv-relations)
-set(GSV_UTILS_DIR ${GSV_SOURCE_DIR}/gsv-utils)
 
 # Add subdirectories with component libraries
-add_subdirectory(${GSV_UTILS_DIR})
-add_subdirectory(${GSV_LOGGER_DIR})
 add_subdirectory(${GSV_ADAPTERS_DIR})
 add_subdirectory(${GSV_CORE_DIR})
 add_subdirectory(${GSV_EVALUATOR_DIR})
@@ -50,7 +47,7 @@ target_link_libraries(GSV INTERFACE
 include(GNUInstallDirs)
 
 # Install all component libraries and the main interface library
-install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-logger gsv-relations gsv-utils GSV
+install(TARGETS gsv-adapters gsv-core gsv-evaluator gsv-relations GSV
     EXPORT GSVTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -72,16 +69,8 @@ install(DIRECTORY
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/evaluator
 )
 install(DIRECTORY 
-    ${GSV_LOGGER_DIR}/include/gsv-logger
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-install(DIRECTORY 
     ${GSV_RELATIONS_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GSV/relations
-)
-install(DIRECTORY 
-    ${GSV_UTILS_DIR}/include/gsv-utils
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(DIRECTORY 
     ${GSV_INTERFACES_DIR}/

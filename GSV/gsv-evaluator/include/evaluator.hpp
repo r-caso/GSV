@@ -3,10 +3,9 @@
 #include <expected>
 
 #include <QMLExpression/expression.hpp>
+#include <SimpleLogger/simple_logger.hpp>
 
 #include "information_state.hpp"
-#include "ilogger.hpp"
-#include "gsv-logger/logger_utils.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
@@ -25,8 +24,8 @@ namespace iif_sadaf::talk::GSV {
  */
 struct Evaluator {
 public:
-    Evaluator(GSVLogger* logger = nullptr)
-        : m_Logger(normalize(logger))
+    Evaluator(simple_logger::SimpleLogger* logger = nullptr)
+        : m_Logger(simple_logger::normalize(logger))
     { }
 
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::UnaryNode>& expr, std::pair<InformationState, const IModel*> params) const;
@@ -36,10 +35,10 @@ public:
     std::expected<InformationState, std::string> operator()(const std::shared_ptr<QMLExpression::PredicationNode>& expr, std::pair<InformationState, const IModel*> params) const;
 
 private:
-    GSVLogger* m_Logger;
+    simple_logger::SimpleLogger* m_Logger;
 
 };
 
-std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, GSVLogger* logger = nullptr);
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, simple_logger::SimpleLogger* logger = nullptr);
 
 }

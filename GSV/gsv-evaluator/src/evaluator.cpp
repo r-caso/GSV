@@ -10,11 +10,14 @@
 #include <QMLExpression/formatter.hpp>
 
 #include "possibility.hpp"
-#include "gsv-utils/error_reporting.hpp"
 
 namespace iif_sadaf::talk::GSV {
 
 namespace {
+
+    std::string explain_failure(const std::string& formula, const std::string cause) {
+        return std::format("In evaluating formula {}:\n{}", formula, cause);
+    }
 
 void filter(InformationState& state, const std::function<bool(const Possibility&)>& predicate) {
     for (auto it = state.begin(); it != state.end(); ) {
@@ -32,18 +35,16 @@ QMLExpression::Expression negate(const QMLExpression::Expression& expr)
     return std::make_shared<QMLExpression::UnaryNode>(QMLExpression::Operator::NEGATION, expr);
 }
 
-void startLog(GSVLogger* logger, const std::string& formula, const InformationState& state)
+void startLog(simple_logger::SimpleLogger* logger, const std::string& formula, const InformationState& state)
 {
-    logger->log(std::format("===> Starting evaluation of {}", formula));
-    logger->increaseDepth();
-    logger->log(std::format("Input information state is:\n{}", str(state, false, logger->currentIndent())));
+    logger->info(std::format("===> Starting evaluation of {}", formula));
+    logger->info(std::format("Input information state is:\n{}", str(state, false)));
 }
 
-void endLog(GSVLogger* logger, const std::string& formula, const InformationState& state)
+void endLog(simple_logger::SimpleLogger* logger, const std::string& formula, const InformationState& state)
 {
-    logger->log(std::format("Finished the evaluation of {}", formula));
-    logger->log("Output information state is:\n" + str(state, false, logger->currentIndent()));
-    logger->decreaseDepth();
+    logger->info(std::format("Finished the evaluation of {}", formula));
+    logger->info("Output information state is:\n" + str(state, false));
 }
 
 template<typename Visitor>
@@ -84,36 +85,36 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
     startLog(m_Logger, formula, input_state);
 
-    m_Logger->log("Calculating prejacent update");
+    m_Logger->info("Calculating prejacent update");
     const auto prejacent_update = visit(expr->scope, params, Evaluator(m_Logger));
-    m_Logger->log(std::format("Returning to evaluation of {}", formula));
+    m_Logger->info(std::format("Returning to evaluation of {}", formula));
 
     if (!prejacent_update.has_value()) {
         return std::unexpected(explain_failure(formula, prejacent_update.error()));
     }
 
     if (expr->op == QMLExpression::Operator::EPISTEMIC_POSSIBILITY) {
-        m_Logger->log("Applying test for epistemic possibilty: ");
+        m_Logger->info("Applying test for epistemic possibilty: ");
         if (prejacent_update.value().empty()) {
-            m_Logger->log("compatibility test failed");
+            m_Logger->info("compatibility test failed");
             input_state.clear();
         }
         else {
-            m_Logger->log("compatibility test passed");
+            m_Logger->info("compatibility test passed");
         }
     }
     else if (expr->op == QMLExpression::Operator::EPISTEMIC_NECESSITY) {
-        m_Logger->log("Applying test for epistemic necessity: ");
+        m_Logger->info("Applying test for epistemic necessity: ");
         if (!subsistsIn(input_state, prejacent_update.value())) {
-            m_Logger->log("support test failed");
+            m_Logger->info("support test failed");
             input_state.clear();
         }
         else {
-            m_Logger->log("support test passed");
+            m_Logger->info("support test passed");
         }
     }
     else if (expr->op == QMLExpression::Operator::NEGATION) {
-        m_Logger->log("Filtering with negation of the prejacent");
+        m_Logger->info("Filtering with negation of the prejacent");
         filter(input_state, [&](const Possibility& p) -> bool { return !subsistsIn(p, prejacent_update.value()); });
     }
     else {
@@ -159,16 +160,16 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
     // Conjunction is sequential update, treated separately
     if (expr->op == QMLExpression::Operator::CONJUNCTION) {
-        m_Logger->log("Performing sequential update");
-        m_Logger->log("Updating with LHS");
+        m_Logger->info("Performing sequential update");
+        m_Logger->info("Updating with LHS");
         const auto lhs_update = visit(expr->lhs, params, Evaluator(m_Logger));
-        m_Logger->log(std::format("Returning to evaluation of {}", formula));
+        m_Logger->info(std::format("Returning to evaluation of {}", formula));
 
         if (!lhs_update.has_value()) {
             return std::unexpected(explain_failure(formula, lhs_update.error()));
         }
 
-        m_Logger->log("Updating with RHS");
+        m_Logger->info("Updating with RHS");
         const auto rhs_update = visit(expr->rhs, { lhs_update.value(), model }, Evaluator(m_Logger));
 
         if (!rhs_update.has_value()) {
@@ -180,26 +181,26 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
     }
 
     // All other updates are filtering updates
-    m_Logger->log("Calculating hypothetical LHS update");
+    m_Logger->info("Calculating hypothetical LHS update");
     const auto hypothetical_lhs_update = visit(expr->lhs, params, Evaluator(m_Logger));
 
     if (!hypothetical_lhs_update.has_value()) {
         return std::unexpected(explain_failure(formula, hypothetical_lhs_update.error()));
     }
 
-    m_Logger->log(std::format("Returning to evaluation of {}", formula));
+    m_Logger->info(std::format("Returning to evaluation of {}", formula));
 
     if (expr->op == QMLExpression::Operator::DISJUNCTION) {
-        m_Logger->log("Starting calculation of hypothetical RHS update");
-        m_Logger->log("Assuming negation of LHS");
+        m_Logger->info("Starting calculation of hypothetical RHS update");
+        m_Logger->info("Assuming negation of LHS");
         const auto negated_lhs_update = visit(negate(expr->lhs), params, Evaluator(m_Logger));
-        m_Logger->log(std::format("Returning to evaluation of {}", formula));
+        m_Logger->info(std::format("Returning to evaluation of {}", formula));
         
         if (!negated_lhs_update.has_value()) {
             return std::unexpected(explain_failure(formula, negated_lhs_update.error()));
         }
         
-        m_Logger->log("Finishing calculation of hypothetical RHS update");
+        m_Logger->info("Finishing calculation of hypothetical RHS update");
         const auto hypothetical_rhs_update = visit(expr->rhs, { negated_lhs_update.value(), model }, Evaluator(m_Logger));
 
         if (!hypothetical_rhs_update.has_value()) {
@@ -210,15 +211,15 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
             return hypothetical_lhs_update.value().contains(p) || hypothetical_rhs_update.value().contains(p);
         };
 
-        m_Logger->log("Filtering for disjunction");
+        m_Logger->info("Filtering for disjunction");
 
         filter(input_state, in_lhs_or_in_rhs);
     }
     else if (expr->op == QMLExpression::Operator::CONDITIONAL) {
-        m_Logger->log("Calculating hypothetical RHS update");
+        m_Logger->info("Calculating hypothetical RHS update");
         const auto hypothetical_consequent_update = visit(expr->rhs, { hypothetical_lhs_update.value(), model }, Evaluator(m_Logger));
 
-        m_Logger->log(std::format("Returning to evaluation of {}", formula));
+        m_Logger->info(std::format("Returning to evaluation of {}", formula));
 
         if (!hypothetical_consequent_update.has_value()) {
             return std::unexpected(explain_failure(formula, hypothetical_consequent_update.error()));
@@ -235,7 +236,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
             return !subsistsIn(p, hypothetical_lhs_update.value()) || all_descendants_subsist(p);
         };
 
-        m_Logger->log("Filtering for conditional");
+        m_Logger->info("Filtering for conditional");
         filter(input_state, if_subsists_all_descendants_do);
     }
     else {
@@ -279,10 +280,10 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
         for (const int d : std::views::iota(0, model->domainCardinality())) {
             const std::string scope = QMLExpression::format(expr->scope);
             const InformationState s_variant = update(input_state, expr->variable.literal, d);
-            m_Logger->log(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
+            m_Logger->info(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
             const auto hypothetical_s_variant_update = visit(expr->scope, { s_variant, model }, Evaluator(m_Logger));
 
-            m_Logger->log(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
+            m_Logger->info(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
             
             if (!hypothetical_s_variant_update.has_value()) {
                 return std::unexpected(explain_failure(formula, hypothetical_s_variant_update.error()));
@@ -306,10 +307,10 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
 
         for (const int d : std::views::iota(0, model->domainCardinality())) {
             const std::string scope = QMLExpression::format(expr->scope);
-            m_Logger->log(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
+            m_Logger->info(std::format("Evaluating {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
             const auto hypothetical_update = visit(expr->scope, { update(input_state, expr->variable.literal, d), model }, Evaluator(m_Logger));
 
-            m_Logger->log(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
+            m_Logger->info(std::format("Finished evaluation of {} with respect to association {} -> e{}", scope, expr->variable.literal, std::to_string(d)));
 
             if (!hypothetical_update.has_value()) {
                 return std::unexpected(explain_failure(formula, hypothetical_update.error()));
@@ -325,7 +326,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
             return std::ranges::all_of(all_hypothetical_updates, p_subsists_in_hyp_update);
         };
 
-        m_Logger->log("Filtering for universal quantification");
+        m_Logger->info("Filtering for universal quantification");
         filter(input_state, subsists_in_all_hyp_updates);
     }
     else {
@@ -382,7 +383,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
     };
 
     try {
-        m_Logger->log("Filtering for identity");
+        m_Logger->info("Filtering for identity");
         filter(input_state, assigns_same_denotation);
         endLog(m_Logger, formula, input_state);
         return input_state;
@@ -446,7 +447,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
     };
 
     try {
-        m_Logger->log("Filtering for predication");
+        m_Logger->info("Filtering for predication");
         filter(input_state, tuple_in_extension);
         endLog(m_Logger, formula, input_state);
         return input_state;
@@ -473,7 +474,7 @@ std::expected<InformationState, std::string> Evaluator::operator()(const std::sh
  *          encounters an error (e.g., an invalid operator or undefined term interpretation),
  *          an error message is returned instead of an updated state.
  */
-std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, GSVLogger* logger)
+std::expected<InformationState, std::string> evaluate(const QMLExpression::Expression& expr, const InformationState& input_state, const IModel& model, simple_logger::SimpleLogger* logger)
 {
     return visit(expr, { input_state, &model }, Evaluator(logger));
 }

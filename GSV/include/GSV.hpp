@@ -6,4 +6,3 @@
 #include "semantic_relations.hpp"
 
 #include "imodel.hpp"
-#include "ilogger.hpp"

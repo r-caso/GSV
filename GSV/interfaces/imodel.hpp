@@ -26,7 +26,7 @@ public:
     virtual int domainCardinality() const = 0;
     virtual std::expected<int, std::string> termInterpretation(std::string_view term, int world) const = 0;
     virtual std::expected<const std::set<std::vector<int>>*, std::string> predicateInterpretation(std::string_view predicate, int world) const = 0;
-    virtual ~IModel() {};
+    virtual ~IModel() {}
 };
 
 }

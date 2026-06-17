@@ -15,8 +15,7 @@ target_include_directories(gsv-evaluator
 )
 
 target_link_libraries(gsv-evaluator PUBLIC
-    gsv-utils
     gsv-core
-    gsv-logger
     QMLExpression::QMLExpression
+    SimpleLogger::SimpleLogger
 )
